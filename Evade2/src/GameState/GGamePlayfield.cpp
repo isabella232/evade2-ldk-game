@@ -1,140 +1,58 @@
+//
+// Created by Michael Schwartz on 10/29/20.
+//
+
 #include "GGamePlayfield.h"
-#include "GResources.h"
-#include "GHud.h"
+#include "GCamera.h"
 
-GGamePlayfield::GGamePlayfield(BViewPort *aViewPort, TUint16 aTileMapId)
-  : BMapPlayfield(aViewPort, aTileMapId, TILESET_SLOT, ETrue) {
-
-  mTileMapId = aTileMapId;
-//  gDisplay.SetPalette(this->mTileset, 0, 128);
-  for (TInt s = 0; s < 16; s++) {
-    mGroupDone[s] = mGroupState[s] = EFalse;
+GGamePlayfield::GGamePlayfield() : BPlayfield() {
+  for (TInt i = 0; i < NUM_STARS; i++) {
+    InitStar(i);
   }
-  mMosaicTimer = 0;
-
-  GHud::SetColors();
-
-  TRGB *source = gDisplay.renderBitmap->GetPalette();
-  for (TInt color = 0; color < 255; color++) {
-    TRGB c = source[color];
-    mSavedPalette[color] = c;
-    gDisplay.SetColor(color, 0,0,0);
-  }
-
 }
 
-GGamePlayfield::~GGamePlayfield() = default;
+GGamePlayfield::~GGamePlayfield() noexcept {
+
+}
 
 void GGamePlayfield::Render() {
-  BMapPlayfield::Render();
-  if (mMosaicTimer) {
-    TInt mosaicWidth = 1 + (mMosaicIn ? mMosaicTimer : (MOSAIC_DURATION - mMosaicTimer)) * MOSAIC_INTENSITY / MOSAIC_DURATION;
-    TRect &r = mViewPort->mRect;
-    TUint8 *pixels = &gDisplay.renderBitmap->mPixels[0];
+  gDisplay.renderBitmap->Clear(0);
+  TFloat cz = GCamera::mZ,
+         sw = TFloat(SCREEN_WIDTH),
+         sh = TFloat(SCREEN_HEIGHT);
 
-    for (TInt y = r.y1; y < SCREEN_HEIGHT; y++) {
-      for (TInt x = r.x1; x < SCREEN_WIDTH; x++) {
-        pixels[y * SCREEN_WIDTH + x] = pixels[(y - (y - r.y1) % mosaicWidth) * SCREEN_WIDTH + (x - (x - r.x1) % mosaicWidth)];
-      }
+  for (int i = 0; i < NUM_STARS; i++) {
+    TFloat zz = (mStarZ[i] - cz) * 2;
+    if (zz < 0) {
+      InitStar(i);
+      zz = (mStarZ[i] - cz) * 2;
     }
+    TFloat ratioX = sw / (zz + sw);
+    TFloat ratioY = sh / (zz + sh);
+    TFloat x      = (sw / 2) - (mStarX[i] - GCamera::mX) * ratioX;
+    TFloat y      = (sh / 2) - (mStarY[i] - GCamera::mY) * ratioY;
 
-
-    // Normalize mosaic width to the range of 21 and 1.
-    // Record it as a percentage
-    TFloat pct = (1 - ((TFloat)mosaicWidth - 1) / 20);
-
-    for (TInt color = 0; color < 255; color++) {
-      TRGB c = mSavedPalette[color];
-
-      TUint16 red =  (TFloat)c.r * pct;
-      c.r = (TUint8)((red > 0xFF) ? 0xFF :  red);
-
-      TUint16 green =  (TFloat)c.g * pct;
-      c.g = (TUint8)((green > 0xFF) ? 0xFF : green);
-
-      TUint16 blue =  (TFloat)c.b * pct;
-      c.b = (TUint8)((blue > 0xFF) ? 0xFF : blue);
-
-      gDisplay.SetColor(color, c);
+    if (x < 0) {
+//      printf("InitStar x %f < 0\n", x);
+      InitStar(i);
+    } else if (x > sw) {
+//      printf("InitStar x %f > %f\n", x, sw);
+      InitStar(i);
+    } else if (y < 0) {
+//      printf("InitStar y %f < 0\n", y);
+      InitStar(i);
+    } else if (y > sh) {
+//      printf("InitStar y %f > %f\n", y, sh);
+      InitStar(i);
     }
-
-    mMosaicTimer--;
+//    printf("Plot %f,%f\n", x, y);
+    gDisplay.renderBitmap->SafeWritePixel(x, y, COLOR_STAR);
   }
 }
 
-void GGamePlayfield::StartMosaicIn() {
-  if (!mMosaicTimer) {
-    GHud::SetColors();
-    // Cache colors
-    TRGB *source = gDisplay.renderBitmap->GetPalette();
-    for (TInt color = 0; color < 255; color++) {
-      TRGB c = source[color];
-      mSavedPalette[color] = c;
-      gDisplay.SetColor(color, 0,0,0);
-    }
+void GGamePlayfield::InitStar(TInt aIndex) {
+  mStarX[aIndex] = 256 - Random(0, 512) + GCamera::mX;
+  mStarY[aIndex] = 256 - Random(0, 512) + GCamera::mY;
+  mStarZ[aIndex] = GCamera::mZ + Random(200, 512);
 
-    mMosaicTimer = MOSAIC_DURATION;
-    mMosaicIn = ETrue;
-  }
-}
-
-
-void GGamePlayfield::StartMosaicOut() {
-  if (!mMosaicTimer) {
-    TRGB *source = gDisplay.renderBitmap->GetPalette();
-    for (TInt color = 0; color < 255; color++) {
-      TRGB c = source[color];
-      mSavedPalette[color] = c;
-    }
-    mMosaicTimer = MOSAIC_DURATION;
-    mMosaicIn = EFalse;
-  }
-}
-
-void GGamePlayfield::DumpMap() {
-  printf("MAP DATA\n");
-  for (TInt row = 0; row < mMapHeight; row++) {
-    for (TInt col = 0; col < mMapWidth; col++) {
-      printf("%5d ", mMapData[row * mMapWidth + col] & 0xffff);
-    }
-    printf("\n");
-  }
-}
-
-void GGamePlayfield::DumpMapAttributes() {
-  printf("MAP ATTRIBUTES\n");
-  for (TInt row = 0; row < mMapHeight; row++) {
-    for (TInt col = 0; col < mMapWidth; col++) {
-      printf("%5d ", (mMapData[row * mMapWidth + col] >> 16) & 0xffff);
-    }
-    printf("\n");
-  }
-}
-
-void GGamePlayfield::Restore() {
-  gResourceManager.ReleaseBitmapSlot(TILESET_SLOT);
-  mTileMap = gResourceManager.LoadTileMap(mTileMapId, TILESET_SLOT);
-}
-
-void GGamePlayfield::WriteToStream(BMemoryStream &aStream) {
-  aStream.Write(&mTileMapId, sizeof(mTileMapId));
-  aStream.Write(&mGroupDone[0], sizeof(TBool) * 16);
-  aStream.Write(&mGroupState[0], sizeof(TBool) * 16);
-  // object proram
-  aStream.Write(&mObjectCount, sizeof(mObjectCount));
-  aStream.Write(mObjectProgram, sizeof(BObjectProgram) * mObjectCount);
-  printf("BMapPlayfield: %d Objects\n", mObjectCount);
-  DumpObjectProgram();
-}
-
-void GGamePlayfield::ReadFromStream(BMemoryStream &aStream) {
-  aStream.Read(&mTileMapId, sizeof(mTileMapId));
-  aStream.Read(&mGroupDone[0], sizeof(TBool) * 16);
-  aStream.Read(&mGroupState[0], sizeof(TBool) * 16);
-  // object proram
-  aStream.Read(&mObjectCount, sizeof(mObjectCount));
-  mObjectProgram = new BObjectProgram[mObjectCount];
-  aStream.Read(mObjectProgram, sizeof(BObjectProgram) * mObjectCount);
-  printf("BMapPlayfield: %d Objects\n", mObjectCount);
-  DumpObjectProgram();
 }

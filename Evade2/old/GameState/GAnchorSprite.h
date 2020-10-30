@@ -1,6 +1,7 @@
 #ifndef MODITE_GANCHORSPRITE_H
 #define MODITE_GANCHORSPRITE_H
 
+#if 0
 #include <BAnimSprite.h>
 #include <BMemoryStream.h>
 #include "Game.h"
@@ -150,5 +151,7 @@ public:
 protected:
   char mName[64];
 };
+
+#endif
 
 #endif // MODITE_GANCHORSPRITE_H

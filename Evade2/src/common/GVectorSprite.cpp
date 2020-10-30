@@ -1,5 +1,5 @@
 #include "GVectorSprite.h"
-#include "Camera.h"
+#include "GCamera.h"
 
 
 TBool GVectorSprite::ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat y,
@@ -7,7 +7,7 @@ TBool GVectorSprite::ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat
   graphic += 2;
   TBool drawn = false;
 
-  TInt8 numRows = pgm_read_byte(graphic++);
+  TInt8 numRows = *graphic++;
 
   TFloat rad = TFloat(theta) * PI / 180, sint = sin(rad), cost = cos(rad);
 
@@ -22,9 +22,6 @@ TBool GVectorSprite::ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat
     y0 = seg.y0;
     x1 = seg.x1;
     y1 = seg.y1;
-
-//    printf("Row %i : [%i][%i] [%i][%i]\n", i, (TInt16)x0, (TInt16)y0, (TInt16)x1, (TInt16)y1);
-//    scaleFactor = 1;
 
     if (scaleFactor) {
       x0 /= scaleFactor;
@@ -68,18 +65,18 @@ TBool GVectorSprite::ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat
 }
 
 TBool GVectorSprite::Render(BViewPort *aViewPort) {
-  if (!mLines || mZ <= Camera::mZ) {
+  if (!mLines || mZ <= GCamera::mZ) {
     // nothing to draw
     return EFalse;
   }
 
-  TFloat zz = (mZ - Camera::mZ) * 2;
+  TFloat zz = (mZ - GCamera::mZ) * 2;
   TFloat ratio = 128 / (zz + 128);
 
   bool isEnemy = Type() == OTYPE_ENEMY;
   // printf("is enemy = %i\n", isEnemy);
-  TFloat cx = (Camera::mX - mX) * ratio + SCREEN_WIDTH / 2;
-  TFloat cy = (Camera::mY - mY) * ratio + SCREEN_HEIGHT / 2;
+  TFloat cx = (GCamera::mX - mX) * ratio + SCREEN_WIDTH / 2;
+  TFloat cy = (GCamera::mY - mY) * ratio + SCREEN_HEIGHT / 2;
 
   // uint8_t color = isEnemy ? 5 : 255;
 
@@ -91,17 +88,17 @@ TBool GVectorSprite::Render(BViewPort *aViewPort) {
     if ((!drawn) && isEnemy) {
 
       // draw radar blip
-      TFloat dx = Camera::mX - mX,
-          dy = Camera::mY - mY,
+      TFloat dx = GCamera::mX - mX,
+          dy = GCamera::mY - mY,
           angle = atan2(dy, dx);
 
-          printf("TODO: Fill Circle for enemy radar\n");
-//        Gfx::FillCircle(
-//            (int16_t)(SCREEN_WIDTH / 2 + cos(angle) * 75),
-//            (int16_t)(SCREEN_HEIGHT / 2 + sin(angle) * 75),
-//            3,
-//            EBULLET_COLOR
-//        );
+//          printf("TODO: Fill Circle for enemy radar\n");
+        aViewPort->FillCircle(gDisplay.renderBitmap,
+            (int16_t)(SCREEN_WIDTH / 2 + cos(angle) * 75),
+            (int16_t)(SCREEN_HEIGHT / 2 + sin(angle) * 75),
+            3,
+            EBULLET_COLOR
+        );
 
     }
   }
@@ -111,5 +108,5 @@ TBool GVectorSprite::Render(BViewPort *aViewPort) {
 
 
 TBool GVectorSprite::BehindCamera()  {
-  return mZ <= Camera::mZ;
+  return mZ <= GCamera::mZ;
 }
