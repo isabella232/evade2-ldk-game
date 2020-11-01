@@ -24,47 +24,47 @@ ADD_COMPILE_DEFINITIONS(__MODUS_TARGET_DESKTOP_DISPLAY__=true)
 INCLUDE(${CMAKE_CURRENT_SOURCE_DIR}/creative-engine/CreativeEngine.cmake)
 
 
-SET(MODITE_INCLUDE_DIRS
+SET(EVADE2_INCLUDE_DIRS
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/resources
-    ${CMAKE_SOURCE_DIR}/src/LoadGameState
-    ${CMAKE_SOURCE_DIR}/src/GameState
-    ${CMAKE_SOURCE_DIR}/src/GameState/environment
-    ${CMAKE_SOURCE_DIR}/src/GameState/player
-    ${CMAKE_SOURCE_DIR}/src/GameState/inventory
-    ${CMAKE_SOURCE_DIR}/src/GameState/enemies
-    ${CMAKE_SOURCE_DIR}/src/GameState/enemies/final-boss
-    ${CMAKE_SOURCE_DIR}/src/GameState/enemies/grunts
-    ${CMAKE_SOURCE_DIR}/src/GameState/enemies/mid-bosses
-    ${CMAKE_SOURCE_DIR}/src/GameState/status
-    ${CMAKE_SOURCE_DIR}/src/img/
-    ${CMAKE_SOURCE_DIR}/src/AttractState
-    ${CMAKE_SOURCE_DIR}/src/GameMenuState
-    ${CMAKE_SOURCE_DIR}/src/DebugMenuState
-    ${CMAKE_SOURCE_DIR}/src/GameOverState
-    ${CMAKE_SOURCE_DIR}/src/VictoryState
-    ${CMAKE_SOURCE_DIR}/src/MainMenuState
-    ${CMAKE_SOURCE_DIR}/src/MainOptionsState
-    ${CMAKE_SOURCE_DIR}/src/SplashState
-    ${CMAKE_SOURCE_DIR}/src/CreditsState
-    ${CMAKE_SOURCE_DIR}/src/ResetState
+#    ${CMAKE_SOURCE_DIR}/src/LoadGameState
+#    ${CMAKE_SOURCE_DIR}/src/GameState
+#    ${CMAKE_SOURCE_DIR}/src/GameState/environment
+#    ${CMAKE_SOURCE_DIR}/src/GameState/player
+#    ${CMAKE_SOURCE_DIR}/src/GameState/inventory
+#    ${CMAKE_SOURCE_DIR}/src/GameState/enemies
+#    ${CMAKE_SOURCE_DIR}/src/GameState/enemies/final-boss
+#    ${CMAKE_SOURCE_DIR}/src/GameState/enemies/grunts
+#    ${CMAKE_SOURCE_DIR}/src/GameState/enemies/mid-bosses
+#    ${CMAKE_SOURCE_DIR}/src/GameState/status
+#    ${CMAKE_SOURCE_DIR}/src/img/
+#    ${CMAKE_SOURCE_DIR}/src/AttractState
+#    ${CMAKE_SOURCE_DIR}/src/GameMenuState
+#    ${CMAKE_SOURCE_DIR}/src/DebugMenuState
+#    ${CMAKE_SOURCE_DIR}/src/GameOverState
+#    ${CMAKE_SOURCE_DIR}/src/VictoryState
+#    ${CMAKE_SOURCE_DIR}/src/MainMenuState
+#    ${CMAKE_SOURCE_DIR}/src/MainOptionsState
+#    ${CMAKE_SOURCE_DIR}/src/SplashState
+#    ${CMAKE_SOURCE_DIR}/src/CreditsState
+#    ${CMAKE_SOURCE_DIR}/src/ResetState
     ${CMAKE_BINARY_DIR}/usr/local/include
 )
 
 INCLUDE_DIRECTORIES(
-    ${MODITE_INCLUDE_DIRS}
+    ${EVADE2_INCLUDE_DIRS}
     ${CREATIVE_ENGINE_INCLUDE_DIRS}
 )
 
 # gather Modite sources
-FILE(GLOB_RECURSE MODITE_SRC RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
+FILE(GLOB_RECURSE EVADE2_SRC RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
 
 ADD_EXECUTABLE(
     ${PROJECT_NAME}
     Resources.bin
     ${CREATIVE_ENGINE_SOURCE_FILES}
-    ${MODITE_SRC}
-)
+    ${EVADE2_SRC}
+        creative-engine/src/main.cpp src/GameState/GGameState.cpp src/GameState/GGameState.h src/GameState/GGamePlayfield.cpp src/GameState/GGamePlayfield.h)
 
 ProcessorCount(N)
 if (NOT N EQUAL 0)

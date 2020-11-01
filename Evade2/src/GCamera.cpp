@@ -1,16 +1,16 @@
-#include "Camera.h"
+#include "GCamera.h"
 //
 //
 //
 
 
-TFloat Camera::mX = 0;
-TFloat Camera::mY = 0;
-TFloat Camera::mZ = 0;
+TFloat GCamera::mX = 0;
+TFloat GCamera::mY = 0;
+TFloat GCamera::mZ = 0;
 
-TFloat Camera::mVX = 0;
-TFloat Camera::mVY = 0;
-TFloat Camera::mVZ = CAMERA_VZ;
+TFloat GCamera::mVX = 0;
+TFloat GCamera::mVY = 0;
+TFloat GCamera::mVZ = CAMERA_VZ;
 
 //
 //Camera::Camera() {

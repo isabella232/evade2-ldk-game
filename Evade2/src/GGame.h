@@ -3,7 +3,7 @@
 
 //#include "Game.h"
 #include <BApplication.h>
-#include "GStarFieldProcess.h"
+//#include "GStarFieldProcess.h"
 
 class BGameEngine;
 class BFont;
@@ -34,14 +34,14 @@ public:
   void Run();
 
 public:
-  void SetState(TInt aNewState, TAny *aLocalData = ENull, TUint32 aSize = 0);
+//  void SetState(TInt aNewState, TAny *aLocalData = ENull, TUint32 aSize = 0);
   void StartGame(char *aGameName);
 
   TInt GetState();
 
-  void ToggleInGameMenu();
-  void ToggleInventory();
-  void ToggleDebugMenu();
+//  void ToggleInGameMenu();
+//  void ToggleInventory();
+//  void ToggleDebugMenu();
   TBool IsGameState();
   BGameEngine *CurrentState();
   TUint16 mWave;
@@ -51,14 +51,14 @@ protected:
 protected:
   TInt mState;
   TInt mNextState;
-  TAny *mLocalData;   // arbitrary local data that is passed to SetState.
-  TUint32 mLocalDataSize;
+//  TAny *mLocalData;   // arbitrary local data that is passed to SetState.
+//  TUint32 mLocalDataSize;
   BGameEngine *mGameMenu;
-  BGameEngine *mInventory;
-  BGameEngine *mDebugMenu;
+//  BGameEngine *mInventory;
+//  BGameEngine *mDebugMenu;
   TRGB        mShmoo;
 
-  GStarFieldProcess *mStarField;
+//  GStarFieldProcess *mStarField;
 };
 
 extern GGame *gGame;

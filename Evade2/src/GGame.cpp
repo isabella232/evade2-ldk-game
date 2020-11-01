@@ -1,8 +1,10 @@
 #include "Game.h"
 #include "GGame.h"
-#include "GPlayer.h"
-#include "Camera.h"
+//#include "GPlayer.h"
+#include "GCamera.h"
 #include "GResources.h"
+#include "./GameState/GGameState.h"
+
 static TUint32 start;
 
 BFont *gFont8x8, *gFont16x16;
@@ -21,6 +23,9 @@ TBool GGame::mDebug = EFalse;
  *******************************************************************************/
 
 GGame::GGame() {
+  printf("Construct GGame\n");
+  gGameEngine = new GGameState();
+#if 0
   mLocalData = ENull;
   mLocalDataSize = 0;
 
@@ -74,6 +79,7 @@ GGame::GGame() {
   mShmoo.Set(0, 0, 0);
 
   mStarField = new GStarFieldProcess();
+#endif
 }
 
 GGame::~GGame() {
@@ -82,7 +88,7 @@ GGame::~GGame() {
 #endif
   delete gGameEngine;
   delete gViewPort;
-  delete mGameMenu;
+//  delete mGameMenu;
 }
 
 /*******************************************************************************
@@ -90,15 +96,17 @@ GGame::~GGame() {
  *******************************************************************************/
 
 BGameEngine *GGame::CurrentState() {
+#if 0
   if (gGameEngine->IsPaused()) {
     if (mGameMenu) return mGameMenu;
     else if (mInventory) return mInventory;
     else if (mDebugMenu) return mDebugMenu;
   }
-
+#endif
   return gGameEngine;
 }
 
+#if 0
 void GGame::ToggleInGameMenu() {
   if (GPlayer::mGameOver || mDebugMenu || mInventory) {
     return;
@@ -115,6 +123,9 @@ void GGame::ToggleInGameMenu() {
   gControls.dKeys = 0;
 }
 
+#endif
+
+#if 0
 void GGame::ToggleDebugMenu() {
   if (GPlayer::mGameOver || mGameMenu || mInventory) {
     return;
@@ -130,11 +141,13 @@ void GGame::ToggleDebugMenu() {
   }
   gControls.dKeys = 0;
 }
+#endif
 
 /*******************************************************************************
  *******************************************************************************
  *******************************************************************************/
 
+#if 0
 void GGame::ToggleInventory() {
 //  if (GPlayer::mGameOver || mGameMenu) {
 //    return;
@@ -151,11 +164,13 @@ void GGame::ToggleInventory() {
 //  }
 //  gControls.dKeys = 0;
 }
+#endif
 
 /*******************************************************************************
  *******************************************************************************
  *******************************************************************************/
 
+#if 0
 void GGame::SetState(TInt aNewState, TAny *aLocalData, TUint32 aSize) {
   mNextState = aNewState;
   if (aLocalData) {
@@ -170,12 +185,14 @@ void GGame::SetState(TInt aNewState, TAny *aLocalData, TUint32 aSize) {
     mLocalDataSize = 0;
   }
 }
+#endif
 
 TInt GGame::GetState() {
   return mState;
 }
 
 void GGame::StartGame(char *aGameName) {
+#if 0
 #ifdef DEBUG_MODE
   printf("START GAME (%s)\n", aGameName);
 #endif
@@ -184,6 +201,7 @@ void GGame::StartGame(char *aGameName) {
     aGameName,
     strlen(aGameName)+1
   );
+#endif
 }
 
 TBool GGame::IsGameState() {
@@ -194,8 +212,9 @@ TBool GGame::IsGameState() {
   if (!state) {
     return EFalse;
   }
-  GGameState *s = (GGameState *)gGameEngine;
-  return !s->IsGameOver();
+  return ETrue;
+//  GGameState *s = (GGameState *)gGameEngine;
+//  return !s->IsGameOver();
 }
 
 /*******************************************************************************
@@ -203,6 +222,21 @@ TBool GGame::IsGameState() {
  *******************************************************************************/
 
 void GGame::Run() {
+  printf("run\n");
+  TBool done = EFalse;
+  while (!done) {
+    Random(); // randomize
+    mShmoo.Set(TUint8(mShmoo.r + 16), TUint8(mShmoo.g + 16), TUint8(mShmoo.b + 16));
+    gDisplay.displayBitmap->SetColor(COLOR_SHMOO, mShmoo);
+    GCamera::Move();
+    gGameEngine->GameLoop();
+    gDisplay.Update();
+    if (gControls.WasPressed(BUTTONQ)) {
+      done = ETrue;
+    }
+  }
+
+#if 0
 #ifdef ENABLE_OPTIONS
   TBool muted = gOptions->muted;
 #endif
@@ -337,4 +371,5 @@ void GGame::Run() {
     }
 #endif
   }
+#endif
 }

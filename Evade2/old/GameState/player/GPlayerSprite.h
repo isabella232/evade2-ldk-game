@@ -1,6 +1,7 @@
 #ifndef MODITE_GPLAYERSPRITE_H
 #define MODITE_GPLAYERSPRITE_H
 
+#if 0
 #include "GAnchorSprite.h"
 
 class GPlayerSprite : public GAnchorSprite {
@@ -13,5 +14,6 @@ public:
 public:
   TFloat mSwordCharge;
 };
+#endif
 
 #endif //MODITE_GPLAYERSPRITE_H

@@ -3,6 +3,7 @@
 
 #include "BSprite.h"
 #include "GResources.h"
+#include "Game.h"
 
 struct vec_segment_u8 {
   TInt8 x0;
@@ -40,7 +41,7 @@ public:
 
   TBool Render(BViewPort *aViewPort) OVERRIDE;
 
-  void Animate() OVERRIDE {
+  void Move() OVERRIDE {
     mX += mVX;
     mY += mVY;
     mZ += mVZ;

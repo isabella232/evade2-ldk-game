@@ -4,6 +4,7 @@
 #include "GAnchorSprite.h"
 #include "GGamePlayfield.h"
 
+#if 0
 // constructor
 GAnchorSprite::GAnchorSprite(GGameState *aGameState, TInt aPri, TUint16 aBM, TUint16 aImg, TUint16 aType)
     : BAnimSprite(aPri, aBM, aImg, aType), mName("NO NAME") {
@@ -376,3 +377,4 @@ void GAnchorSprite::Dump() {
   printf("%-16.16s: %d\n", "flags", flags);
   printf("\n");
 }
+#endif
