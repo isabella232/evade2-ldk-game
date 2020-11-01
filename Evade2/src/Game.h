@@ -1,6 +1,8 @@
 #ifndef MODITE_GAME_H
 #define MODITE_GAME_H
 
+#include <BTypes.h>
+
 #define WIDTH 640
 #define HEIGHT 400
 #define SCREEN_WIDTH 320
