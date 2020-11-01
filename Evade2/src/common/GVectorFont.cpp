@@ -10,7 +10,7 @@
 #include "charset.h"
 #include <BTypes.h>
 
-static const TInt8 *const charset[] = {
+const TInt8 *charset[] = {
   ENull, // space
   font_emark,
 #ifdef FULL_CHARSET
@@ -170,36 +170,41 @@ static const TInt8 *const charset[] = {
   ENull, // ``
 };
 
-WORD Font::scale = 0x100;
+GVectorFont::GVectorFont() {
+  scale = 0x100;
+  color = COLOR_TEXT;
+}
 
 #ifdef ENABLE_ROTATING_TEXT
-TInt Font::print_string_rotatedx(TInt8 x, TInt8 y, FLOAT theta, const char *s) {
+TInt8 GVectorFont::print_string_rotatedx(TInt8 x, TInt8 y, TFloat theta, const char *s) {
   theta = float(theta) * 3.1415926 / 180;
-  FLOAT cost = cos(theta),
-        sint = sin(theta);
-  PGM_P p = reinterpret_cast<PGM_P>(ifsh);
+  TFloat cost = cos(theta),
+         sint = sin(theta);
+  const char *p = s;
 
-  FLOAT fscale = FLOAT(scale >> 8) + FLOAT(scale & 0xff) / 256.0;
+  TFloat fscale = TFloat(scale >> 8) + TFloat(scale & 0xff) / 256.0;
 
   const TInt8 size = 9;
 
   TInt8 xo = x;
-  while (char c = pgm_read_byte(p++)) {
-    PGM_P glyph = (PGM_P)pgm_read_word(&charset[toupper(c) - 32]);
+  while (char c = *p++) {
+    const TInt8 *glyph = charset[toupper(c) - 32];
     if (glyph) {
-      TInt8 lines = pgm_read_byte(glyph++);
+      TInt8 lines = *glyph++;
 
       for (TInt8 i = 0; i < lines; i++) {
-        FLOAT x0 = (TInt8)pgm_read_byte(glyph++) * fscale + x,
-              y0 = (TInt8)pgm_read_byte(glyph++) * fscale + y,
-              x1 = (TInt8)pgm_read_byte(glyph++) * fscale + x,
-              y1 = (TInt8)pgm_read_byte(glyph++) * fscale + y;
+        TFloat x0 = (TInt8)*glyph++ * fscale + x,
+               y0 = (TInt8)*glyph++ * fscale + y,
+               x1 = (TInt8)*glyph++ * fscale + x,
+               y1 = (TInt8)*glyph++ * fscale + y;
 
-        Graphics::drawLine(
-            x0,
-            ((y0 - y) * sint + cost + y),
-            x1,
-            ((y1 - y) * sint + cost + y));
+        gDisplay.renderBitmap->DrawLine(
+          gViewPort,
+          x0,
+          ((y0 - y) * sint + cost + y),
+          x1,
+          ((y1 - y) * sint + cost + y),
+          color);
       }
       x += size * fscale;
     }
@@ -211,38 +216,42 @@ TInt Font::print_string_rotatedx(TInt8 x, TInt8 y, FLOAT theta, const char *s) {
 }
 #endif
 
-TInt8 Font::write(TInt8 x, TInt8 y, char c) {
-  PGM_P glyph;
+TInt8 GVectorFont::write(TInt8 x, TInt8 y, char c) {
+  const TInt8 *glyph;
   const TInt8 width = 9;
 
-  FLOAT fscale = FLOAT(scale >> 8) + FLOAT(scale & 0xff) / 256.0;
-  glyph = (PGM_P)pgm_read_word(&charset[toupper(c) - 32]);
+  TFloat fscale = TFloat(scale >> 8) + TFloat(scale & 0xff) / 256.0;
+  glyph = charset[toupper(c) - 32];
   if (glyph) {
-    TInt8 lines = pgm_read_byte(glyph++);
+    TInt8 lines = *glyph++;
 
     for (TInt8 i = 0; i < lines; i++) {
-      TInt8 x0 = pgm_read_byte(glyph++),
-           y0 = pgm_read_byte(glyph++),
-           x1 = pgm_read_byte(glyph++),
-           y1 = pgm_read_byte(glyph++);
+      TInt8 x0 = *glyph++,
+            y0 = *glyph++,
+            x1 = *glyph++,
+            y1 = *glyph++;
 
-      Graphics::drawLine(x + x0 * fscale, y + y0 * fscale, x + x1 * fscale, y + y1 * fscale);
+      gDisplay.renderBitmap->DrawLine(
+        gViewPort,
+        x + x0 * fscale, y + y0 * fscale,
+        x + x1 * fscale, y + y1 * fscale,
+        color);
     }
   }
   return width * fscale;
 }
 
-TInt8 Font::print_string(TInt8 x, TInt8 y, char *s) {
+TInt8 GVectorFont::print_string(TInt8 x, TInt8 y, char *s) {
   TInt8 xx = x;
   while (char c = *s++) {
-    TInt8 width = Font::write(x, y, c);
+    TInt8 width = write(x, y, c);
     x += width;
   }
   return x - xx; // width of string printed
 }
 
-TInt8 Font::print_long(TInt8 x, TInt8 y, LONG n, TInt8 base) {
-  char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
+TInt8 GVectorFont::print_long(TInt8 x, TInt8 y, TInt64 n, TInt8 base) {
+  char buf[8 * sizeof(TInt64) + 1]; // Assumes 8-bit chars plus zero byte.
   char *str = &buf[sizeof(buf) - 1];
 
   *str = '\0';
@@ -261,8 +270,8 @@ TInt8 Font::print_long(TInt8 x, TInt8 y, LONG n, TInt8 base) {
   return print_string(x, y, str);
 }
 
-#ifdef PRINTF_FLOAT
-TInt8 Font::print_float(TInt8 x, TInt8 y, double number, TInt8 digits) {
+#ifdef PRINTF_TFloat
+TInt8 GVectorFont::print_float(TInt8 x, TInt8 y, double number, TInt8 digits) {
   TInt8 xx = x;
   if (isnan(number)) {
     x += write(x, y, 'n');
@@ -318,23 +327,23 @@ TInt8 Font::print_float(TInt8 x, TInt8 y, double number, TInt8 digits) {
 }
 #endif
 
-TInt8 Font::_printf(TInt8 x, TInt8 y, const char *s, ...) {
+TInt8 GVectorFont::printf(TInt8 x, TInt8 y, const char *s, ...) {
   va_list ap;
   TInt8 xx = x;
   char c;
-  PGM_P p = reinterpret_cast<PGM_P>(ifsh);
-  va_start(ap, ifsh);
+  const char *p = s;
+  va_start(ap, s);
 
-  while (c = pgm_read_byte(p++)) {
+  while ((c = *p++)) {
     if (c == '%') {
-      c = pgm_read_byte(p++);
+      c = *p++;
       switch (c) {
         case '\0':
           va_end(ap);
           return x - xx;
-#ifdef PRINTF_FLOAT
+#ifdef PRINTF_TFloat
         case '%':
-          x += Font::write(x, y, '%');
+          x += write(x, y, '%');
           break;
         case 'f':
           x += print_float(x, y, va_arg(ap, double));
@@ -343,7 +352,7 @@ TInt8 Font::_printf(TInt8 x, TInt8 y, const char *s, ...) {
         case 'd':
           x += print_long(x, y, (unsigned long)va_arg(ap, int));
           break;
-#ifdef PRINTF_FLOAT
+#ifdef PRINTF_TFloat
         case 'x':
           x += print_long(x, y, (unsigned long)va_arg(ap, int) & 0xffff, 16);
           break;
@@ -352,12 +361,12 @@ TInt8 Font::_printf(TInt8 x, TInt8 y, const char *s, ...) {
           break;
 #endif
         default:
-          x += Font::write(x, y, c);
+          x += write(x, y, c);
           break;
       }
     }
     else {
-      x += Font::write(x, y, c);
+      x += write(x, y, c);
     }
   }
   va_end(ap);

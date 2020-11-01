@@ -27,6 +27,7 @@ INCLUDE(${CMAKE_CURRENT_SOURCE_DIR}/creative-engine/CreativeEngine.cmake)
 SET(EVADE2_INCLUDE_DIRS
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/resources
+    ${CMAKE_SOURCE_DIR}/src/common
 #    ${CMAKE_SOURCE_DIR}/src/LoadGameState
 #    ${CMAKE_SOURCE_DIR}/src/GameState
 #    ${CMAKE_SOURCE_DIR}/src/GameState/environment

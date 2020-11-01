@@ -10,6 +10,7 @@
 #define SCREEN_DEPTH 8
 
 const float CAMERA_VZ = 4;
+const float DELTACONTROL = 11;
 
 #define FRAME_RATE_INFO 0
 #undef FRAME_RATE_INFO
@@ -49,6 +50,7 @@ const float CAMERA_VZ = 4;
 //const TUint16 FACTOR = FRAMES_PER_SECOND / 30;
 
 #include "GResources.h"
+#include "common/GVectorFont.h"
 #include "GGame.h"
 //#include "common/GDialogWidget.h"
 //#include "common/GButtonWidget.h"
@@ -80,10 +82,10 @@ const TUint16 CONTROL_JOYDOWN = JOYDOWN;
 const TUint16 CONTROL_JOYLEFT = JOYLEFT;
 const TUint16 CONTROL_JOYRIGHT = JOYRIGHT;
 const TUint16 CONTROL_FIRE = BUTTONA;
-const TUint16 CONTROL_RUN = BUTTONB;
-const TUint16 CONTROL_SPELL = BUTTONX;
-const TUint16 CONTROL_INVENTORY = BUTTONR;
-const TUint16 CONTROL_TARGET = BUTTONL;
+const TUint16 CONTROL_BURST = BUTTONB;
+/* const TUint16 CONTROL_SPELL = BUTTONX; */
+/* const TUint16 CONTROL_INVENTORY = BUTTONR; */
+/* const TUint16 CONTROL_TARGET = BUTTONL; */
 const TUint16 CONTROL_DEBUG = BUTTON_SELECT;
 
 struct EnemyConfig {
