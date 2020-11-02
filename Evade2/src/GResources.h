@@ -122,11 +122,12 @@ const TUint8 COLOR_SPACE = 215;
 const TUint8 SHMOO_COLOR = 216;
 const TUint8 BULLET_COLOR = 217;
 const TUint8 EBULLET_COLOR = 218;
-const TUint8 BOSS_COLOR = 219;
-const TUint8 ASSAULT_COLOR = 220;
-const TUint8 BOMBER_COLOR = 221;
-const TUint8 SCOUT_COLOR = 222;
-const TUint8 STAR_COLOR = 223;
+const TUint8 BOMB_COLOR = 219;
+const TUint8 BOSS_COLOR = 220;
+const TUint8 ASSAULT_COLOR = 221;
+const TUint8 BOMBER_COLOR = 222;
+const TUint8 SCOUT_COLOR = 223;
+const TUint8 STAR_COLOR = 224;
 
 #define MAX_BBITMAP 5
 

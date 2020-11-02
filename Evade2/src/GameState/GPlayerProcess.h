@@ -7,7 +7,6 @@
 #define PLAYER_FLAG_ALT (1 << 1)
 
 #include "Game.h"
-#include <BProcess.h>
 
 class GPlayerProcess : public BProcess {
 public:
@@ -16,9 +15,11 @@ public:
 public:
   TInt8 power;
   TInt8 shield;
-  TInt8 num_bullets;
-  TUint8 flags;
+  TInt8 mNumBullets;
+//  TUint8 flags;
   TUint8 color;
+  TBool mAlt;
+  TBool mHit;
 
 public:
   void recharge_shield();
@@ -29,11 +30,12 @@ public:
   void DrawLine(TFloat x1, TFloat y1, TFloat x2, TFloat y2);
 
 protected:
-  void drawMeter(TInt8 side, TInt8 value);
+  void DrawMeter(TInt8 side, TInt8 value);
   void DrawBitmap(TInt16 x, TInt16 y, const TUint8 *bitmap, TUint8 w, TUint8 h, TUint8 color = COLOR_WHITE);
 
 public:
-  TBool RunBefore();
-  TBool RunAfter();
+  TBool RunBefore() OVERRIDE;
+  TBool RunAfter() OVERRIDE;
 };
+
 #endif

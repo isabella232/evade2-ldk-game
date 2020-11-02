@@ -65,7 +65,7 @@ ADD_EXECUTABLE(
     Resources.bin
     ${CREATIVE_ENGINE_SOURCE_FILES}
     ${EVADE2_SRC}
-        creative-engine/src/main.cpp src/GameState/GGameState.cpp src/GameState/GGameState.h src/GameState/GGamePlayfield.cpp src/GameState/GGamePlayfield.h)
+        src/GameState/GGameState.cpp src/GameState/GGameState.h src/GameState/GGamePlayfield.cpp src/GameState/GGamePlayfield.h src/GameState/GPlayerBulletProcess.cpp src/GameState/GPlayerBulletProcess.h src/main.cpp src/GameState/GEnemyProcess.cpp src/GameState/GEnemyProcess.h src/GameState/GEnemyBulletProcess.cpp src/GameState/GEnemyBulletProcess.h)
 
 ProcessorCount(N)
 if (NOT N EQUAL 0)

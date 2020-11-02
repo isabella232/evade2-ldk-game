@@ -7,13 +7,17 @@
 
 #include <BGameEngine.h>
 
+class GPlayerProcess;
+
 class GGameState : public BGameEngine {
 public:
   GGameState();
   ~GGameState();
 public:
 //  void GameLoop() OVERRIDE;
+  GPlayerProcess *mPlayerProcess;
 };
 
+extern GGameState *gGameState;
 
 #endif //EVADE2_GGAMESTATE_H

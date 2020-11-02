@@ -6,19 +6,19 @@
 
 class GCamera {
 public:
-  static TFloat mX, mY, mZ;
-  static TFloat mVX, mVY, mVZ;
+  static TFloat x,y,z;
+  static TFloat vx,vy,vz;
 
 public:
   static void Move() {
-    GCamera::mX += GCamera::mVX;
-    GCamera::mY += GCamera::mVY;
-    GCamera::mZ += GCamera::mVZ;
+    GCamera::x += GCamera::vx;
+    GCamera::y += GCamera::vy;
+    GCamera::z += GCamera::vz;
   }
 
   static TBool CollidesWith(GVectorSprite *aVSprite) {
     // If enemy bullet collides with player
-    if (abs(aVSprite->mZ - GCamera::mZ) < abs(aVSprite->mVZ) && abs(aVSprite->mX - GCamera::mX) < 64 && abs(aVSprite->mY - GCamera::mY) < 64) {
+    if (abs(aVSprite->z - GCamera::z) < abs(aVSprite->vz) && abs(aVSprite->x - GCamera::x) < 64 && abs(aVSprite->y - GCamera::y) < 64) {
       return ETrue;
     }
     return EFalse;

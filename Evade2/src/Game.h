@@ -5,12 +5,16 @@
 
 #define WIDTH 640
 #define HEIGHT 400
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 200
-#define SCREEN_DEPTH 8
+//#define SCREEN_WIDTH 320
+//#define SCREEN_HEIGHT 200
+//#define SCREEN_DEPTH 8
 
-const float CAMERA_VZ = 4;
-const float DELTACONTROL = 11;
+const TFloat CAMERA_VZ = 4;
+const TFloat DELTACONTROL = 11;
+const TInt8 MAX_BULLETS = 6;
+
+#define BANK_LEFT TUint32(1<<OFLAG_USER_BIT)
+#define ORBIT_LEFT TUint32(1<<(OFLAG_USER_BIT+1))
 
 #define FRAME_RATE_INFO 0
 #undef FRAME_RATE_INFO
@@ -37,7 +41,7 @@ const float DELTACONTROL = 11;
 #endif
 
 #ifndef RADIANS
-#define RADIANS(degrees) (FLOAT(degrees) * PI / 180)
+#define RADIANS(degrees) (TFloat(degrees) * PI / 180)
 #endif
 
 #include <stdio.h>

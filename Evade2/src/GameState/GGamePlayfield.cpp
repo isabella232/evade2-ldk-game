@@ -17,7 +17,7 @@ GGamePlayfield::~GGamePlayfield() noexcept {
 
 void GGamePlayfield::Render() {
   gDisplay.renderBitmap->Clear(0);
-  TFloat cz = GCamera::mZ,
+  TFloat cz = GCamera::z,
          sw = TFloat(SCREEN_WIDTH),
          sh = TFloat(SCREEN_HEIGHT);
 
@@ -29,8 +29,8 @@ void GGamePlayfield::Render() {
     }
     TFloat ratioX = sw / (zz + sw);
     TFloat ratioY = sh / (zz + sh);
-    TFloat x      = (sw / 2) - (mStarX[i] - GCamera::mX) * ratioX;
-    TFloat y      = (sh / 2) - (mStarY[i] - GCamera::mY) * ratioY;
+    TFloat x      = (sw / 2) - (mStarX[i] - GCamera::x) * ratioX;
+    TFloat y      = (sh / 2) - (mStarY[i] - GCamera::y) * ratioY;
 
     if (x < 0) {
 //      printf("InitStar x %f < 0\n", x);
@@ -51,8 +51,7 @@ void GGamePlayfield::Render() {
 }
 
 void GGamePlayfield::InitStar(TInt aIndex) {
-  mStarX[aIndex] = 256 - Random(0, 512) + GCamera::mX;
-  mStarY[aIndex] = 256 - Random(0, 512) + GCamera::mY;
-  mStarZ[aIndex] = GCamera::mZ + Random(200, 512);
-
+  mStarX[aIndex] = TFloat(256) - Random(0, 512) + GCamera::x;
+  mStarY[aIndex] = TFloat(256) - Random(0, 512) + GCamera::y;
+  mStarZ[aIndex] = GCamera::z + Random(200, 512);
 }

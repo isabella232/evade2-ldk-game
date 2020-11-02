@@ -6,6 +6,7 @@
 //#include "GStarFieldProcess.h"
 
 class BGameEngine;
+
 class BFont;
 
 enum {
@@ -39,30 +40,26 @@ public:
 
   TInt GetState();
 
-//  void ToggleInGameMenu();
-//  void ToggleInventory();
-//  void ToggleDebugMenu();
   TBool IsGameState();
+
   BGameEngine *CurrentState();
+
   TUint16 mWave;
+  TUint16 mKills;
+  TUint8 mDifficulty;
 
   static TBool mDebug;
 protected:
-protected:
-  TInt mState;
-  TInt mNextState;
-//  TAny *mLocalData;   // arbitrary local data that is passed to SetState.
-//  TUint32 mLocalDataSize;
+  TInt        mState;
+  TInt        mNextState;
   BGameEngine *mGameMenu;
-//  BGameEngine *mInventory;
-//  BGameEngine *mDebugMenu;
   TRGB        mShmoo;
 
 //  GStarFieldProcess *mStarField;
 };
 
-extern GGame *gGame;
+extern GGame       *gGame;
 extern BGameEngine *gGameEngine;
-extern BFont *gFont8x8, *gFont16x16;
+extern BFont       *gFont8x8, *gFont16x16;
 
 #endif //BRICKOUT_GGAME_H

@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "GGame.h"
 //#include "GPlayer.h"
-#include "GCamera.h"
+#include "GameState/GCamera.h"
 #include "GResources.h"
 #include "./GameState/GGameState.h"
 
@@ -24,7 +24,8 @@ TBool GGame::mDebug = EFalse;
 
 GGame::GGame() {
   printf("Construct GGame\n");
-  gGameEngine = new GGameState();
+  mDifficulty = 1;
+  mState = GAME_STATE_GAME;
 #if 0
   mLocalData = ENull;
   mLocalDataSize = 0;
@@ -223,6 +224,7 @@ TBool GGame::IsGameState() {
 
 void GGame::Run() {
   printf("run\n");
+  gGameEngine = new GGameState();
   TBool done = EFalse;
   while (!done) {
     Random(); // randomize

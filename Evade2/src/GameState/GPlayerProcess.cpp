@@ -5,7 +5,7 @@
 
 #include "Game.h"
 #include "GCamera.h"
-
+#include "GPlayerBulletProcess.h"
 #include "img/hud_console_img.h"
 
 //TODO: Put in own files
@@ -25,11 +25,14 @@ const TUint8 crosshair_right_4x8[] = {
 #define MAX_LIFE 100
 
 GPlayerProcess::GPlayerProcess() {
-  GCamera::mVZ = CAMERA_VZ;
-  power = MAX_POWER;
-  shield = MAX_LIFE;
-  num_bullets = 0;
-  flags = 0;
+  color        = COLOR_WHITE;
+  GCamera::vz = CAMERA_VZ;
+  power        = MAX_POWER;
+  shield       = MAX_LIFE;
+  mNumBullets  = 0;
+  mAlt         = EFalse;
+  mHit         = EFalse;
+  printf("screen %d,%d\n", gDisplay.renderBitmap->Width(), gDisplay.renderBitmap->Height());
 }
 
 void GPlayerProcess::DrawPixel(TFloat x, TFloat y) {
@@ -41,7 +44,7 @@ void GPlayerProcess::DrawLine(TFloat x1, TFloat y1, TFloat x2, TFloat y2) {
 }
 
 void GPlayerProcess::DrawBitmap(TInt16 x, TInt16 y, const TUint8 *bitmap, TUint8 w, TUint8 h, TUint8 color) {
-  #if 0
+#if 0
   // no need to draw at all if we're offscreen
   if (x + w < 0 || x > WIDTH - 1 || y + h < 0 || y > HEIGHT - 1)
     return;
@@ -86,16 +89,15 @@ void GPlayerProcess::DrawBitmap(TInt16 x, TInt16 y, const TUint8 *bitmap, TUint8
       }
     }
   }
-  #endif
+#endif
 }
 
 void GPlayerProcess::hit(TInt8 amount) {
   shield -= amount;
   if (shield <= 0) {
     // ProcessManager::birth(GameOver::entry);
-  }
-  else {
-    flags |= PLAYER_FLAG_HIT;
+  } else {
+    mHit = ETrue;
     // Sound::play_sound(SFX_PLAYER_HIT_BY_ENEMY);
   }
 }
@@ -113,40 +115,43 @@ void GPlayerProcess::recharge_power() {
 }
 
 TBool GPlayerProcess::RunBefore() {
-  if (gGame->GetState() == GAME_STATE_GAME) {
+  if (gGame->GetState() != GAME_STATE_GAME) {
     // if (game_mode != MODE_GAME) {
-    GCamera::mVX = GCamera::mVY = 0;
+    GCamera::vx = GCamera::vy = 0;
     return ETrue;
   }
 
   if (gControls.WasPressed(CONTROL_FIRE)) {
-    TInt8 deltaX = 0,
-          deltaY = 0;
+    if (mNumBullets < MAX_BULLETS) {
 
-    deltaX = gControls.IsPressed(CONTROL_JOYRIGHT) ? -12 : deltaX;
-    deltaX = gControls.IsPressed(CONTROL_JOYLEFT) ? 12 : deltaX;
+      TInt8 deltaX = 0,
+            deltaY = 0;
 
-    deltaY = gControls.IsPressed(CONTROL_JOYUP) ? -11 : deltaY;
-    deltaY = gControls.IsPressed(CONTROL_JOYDOWN) ? 13 : deltaY;
+      deltaX = gControls.IsPressed(CONTROL_JOYRIGHT) ? -12 : deltaX;
+      deltaX = gControls.IsPressed(CONTROL_JOYLEFT) ? 12 : deltaX;
 
-    // Bullet::fire(deltaX, deltaY, Player::flags & PLAYER_FLAG_ALT);
-    flags ^= PLAYER_FLAG_ALT;
+      deltaY = gControls.IsPressed(CONTROL_JOYUP) ? -11 : deltaY;
+      deltaY = gControls.IsPressed(CONTROL_JOYDOWN) ? 13 : deltaY;
+
+
+      gGameEngine->AddProcess(new GPlayerBulletProcess(deltaX, deltaY, mAlt));
+
+      mAlt = !mAlt;
+    }
   }
 
   if (gControls.IsPressed(CONTROL_BURST)) {
     if (power > 0) {
-      GCamera::mVZ = CAMERA_VZ * 2;
+      GCamera::vz = CAMERA_VZ * 2;
       power--;
       if (power < 0) {
         power = 0;
       }
+    } else {
+      GCamera::vz = CAMERA_VZ;
     }
-    else {
-      GCamera::mVZ = CAMERA_VZ;
-    }
-  }
-  else {
-    GCamera::mVZ = CAMERA_VZ;
+  } else {
+    GCamera::vz = CAMERA_VZ;
     power++;
     if (power > MAX_POWER) {
       power = MAX_POWER;
@@ -154,23 +159,19 @@ TBool GPlayerProcess::RunBefore() {
   }
 
   if (gControls.IsPressed(CONTROL_JOYRIGHT)) {
-    GCamera::mVX = -DELTACONTROL;
-  }
-  else if (gControls.IsPressed(CONTROL_JOYLEFT)) {
-    GCamera::mVX = DELTACONTROL;
-  }
-  else {
-    GCamera::mVX = 0;
+    GCamera::vx = -DELTACONTROL;
+  } else if (gControls.IsPressed(CONTROL_JOYLEFT)) {
+    GCamera::vx = DELTACONTROL;
+  } else {
+    GCamera::vx = 0;
   }
 
   if (gControls.IsPressed(CONTROL_JOYDOWN)) {
-    GCamera::mVY = DELTACONTROL;
-  }
-  else if (gControls.IsPressed(CONTROL_JOYUP)) {
-    GCamera::mVY = -DELTACONTROL;
-  }
-  else {
-    GCamera::mVY = 0;
+    GCamera::vy = DELTACONTROL;
+  } else if (gControls.IsPressed(CONTROL_JOYUP)) {
+    GCamera::vy = -DELTACONTROL;
+  } else {
+    GCamera::vy = 0;
   }
   return ETrue;
 }
@@ -182,7 +183,7 @@ TBool GPlayerProcess::RunBefore() {
 #ifdef ENABLE_HUD_MOVEMENTS
 
 // 13 == full. Anything less, and we draw "less meter"
-static void drawMeter(TInt8 side, TInt8 value, TInt8 deltaXMeter, TInt8 deltaYMeter) {
+void DrawMeter(TInt8 side, TInt8 value, TInt8 deltaXMeter, TInt8 deltaYMeter) {
 
   //start at X:14
   // Draw 2 lines, skip one line, iterate 13 total times
@@ -223,7 +224,7 @@ static void drawMeter(TInt8 side, TInt8 value, TInt8 deltaXMeter, TInt8 deltaYMe
 #else
 
 // 13 == full. Anything less, and we draw "less meter"
-void GPlayerProcess::drawMeter(TInt8 side, TInt8 value) {
+void GPlayerProcess::DrawMeter(TInt8 side, TInt8 value) {
 
   //start at X:14
   // Draw 2 lines, skip one line, iterate 13 total times
@@ -238,23 +239,20 @@ void GPlayerProcess::drawMeter(TInt8 side, TInt8 value) {
       if (i >= value) {
         DrawPixel(0, y);
         DrawPixel(0, y + 1);
-      }
-      else {
+      } else {
         DrawLine(0, y, 2, y);
         DrawLine(0, y + 1, 3, y + 1);
       }
       y -= 3;
     }
-  }
-  else { // RIGHT
+  } else { // RIGHT
     for (TInt8 i = 0; i < 10; i++) {
       if (i >= value) {
-        DrawPixel(127, y);
-        DrawPixel(127, y + 1);
-      }
-      else {
-        DrawLine(126, y, 128, y);
-        DrawLine(125, y + 1, 128, y + 1);
+        DrawPixel(SCREEN_WIDTH-1, y);
+        DrawPixel(SCREEN_WIDTH-1, y + 1);
+      } else {
+        DrawLine(SCREEN_WIDTH-2, y, SCREEN_WIDTH, y);
+        DrawLine(SCREEN_WIDTH-3, y + 1, SCREEN_WIDTH, y + 1);
       }
       y -= 3;
     }
@@ -264,9 +262,12 @@ void GPlayerProcess::drawMeter(TInt8 side, TInt8 value) {
 #endif // #if ENABLE_HUD_MOVEMENTS
 
 TBool GPlayerProcess::RunAfter() {
-  // TODO: swap background black -> white -> black
-  // arduboy.invert(flags & PLAYER_FLAG_HIT);
-  flags &= ~PLAYER_FLAG_HIT;
+  if (mHit) {
+    gDisplay.SetColor(0, 255, 255, 255);
+  } else {
+    gDisplay.SetColor(0, 0, 0, 0);
+  }
+  mHit = EFalse;
 
 #ifdef ENABLE_HUD_MOVEMENTS
   TInt8 consoleX = 40,
@@ -311,14 +312,15 @@ TBool GPlayerProcess::RunAfter() {
   DrawBitmap(53 + deltaXCrossHairs, 30 + deltaYCrossHairs, crosshair_left_4x8, 4, 8);
   DrawBitmap(72 + deltaXCrossHairs, 30 + deltaYCrossHairs, crosshair_right_4x8, 4, 8);
 
-  drawMeter(0, shield, deltaXMeter, deltaYMeter);
-  drawMeter(1, power, deltaXMeter, deltaYMeter);
+  DrawMeter(0, shield, deltaXMeter, deltaYMeter);
+  DrawMeter(1, power, deltaXMeter, deltaYMeter);
 
 #else
   DrawBitmap(40, 58, hud_console_img, 0x30, 0x08);
 
-  drawMeter(0, shield);
-  drawMeter(1, power);
+  DrawMeter(0, shield);
+  DrawMeter(1, power);
 #endif
+
   return ETrue;
 }

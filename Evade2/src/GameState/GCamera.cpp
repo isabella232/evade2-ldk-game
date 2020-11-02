@@ -4,13 +4,13 @@
 //
 
 
-TFloat GCamera::mX = 0;
-TFloat GCamera::mY = 0;
-TFloat GCamera::mZ = 0;
+TFloat GCamera::x = 0;
+TFloat GCamera::y = 0;
+TFloat GCamera::z = 0;
 
-TFloat GCamera::mVX = 0;
-TFloat GCamera::mVY = 0;
-TFloat GCamera::mVZ = CAMERA_VZ;
+TFloat GCamera::vx = 0;
+TFloat GCamera::vy = 0;
+TFloat GCamera::vz = CAMERA_VZ;
 
 //
 //Camera::Camera() {

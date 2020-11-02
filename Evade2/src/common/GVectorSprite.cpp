@@ -1,9 +1,9 @@
 #include "GVectorSprite.h"
-#include "GCamera.h"
+#include "GameState/GCamera.h"
 
 
 TBool GVectorSprite::ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat y,
-                           TFloat theta, TFloat scaleFactor, TInt8 step, TUint8 color) {
+                                          TFloat theta, TFloat scaleFactor, TInt8 step, TUint8 color) {
   graphic += 2;
   TBool drawn = false;
 
@@ -13,7 +13,7 @@ TBool GVectorSprite::ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat
 
   for (TInt8 i = 0; i < numRows; i++) {
     struct vec_segment_u8 seg;
-    TFloat x0, y0, x1, y1;
+    TFloat                x0, y0, x1, y1;
 
     memcpy(&seg, graphic, sizeof(seg));
     graphic += sizeof(seg);
@@ -38,16 +38,15 @@ TBool GVectorSprite::ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat
     }
 
 
-
     TInt16 drawX1 = x0 * cost - y0 * sint + x,
-        drawY1 = y0 * cost + x0 * sint + y,
-        drawX2 = x1 * cost - y1 * sint + x,
-        drawY2 = y1 * cost + x1 * sint + y;
+           drawY1 = y0 * cost + x0 * sint + y,
+           drawX2 = x1 * cost - y1 * sint + x,
+           drawY2 = y1 * cost + x1 * sint + y;
 
     TBool xInBounds = (drawX1 >= 0) && (drawX1 <= DISPLAY_WIDTH) && (drawY1 >= 0) && (drawY1 < DISPLAY_HEIGHT),
-        yInBounds = (drawX2 >= 0) && (drawX2 <= DISPLAY_WIDTH) && (drawY2 >= 0) && (drawY2 < DISPLAY_HEIGHT);
+          yInBounds = (drawX2 >= 0) && (drawX2 <= DISPLAY_WIDTH) && (drawY2 >= 0) && (drawY2 < DISPLAY_HEIGHT);
 
-    if ((! xInBounds) && !(yInBounds)) {
+    if ((!xInBounds) && !(yInBounds)) {
       continue;
     }
 
@@ -65,40 +64,41 @@ TBool GVectorSprite::ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat
 }
 
 TBool GVectorSprite::Render(BViewPort *aViewPort) {
-  if (!mLines || mZ <= GCamera::mZ) {
+  if (!mLines || z <= GCamera::z) {
     // nothing to draw
     return EFalse;
   }
 
-  TFloat zz = (mZ - GCamera::mZ) * 2;
+  TFloat zz    = (z - GCamera::z) * 2;
   TFloat ratio = 128 / (zz + 128);
+  TFloat sw    = TFloat(SCREEN_WIDTH),
+         sh    = TFloat(SCREEN_HEIGHT);
 
-  bool isEnemy = Type() == OTYPE_ENEMY;
+  bool   isEnemy = Type() == OTYPE_ENEMY;
   // printf("is enemy = %i\n", isEnemy);
-  TFloat cx = (GCamera::mX - mX) * ratio + SCREEN_WIDTH / 2;
-  TFloat cy = (GCamera::mY - mY) * ratio + SCREEN_HEIGHT / 2;
+  TFloat cx      = (GCamera::x - x) * ratio + sw / 2;
+  TFloat cy      = (GCamera::y - y) * ratio + sh / 2;
 
   // uint8_t color = isEnemy ? 5 : 255;
 
   if (flags & OFLAG_EXPLODE) {
     ExplodeVectorGraphic(mLines, cx, cy, mTheta, 1 / ratio, mState, this->mColor);
-  }
-  else {
+  } else {
     bool drawn = DrawVectorGraphic(mLines, cx, cy, mTheta, 1 / ratio, this->mColor);
     if ((!drawn) && isEnemy) {
 
       // draw radar blip
-      TFloat dx = GCamera::mX - mX,
-          dy = GCamera::mY - mY,
-          angle = atan2(dy, dx);
+      TFloat dx    = GCamera::x - x,
+             dy    = GCamera::y - y,
+             angle = atan2(dy, dx);
 
 //          printf("TODO: Fill Circle for enemy radar\n");
-        aViewPort->FillCircle(gDisplay.renderBitmap,
-            (int16_t)(SCREEN_WIDTH / 2 + cos(angle) * 75),
-            (int16_t)(SCREEN_HEIGHT / 2 + sin(angle) * 75),
-            3,
-            EBULLET_COLOR
-        );
+      aViewPort->FillCircle(gDisplay.renderBitmap,
+                            (int16_t) (sw / 2 + cos(angle) * 75),
+                            (int16_t) (sh / 2 + sin(angle) * 75),
+                            3,
+                            mColor
+      );
 
     }
   }
@@ -107,6 +107,6 @@ TBool GVectorSprite::Render(BViewPort *aViewPort) {
 }
 
 
-TBool GVectorSprite::BehindCamera()  {
-  return mZ <= GCamera::mZ;
+TBool GVectorSprite::BehindCamera() {
+  return z <= GCamera::z;
 }
