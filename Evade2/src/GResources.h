@@ -95,8 +95,7 @@ const TUint8 COLOR_BLACK = 0;
 const TUint8 COLOR_WHITE = 1;
 const TUint8 COLOR_TEXT = 2;
 const TUint8 COLOR_STAR = 3;
-const TUint8 COLOR_ENEMY1 = 4;
-const TUint8 COLOR_SHMOO = 255;
+const TUint8 COLOR_HUD = 4;
 
 const TUint8 COLOR_BLUE = 201;
 const TUint8 COLOR_GREEN = 202;
@@ -113,6 +112,7 @@ const TUint8 COLOR_BRIGHT_RED = 212;
 const TUint8 COLOR_BRIGHT_MAGENTA = 213;
 const TUint8 COLOR_YELLOW = 214;
 const TUint8 COLOR_SPACE = 215;
+const TUint8 COLOR_SHMOO = 255;
 
 
 

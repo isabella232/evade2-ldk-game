@@ -1,6 +1,12 @@
 #include "GVectorSprite.h"
 #include "GameState/GCamera.h"
 
+void GVectorSprite::SetLines(const TInt8 *aLines) {
+  mLines = aLines;
+  auto *p = (const TUint16 *) mLines;
+  w = p[0];
+  h = p[1];
+}
 
 TBool GVectorSprite::ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat y,
                                           TFloat theta, TFloat scaleFactor, TInt8 step, TUint8 color) {
@@ -63,6 +69,14 @@ TBool GVectorSprite::ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat
   return drawn;
 }
 
+static TFloat square(TFloat f) {
+  return f * f;
+}
+
+TFloat GVectorSprite::DistanceTo(GVectorSprite *aOther) {
+  return sqrt(square(aOther->x - x) + square(aOther->y - y) + square(aOther->z - z));
+};
+
 TBool GVectorSprite::Render(BViewPort *aViewPort) {
   if (!mLines || z <= GCamera::z) {
     // nothing to draw
@@ -74,7 +88,7 @@ TBool GVectorSprite::Render(BViewPort *aViewPort) {
   TFloat sw    = TFloat(SCREEN_WIDTH),
          sh    = TFloat(SCREEN_HEIGHT);
 
-  bool   isEnemy = Type() == OTYPE_ENEMY;
+  bool   isEnemy = type == STYPE_ENEMY;
   // printf("is enemy = %i\n", isEnemy);
   TFloat cx      = (GCamera::x - x) * ratio + sw / 2;
   TFloat cy      = (GCamera::y - y) * ratio + sh / 2;
@@ -90,14 +104,21 @@ TBool GVectorSprite::Render(BViewPort *aViewPort) {
       // draw radar blip
       TFloat dx    = GCamera::x - x,
              dy    = GCamera::y - y,
-             angle = atan2(dy, dx);
+             angle = atan2(dy, dx),
+             midx  = sw / 2,
+             midy  = sh / 2,
+             cxx    = midx + cos(angle) * (midx - 10),
+             cyy    = midy + sin(angle) * (midy - 10);
 
 //          printf("TODO: Fill Circle for enemy radar\n");
+
+//      printf("Angle: %f, x: %f, y: %f, cx,cy: %f,%f\n", angle, x, y, cx, cy);
       aViewPort->FillCircle(gDisplay.renderBitmap,
-                            (int16_t) (sw / 2 + cos(angle) * 75),
-                            (int16_t) (sh / 2 + sin(angle) * 75),
-                            3,
-                            mColor
+                            (TInt16) cxx,
+                            (TInt16) cyy,
+                            4,
+                            COLOR_SHMOO
+//                            mColor
       );
 
     }

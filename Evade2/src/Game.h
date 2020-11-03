@@ -9,10 +9,13 @@
 //#define SCREEN_HEIGHT 200
 //#define SCREEN_DEPTH 8
 
-const TFloat CAMERA_VZ = 4;
-const TFloat DELTACONTROL = 11;
+const TFloat CAMERA_VZ = 2; // 4;
+const TFloat DELTACONTROL = 6; // 11;
 const TInt8 MAX_BULLETS = 6;
+const TFloat BULLET_VZ = 8; // 15;
 
+// COLLISION_RADIUS = distance from player bullet to enemy required for a hit
+const TFloat COLLISION_RADIUS = 64;
 #define BANK_LEFT TUint32(1<<OFLAG_USER_BIT)
 #define ORBIT_LEFT TUint32(1<<(OFLAG_USER_BIT+1))
 
@@ -27,6 +30,9 @@ const TInt8 MAX_BULLETS = 6;
 
 #define ENABLE_OPTIONS
 // #undef ENABLE_OPTIONS
+
+#define ENABLE_HUD_MOVEMENTS
+// #undef ENABLE_HUD_MOVEMENTS
 
 // Debug mode
 #define DEBUG_MODE
@@ -105,19 +111,19 @@ struct EnemyConfig {
   TInt16 mVZ;
 };
 
-const TUint16 OFLAG_TYPE_MASK = 0x07;
-// Object is an enemy
-const TUint16 OTYPE_ENEMY = 0;
-// Object is player's bullet
-const TUint16 OTYPE_PLAYER_BULLET = 1;
-// Object is enemy bullet
-const TUint16 OTYPE_ENEMY_BULLET = 2;
-// STRING means lines is a character string to be rendered in 3D
-const TUint16 OTYPE_STRING = 3;
-const TUint16 OTYPE_ASTEROID = 4;
-// MOON means lines is ignored and a circle is rendered, as in a moon or planet
-// theta becomes radius
-const TUint16 OTYPE_MOON = 5;
+//const TUint16 OFLAG_TYPE_MASK = 0x07;
+//// Object is an enemy
+//const TUint16 OTYPE_ENEMY = 0;
+//// Object is player's bullet
+//const TUint16 OTYPE_PLAYER_BULLET = 1;
+//// Object is enemy bullet
+//const TUint16 OTYPE_ENEMY_BULLET = 2;
+//// STRING means lines is a character string to be rendered in 3D
+//const TUint16 OTYPE_STRING = 3;
+//const TUint16 OTYPE_ASTEROID = 4;
+//// MOON means lines is ignored and a circle is rendered, as in a moon or planet
+//// theta becomes radius
+//const TUint16 OTYPE_MOON = 5;
 
 // FLAGS
 // if set, the lines will explode

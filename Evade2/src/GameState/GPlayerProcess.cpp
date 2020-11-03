@@ -25,25 +25,32 @@ const TUint8 crosshair_right_4x8[] = {
 #define MAX_LIFE 100
 
 GPlayerProcess::GPlayerProcess() {
-  color        = COLOR_WHITE;
+  color       = COLOR_WHITE;
   GCamera::vz = CAMERA_VZ;
-  power        = MAX_POWER;
-  shield       = MAX_LIFE;
-  mNumBullets  = 0;
-  mAlt         = EFalse;
-  mHit         = EFalse;
+  power       = MAX_POWER;
+  shield      = MAX_LIFE;
+  mNumBullets = 0;
+  mAlt        = EFalse;
+  mHit        = EFalse;
   printf("screen %d,%d\n", gDisplay.renderBitmap->Width(), gDisplay.renderBitmap->Height());
 }
 
-void GPlayerProcess::DrawPixel(TFloat x, TFloat y) {
+void GPlayerProcess::DrawPixel(TFloat x, TFloat y) const {
   gDisplay.renderBitmap->WritePixel(x, y, color);
 }
 
-void GPlayerProcess::DrawLine(TFloat x1, TFloat y1, TFloat x2, TFloat y2) {
+void GPlayerProcess::DrawPixel(TFloat x, TFloat y, TUint8 aColor) {
+  gDisplay.renderBitmap->WritePixel(x, y, aColor);
+}
+
+void GPlayerProcess::DrawLine(TFloat x1, TFloat y1, TFloat x2, TFloat y2) const {
   gDisplay.renderBitmap->DrawLine(gViewPort, x1, y1, x2, y2, color);
 }
 
-void GPlayerProcess::DrawBitmap(TInt16 x, TInt16 y, const TUint8 *bitmap, TUint8 w, TUint8 h, TUint8 color) {
+void GPlayerProcess::DrawBitmap(TInt16 x, TInt16 y, const TUint8 *bitmap, TUint8 w, TUint8 h, TUint8 aColor)  const {
+  if (x + w < 0 || x > SCREEN_WIDTH - 1 || y + h < 0 || y > SCREEN_HEIGHT - 1) {
+    return;
+  }
 #if 0
   // no need to draw at all if we're offscreen
   if (x + w < 0 || x > WIDTH - 1 || y + h < 0 || y > HEIGHT - 1)
@@ -92,7 +99,7 @@ void GPlayerProcess::DrawBitmap(TInt16 x, TInt16 y, const TUint8 *bitmap, TUint8
 #endif
 }
 
-void GPlayerProcess::hit(TInt8 amount) {
+void GPlayerProcess::Hit(TInt8 amount) {
   shield -= amount;
   if (shield <= 0) {
     // ProcessManager::birth(GameOver::entry);
@@ -180,10 +187,35 @@ TBool GPlayerProcess::RunBefore() {
 /** HUD */
 /************************************************************************/
 
+void GPlayerProcess::DrawHud(TFloat x, TFloat y) {
+
+  const TUint8 color   = COLOR_WHITE;
+  const TFloat  width   = 0x30, height = 0x08;
+  const TUint8 *bitmap = hud_console_img;
+
+  for (TInt xx = 0, xxx = 0; xx < width; xx++, xxx += 2) {
+    for (TInt yy = 0, yyy = 0; yy < height; yy++, yyy += 2) {
+      if (y + yy > SCREEN_HEIGHT-1) {
+        continue;
+      }
+      TInt8 byte = bitmap[xx + (yy / 8)];
+      TInt8 bit  = (yy % 8);
+      if (byte & (1 << bit)) {
+        //        Graphics::drawPixel(x + xx, y + yy, color);
+        DrawPixel(x + xxx, y + yyy, COLOR_HUD);
+        DrawPixel(x + xxx + 1, y + yyy, COLOR_HUD);
+        DrawPixel(x + xxx, y + yyy + 1, COLOR_HUD);
+        DrawPixel(x + xxx + 1, y + yyy + 1, COLOR_HUD);
+        //        Graphics::drawPixel(x + xx * 2 + 1, y + yy * 2 + 1, color);
+      }
+    }
+  }
+}
+
 #ifdef ENABLE_HUD_MOVEMENTS
 
 // 13 == full. Anything less, and we draw "less meter"
-void DrawMeter(TInt8 side, TInt8 value, TInt8 deltaXMeter, TInt8 deltaYMeter) {
+void GPlayerProcess::DrawMeter(TInt8 side, TInt8 value, TInt8 deltaXMeter, TInt8 deltaYMeter) {
 
   //start at X:14
   // Draw 2 lines, skip one line, iterate 13 total times
@@ -198,26 +230,25 @@ void DrawMeter(TInt8 side, TInt8 value, TInt8 deltaXMeter, TInt8 deltaYMeter) {
       if (i >= value) {
         DrawPixel(1 + deltaXMeter, y + deltaYMeter);
         DrawPixel(1 + deltaXMeter, y + 1 + deltaYMeter);
-      }
-      else {
+      } else {
         DrawLine(1 + deltaXMeter, y + deltaYMeter, 3 + deltaXMeter, y + deltaYMeter);
         DrawLine(1 + deltaXMeter, y + 1 + deltaYMeter, 4 + deltaXMeter, y + 1 + deltaYMeter);
       }
       y -= 3;
     }
-  }
-  else { // RIGHT
-    for (TInt8 i = 0; i < 10; i++) {
+  } else { // RIGHT
+    const TInt RIGHT_SIDE = SCREEN_WIDTH - 2;
+    for (TInt8 i          = 0; i < 10; i++) {
       if (i >= value) {
-        DrawPixel(126 + deltaXMeter, y + deltaYMeter);
-        DrawPixel(126 + deltaXMeter, y + 1 + deltaYMeter);
-      }
-      else {
-        DrawLine(124 + deltaXMeter, y + deltaYMeter, 126 + deltaXMeter, y + deltaYMeter);
-        DrawLine(123 + deltaXMeter, y + 1 + deltaYMeter, 126 + deltaXMeter, y + 1 + deltaYMeter);
+        DrawPixel(RIGHT_SIDE + deltaXMeter, y + deltaYMeter);
+        DrawPixel(RIGHT_SIDE + deltaXMeter, y + 1 + deltaYMeter);
+      } else {
+        DrawLine(RIGHT_SIDE - 2 + deltaXMeter, y + deltaYMeter, RIGHT_SIDE + deltaXMeter, y + deltaYMeter);
+        DrawLine(RIGHT_SIDE - 3 + deltaXMeter, y + 1 + deltaYMeter, RIGHT_SIDE + deltaXMeter, y + 1 + deltaYMeter);
       }
       y -= 3;
     }
+
   }
 }
 
@@ -270,47 +301,73 @@ TBool GPlayerProcess::RunAfter() {
   mHit = EFalse;
 
 #ifdef ENABLE_HUD_MOVEMENTS
-  TInt8 consoleX = 40,
-        consoleY = 58,
-        deltaXMeter = 0,
-        deltaYMeter = 0,
-        deltaXCrossHairs = 0,
-        deltaYCrossHairs = 0;
+  TFloat consoleX         = 0, consoleY = 0, deltaXMeter = 0, deltaYMeter = 0,
+         deltaXCrossHairs = 0, deltaYCrossHairs = 0;
 
-  // Font::scale = .6 * 256;
-  // Font::printf(5,5,"D %d", Game::difficulty);
-  // Font::printf(5,12,"W %d", Game::wave);
-  // Font::scale = 256;
-  if (game_mode == MODE_GAME) {
 
-    if (gControls.IsPressed(JOYSTICK_RIGHT)) {
-      consoleX = 38;
-      deltaXMeter = -1;
+  if (gGame->IsGameState()) {
+
+    if (gControls.IsPressed(CONTROL_JOYRIGHT)) {
+      consoleX         = -4;
+      deltaXMeter      = -1;
       deltaXCrossHairs = 4;
-    }
-    else if (gControls.IsPressed(JOYSTICK_LEFT)) {
-      consoleX = 42;
-      deltaXMeter = 1;
+    } else if (gControls.IsPressed(CONTROL_JOYLEFT)) {
+      consoleX         = 4;
+      deltaXMeter      = 1;
       deltaXCrossHairs = -4;
     }
 
-    if (gControls.IsPressed(JOYSTICK_UP)) {
-      consoleY = 56;
-      deltaYMeter = -1;
+    if (gControls.IsPressed(CONTROL_JOYUP)) {
+      consoleY         = -4;
+      deltaYMeter      = -1;
       deltaYCrossHairs = 4;
-    }
-    else if (gControls.IsPressed(JOYSTICK_DOWN)) {
-      consoleY = 60;
-      deltaYMeter = 1;
+    } else if (gControls.IsPressed(CONTROL_JOYDOWN)) {
+      consoleY         = 4;
+      deltaYMeter      = 1;
       deltaYCrossHairs = -4;
     }
   }
 
-  DrawBitmap(consoleX, consoleY, hud_console_img, 0x30, 0x08);
-  // // DrawLine(64, 0, 64, 64); // used to measure the center of the screen.
+  const TFloat screenMidX = TFloat(SCREEN_WIDTH)/2, screenMidY = TFloat(SCREEN_HEIGHT)/2;
 
-  DrawBitmap(53 + deltaXCrossHairs, 30 + deltaYCrossHairs, crosshair_left_4x8, 4, 8);
-  DrawBitmap(72 + deltaXCrossHairs, 30 + deltaYCrossHairs, crosshair_right_4x8, 4, 8);
+  DrawHud(screenMidX - (0x30) + consoleX, (240 + consoleY) - 12);
+
+  /** Reticle **/
+  // Top left
+  DrawLine(screenMidX + deltaXCrossHairs - 5,
+           screenMidY + deltaYCrossHairs,
+           screenMidX + deltaXCrossHairs - 12,
+           screenMidY + deltaYCrossHairs - 7);
+
+  DrawPixel(screenMidX + deltaXCrossHairs - 5,
+            screenMidY + deltaYCrossHairs - 5, 255);
+
+  // Top Right
+  DrawLine(screenMidX + deltaXCrossHairs + 5,
+           screenMidY + deltaYCrossHairs,
+           screenMidX + deltaXCrossHairs + 12,
+           screenMidY + deltaYCrossHairs - 7);
+
+  DrawPixel(screenMidX + deltaXCrossHairs + 5,
+            screenMidY + deltaYCrossHairs - 5, 255);
+
+  // Bottom Right
+  DrawLine(screenMidX + deltaXCrossHairs + 5,
+           screenMidY + deltaYCrossHairs,
+           screenMidX + deltaXCrossHairs + 12,
+           screenMidY + deltaYCrossHairs + 7);
+
+  DrawPixel(screenMidX + deltaXCrossHairs + 5,
+            screenMidY + deltaYCrossHairs + 5, 255);
+
+  // Bottom left
+  DrawLine(screenMidX + deltaXCrossHairs - 5,
+           screenMidY + deltaYCrossHairs,
+           screenMidX + deltaXCrossHairs - 12,
+           screenMidY + deltaYCrossHairs + 7);
+
+  DrawPixel(screenMidX + deltaXCrossHairs - 5,
+            screenMidY + deltaYCrossHairs + 5, 255);
 
   DrawMeter(0, shield, deltaXMeter, deltaYMeter);
   DrawMeter(1, power, deltaXMeter, deltaYMeter);

@@ -46,10 +46,16 @@ public:
     y += vy;
     z += vz;
   }
+public:
+  void SetLines(const TInt8 *aLines);
+  const TInt8 *GetLines() { return mLines; }
 
+protected:
   // if lines is NULL, then the variables in the Object structure can be used
   // for any purpose
   const TInt8 *mLines;
+
+public:
 
   TFloat z;    // coordinates
   TFloat vz; // velocity in x,y,z
@@ -64,6 +70,7 @@ public:
 //  }
 
   TBool BehindCamera();
+  TFloat DistanceTo(GVectorSprite *aOther);
 
   TBool do_death() {
 //    if (o->flags & OFLAG_COLLISION) {
@@ -75,10 +82,6 @@ public:
 //      return TRUE;
 //    }
     return EFalse;
-  }
-
-  inline TUint8 Type() {
-    return flags & OFLAG_TYPE_MASK;
   }
 };
 

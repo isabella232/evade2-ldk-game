@@ -12,7 +12,9 @@ class GPlayerProcess;
 class GGameState : public BGameEngine {
 public:
   GGameState();
+
   ~GGameState();
+
 public:
 //  void GameLoop() OVERRIDE;
   GPlayerProcess *mPlayerProcess;

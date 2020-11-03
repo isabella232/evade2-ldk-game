@@ -13,28 +13,44 @@ public:
   GPlayerProcess();
 
 public:
-  TInt8 power;
-  TInt8 shield;
-  TInt8 mNumBullets;
+  TInt8  power;
+  TInt8  shield;
+  TInt8  mNumBullets;
 //  TUint8 flags;
   TUint8 color;
-  TBool mAlt;
-  TBool mHit;
+  TBool  mAlt;
+  TBool  mHit;
 
 public:
   void recharge_shield();
+
   void recharge_power();
 
-  void hit(TInt8 amount);
-  void DrawPixel(TFloat x, TFloat y);
-  void DrawLine(TFloat x1, TFloat y1, TFloat x2, TFloat y2);
+  void Hit(TInt8 amount);
+
+  void DrawPixel(TFloat x, TFloat y) const;
+
+  void DrawPixel(TFloat x, TFloat y, TUint8 aColor);
+
+  void DrawLine(TFloat x1, TFloat y1, TFloat x2, TFloat y2) const;
 
 protected:
+#ifdef ENABLE_HUD_MOVEMENTS
+
+  void DrawHud(TFloat x, TFloat y);
+
+  void DrawMeter(TInt8 side, TInt8 value, TInt8 deltaXMeter, TInt8 deltaYMeter);
+
+#else
+  }
   void DrawMeter(TInt8 side, TInt8 value);
-  void DrawBitmap(TInt16 x, TInt16 y, const TUint8 *bitmap, TUint8 w, TUint8 h, TUint8 color = COLOR_WHITE);
+#endif
+
+  void DrawBitmap(TInt16 x, TInt16 y, const TUint8 *bitmap, TUint8 w, TUint8 h, TUint8 aColor = COLOR_WHITE) const;
 
 public:
   TBool RunBefore() OVERRIDE;
+
   TBool RunAfter() OVERRIDE;
 };
 

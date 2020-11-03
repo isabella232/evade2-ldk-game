@@ -3,6 +3,7 @@
 //
 
 #include "GGame.h"
+#include "GGameState.h"
 #include "GEnemyProcess.h"
 #include "GEnemyBulletProcess.h"
 #include "GCamera.h"
@@ -13,9 +14,9 @@
 #define FIRE_TIME (60 / gGame->mDifficulty + Random(1, 60 / gGame->mDifficulty))
 
 GEnemyProcess::GEnemyProcess() {
-  printf("Spawn GEmenyProcess\n");
-  mSprite = new GVectorSprite(OTYPE_ENEMY);
+  mSprite = new GVectorSprite(STYPE_ENEMY);
   gGameEngine->AddSprite(mSprite);
+  mState = ESTATE_WAITINIT;
   respawn();
 }
 
@@ -52,7 +53,8 @@ void GEnemyProcess::fire() {
   }
 }
 
-#define DELTA_THETA 8
+//#define DELTA_THETA 8
+#define DELTA_THETA 4
 
 void GEnemyProcess::bank(TInt16 delta) {
   if (mSprite->flags & BANK_LEFT) {
@@ -92,7 +94,7 @@ void GEnemyProcess::init_scout() {
   mSprite->x      = GCamera::x + Random(-256, 256);
   mSprite->y      = GCamera::y + Random(-256, 256);
   mSprite->z      = GCamera::z + 1024;
-  mSprite->vz     = CAMERA_VZ - 12;
+  mSprite->vz     = CAMERA_VZ - 3; // 12;
   mSprite->vx     = mSprite->vy = 0;
   mSprite->mTheta = Random(-50, 50);
   mSprite->mColor = SCOUT_COLOR;
@@ -102,11 +104,11 @@ void GEnemyProcess::init_scout() {
  * Initialize object for bomber enemy
  */
 void GEnemyProcess::init_bomber() {
-  mSprite->x  = GCamera::x + 128 - Random(0, 127);
-  mSprite->y  = GCamera::y + 128 - Random(0, 127);
-  mSprite->z  = GCamera::z - 30;
-  mSprite->vz = CAMERA_VZ + 1 + gGame->mWave;
-  mSprite->vx = mSprite->vy = 0;
+  mSprite->x      = GCamera::x + 128 - Random(0, 127);
+  mSprite->y      = GCamera::y + 128 - Random(0, 127);
+  mSprite->z      = GCamera::z - 30;
+  mSprite->vz     = CAMERA_VZ + 1 + gGame->mWave;
+  mSprite->vx     = mSprite->vy = 0;
   mSprite->mColor = BOMBER_COLOR;
 }
 
@@ -119,22 +121,21 @@ void GEnemyProcess::init() {
   // One enemy type enters per wave
   switch (Random(0, (gGame->mWave > 3) ? 3 : gGame->mWave)) {
     case 0:
-      mSprite->mLines = (const TInt8 *) &enemy_scout_1_img;
+      mSprite->SetLines((const TInt8 *) &enemy_scout_1_img);
       init_scout();
       mState = ESTATE_SEEK;
       break;
     case 1:
-      mSprite->mLines = (const TInt8 *) &enemy_heavy_bomber_1_img;
+      mSprite->SetLines((const TInt8 *) &enemy_heavy_bomber_1_img);
       init_bomber();
       mState = ESTATE_EVADE;
       break;
     case 2:
-      mSprite->mLines = (const TInt8 *) &enemy_assault_1_img;
+      mSprite->SetLines((const TInt8 *) &enemy_assault_1_img);
       init_assault(Random() & 1);
       mState = ESTATE_ORBIT;
       break;
   }
-  printf("init\n");
 }
 
 TBool GEnemyProcess::StateSeek() {
@@ -191,26 +192,23 @@ TBool GEnemyProcess::StateOrbit() {
     if (o->mState < 0) {
       o->mState = 0;
       o->flags &= ~ORBIT_LEFT;
-    }
-    else {
+    } else {
       o->mTheta -= 12;
     }
-  }
-  else {
+  } else {
     o->mState += gGame->mDifficulty;
     if (o->mState > 180) {
       o->mState = 180;
       o->flags |= ORBIT_LEFT;
-    }
-    else {
+    } else {
       o->mTheta += 12;
     }
   }
 
   TFloat rad = RADIANS(o->mState);
   o->vy = (GCamera::y > o->y) ? -2 : 2;
-  o->y = GCamera::y;
-  o->x = cos(rad) * 256;
+  o->y  = GCamera::y;
+  o->x  = cos(rad) * 256;
   if (gGame->GetState() == GAME_STATE_GAME) {
     o->z = GCamera::z + sin(rad) * 256;
   }
@@ -224,8 +222,7 @@ TBool GEnemyProcess::StateWaitInit() {
   if (o->mTimer <= 0 && gGame->GetState() == GAME_STATE_GAME) {
     init();
     return ETrue;
-  }
-  else {
+  } else {
     o->mTimer = 1;
   }
   o->mTimer--;
@@ -237,8 +234,7 @@ TBool GEnemyProcess::StateRunAway() {
   GVectorSprite *o = mSprite;
   if (gGame->GetState() != GAME_STATE_GAME) {
     o->vz += o->mState * 8;
-  }
-  else {
+  } else {
     o->vz += o->mState;
   }
   o->vx += o->vx > 0 ? .1 : -.1;
@@ -268,10 +264,6 @@ TBool GEnemyProcess::StateExplode() {
 }
 
 TBool GEnemyProcess::RunBefore() {
-  return ETrue;
-}
-
-TBool GEnemyProcess::RunAfter() {
   switch (mState) {
     case ESTATE_SEEK:
       return StateSeek();
@@ -288,4 +280,19 @@ TBool GEnemyProcess::RunAfter() {
     default:
       Panic("Bad Genemy State %d", mState);
   }
+  return ETrue;
+}
+
+TBool GEnemyProcess::RunAfter() {
+//  BSpriteList        &l = gGameState->mSpriteList;
+//  for (GVectorSprite *s = (GVectorSprite *)l.Prev(mSprite); !l.End(s); s = (GVectorSprite *) l.Prev(s)) {
+//    if (s->type & STYPE_PBULLET) {
+//      printf("%f %f %f %d/%d\n", ABS(mSprite->z - s->z), ABS(mSprite->y - s->y), ABS(mSprite->x - s->x), mSprite->w, mSprite->h);
+//      if (ABS(mSprite->z - s->z) < BULLET_VZ && ABS(mSprite->x - s->x) < mSprite->w && ABS(mSprite->y - s->y) < mSprite->h) {
+//        s->flags |= OFLAG_COLLISION;
+//        mSprite->flags |= OFLAG_COLLISION;
+//      }
+//    }
+//  }
+  return ETrue;
 }
