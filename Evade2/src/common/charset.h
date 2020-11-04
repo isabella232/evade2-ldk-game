@@ -762,4 +762,164 @@ const TInt8 font_amp[] = {
 };
 #endif
 
+const TInt8 *charset[] = {
+  ENull, // space
+  font_emark,
+#ifdef FULL_CHARSET
+  font_dquote,
+#else
+  ENull,
+#endif
+#ifdef FULL_CHARSET
+  font_pound, // #
+#else
+  ENull,
+#endif
+#ifdef FULL_CHARSET
+  font_dollar, // $
+#else
+  ENull,
+#endif
+#ifdef FULL_CHARSET
+  font_percent, // %
+#else
+  ENull,
+#endif
+#ifdef FULL_CHARSET
+  font_amp, // &
+#else
+  ENull,
+#endif
+#ifdef FULL_CHARSET
+  font_squote, // '
+#else
+  ENull,
+#endif
+#ifdef FULL_CHARSET
+  font_lparen, // (
+#else
+  ENull,
+#endif
+#ifdef FULL_CHARSET
+  font_rparen, // )
+#else
+  ENull,
+#endif
+#ifdef FULL_CHARSET
+  font_asterisk, // *
+#else
+  ENull,
+#endif
+#ifdef FULL_CHARSET
+  font_plus,
+#else
+  ENull,
+#endif
+#ifdef FULL_CHARSET
+  font_comma,
+#else
+  ENull,
+#endif
+#ifdef FULL_CHARSET
+  font_minus,
+#else
+  ENull,
+#endif
+  font_period,
+  font_fslash,
+  font_0,
+  font_1,
+  font_2,
+  font_3,
+  font_4,
+  font_5,
+  font_6,
+  font_7,
+  font_8,
+  font_9,
+  font_colon,
+#ifdef full_charset
+  font_semicolon,
+#else
+  ENull,
+#endif
+#ifdef full_charset
+  font_lt, // <
+#else
+  ENull,
+#endif
+#ifdef full_charset
+  font_eq, // =
+#else
+  ENull,
+#endif
+#ifdef full_charset
+  font_gt, // >
+#else
+  ENull,
+#endif
+#ifdef full_charset
+  font_qmark,
+#else
+  ENull,
+#endif
+#ifdef full_charset
+  font_at, // @
+#else
+  ENull,
+#endif
+  font_a,
+  font_b,
+  font_c,
+  font_d,
+  font_e,
+  font_f,
+  font_g,
+  font_h,
+  font_i,
+  font_j,
+  font_k,
+  font_l,
+  font_m,
+  font_n,
+  font_o,
+  font_p,
+  font_q,
+  font_r,
+  font_s,
+  font_t,
+  font_u,
+  font_v,
+  font_w,
+  font_x,
+  font_y,
+  font_z,
+#ifdef full_charset
+  font_lt, // [
+#else
+  ENull,
+#endif
+#ifdef full_charset
+  font_bslash, // '\'
+#else
+  ENull,
+#endif
+#ifdef full_charset
+  font_gt, // ]
+#else
+  ENull,
+#endif
+#ifdef full_charset
+  font_caret, // ^
+#else
+  ENull,
+#endif
+#ifdef full_charset
+  font_uscore, // _
+#else
+  ENull,
+#endif
+  ENull, // ``
+};
+
 #endif

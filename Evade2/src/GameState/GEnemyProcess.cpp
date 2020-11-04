@@ -13,6 +13,20 @@
 
 #define FIRE_TIME (60 / gGame->mDifficulty + Random(1, 60 / gGame->mDifficulty))
 
+const TInt8 *GEnemyProcess::Graphic(TInt aType) {
+  switch (aType) {
+    case ENEMY_ASSAULT:
+      return (const TInt8 *)&enemy_assault_1_img;
+    case ENEMY_BOMBER:
+      return (const TInt8 *)&enemy_heavy_bomber_1_img;
+    case ENEMY_SCOUT:
+      return (const TInt8 *)&enemy_scout_1_img;
+    default:
+      Panic("Invalid enemy type: %d\n", aType);
+  }
+  return ENull;
+}
+
 GEnemyProcess::GEnemyProcess() {
   mSprite = new GVectorSprite(STYPE_ENEMY);
   gGameEngine->AddSprite(mSprite);
@@ -154,7 +168,6 @@ TBool GEnemyProcess::StateSeek() {
   if (o->z - GCamera::z < Random(256, 512)) {
     o->mState = -1;
     mState = ESTATE_RUNAWAY;
-//    me->sleep(1, run_away);
     return ETrue;
   }
 
@@ -166,12 +179,10 @@ TBool GEnemyProcess::StateEvade() {
   if (o->z - GCamera::z > 512) {
     o->mState = 1;
     mState = ESTATE_RUNAWAY;
-//    me->sleep(1, run_away);
     return ETrue;
   }
   if (death()) {
     mState = ESTATE_EXPLODE;
-//    me->sleep(1, explode);
     return ETrue;
   }
   bank(15);
@@ -213,7 +224,6 @@ TBool GEnemyProcess::StateOrbit() {
     o->z = GCamera::z + sin(rad) * 256;
   }
 
-//  me->sleep(1);
   return ETrue;
 }
 
@@ -226,7 +236,6 @@ TBool GEnemyProcess::StateWaitInit() {
     o->mTimer = 1;
   }
   o->mTimer--;
-//  me->sleep(1);
   return ETrue;
 }
 
@@ -245,12 +254,10 @@ TBool GEnemyProcess::StateRunAway() {
   }
   if (death()) {
     mState = ESTATE_EXPLODE;
-//    me->sleep(1, explode);
     return ETrue;
   }
   bank();
   fire();
-//  me->sleep(1);
   return ETrue;
 }
 

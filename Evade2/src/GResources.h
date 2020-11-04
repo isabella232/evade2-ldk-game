@@ -10,6 +10,7 @@ const TUint16 EVENT_SPELL_PROCESS_EXIT = 1;
 enum {
   FONT_8x8_SLOT,
   FONT_16x16_SLOT,
+  BKG_SLOT,
   SLOT_MAX,
 };
 
@@ -94,8 +95,9 @@ const TUint16 IMG_DAMAGE_UP = 40;
 const TUint8 COLOR_BLACK = 0;
 const TUint8 COLOR_WHITE = 1;
 const TUint8 COLOR_TEXT = 2;
-const TUint8 COLOR_STAR = 3;
-const TUint8 COLOR_HUD = 4;
+const TUint8 COLOR_TEXT_BG = 3;
+const TUint8 COLOR_STAR = 4;
+const TUint8 COLOR_HUD = 5;
 
 const TUint8 COLOR_BLUE = 201;
 const TUint8 COLOR_GREEN = 202;

@@ -1,7 +1,7 @@
 #include "GPlayerProcess.h"
 #include "GPlayer.h"
 #include "GPlayerSprite.h"
-#include "GGamePlayfield.h"
+#include "GStarfield.h"
 #include "GStatProcess.h"
 #include "GResources.h"
 #include "GPlayerBulletProcess.h"

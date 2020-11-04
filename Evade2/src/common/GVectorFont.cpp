@@ -7,196 +7,37 @@
  * See: https://github.com/arduino/Arduino/blob/master/hardware/arduino/avr/cores/arduino/Print.cpp
  */
 
+#include "Game.h"
 #include "charset.h"
-#include <BTypes.h>
 
-const TInt8 *charset[] = {
-  ENull, // space
-  font_emark,
-#ifdef FULL_CHARSET
-  font_dquote,
-#else
-  ENull,
-#endif
-#ifdef FULL_CHARSET
-  font_pound, // #
-#else
-  ENull,
-#endif
-#ifdef FULL_CHARSET
-  font_dollar, // $
-#else
-  ENull,
-#endif
-#ifdef FULL_CHARSET
-  font_percent, // %
-#else
-  ENull,
-#endif
-#ifdef FULL_CHARSET
-  font_amp, // &
-#else
-  ENull,
-#endif
-#ifdef FULL_CHARSET
-  font_squote, // '
-#else
-  ENull,
-#endif
-#ifdef FULL_CHARSET
-  font_lparen, // (
-#else
-  ENull,
-#endif
-#ifdef FULL_CHARSET
-  font_rparen, // )
-#else
-  ENull,
-#endif
-#ifdef FULL_CHARSET
-  font_asterisk, // *
-#else
-  ENull,
-#endif
-#ifdef FULL_CHARSET
-  font_plus,
-#else
-  ENull,
-#endif
-#ifdef FULL_CHARSET
-  font_comma,
-#else
-  ENull,
-#endif
-#ifdef FULL_CHARSET
-  font_minus,
-#else
-  ENull,
-#endif
-  font_period,
-  font_fslash,
-  font_0,
-  font_1,
-  font_2,
-  font_3,
-  font_4,
-  font_5,
-  font_6,
-  font_7,
-  font_8,
-  font_9,
-  font_colon,
-#ifdef full_charset
-  font_semicolon,
-#else
-  ENull,
-#endif
-#ifdef full_charset
-  font_lt, // <
-#else
-  ENull,
-#endif
-#ifdef full_charset
-  font_eq, // =
-#else
-  ENull,
-#endif
-#ifdef full_charset
-  font_gt, // >
-#else
-  ENull,
-#endif
-#ifdef full_charset
-  font_qmark,
-#else
-  ENull,
-#endif
-#ifdef full_charset
-  font_at, // @
-#else
-  ENull,
-#endif
-  font_a,
-  font_b,
-  font_c,
-  font_d,
-  font_e,
-  font_f,
-  font_g,
-  font_h,
-  font_i,
-  font_j,
-  font_k,
-  font_l,
-  font_m,
-  font_n,
-  font_o,
-  font_p,
-  font_q,
-  font_r,
-  font_s,
-  font_t,
-  font_u,
-  font_v,
-  font_w,
-  font_x,
-  font_y,
-  font_z,
-#ifdef full_charset
-  font_lt, // [
-#else
-  ENull,
-#endif
-#ifdef full_charset
-  font_bslash, // '\'
-#else
-  ENull,
-#endif
-#ifdef full_charset
-  font_gt, // ]
-#else
-  ENull,
-#endif
-#ifdef full_charset
-  font_caret, // ^
-#else
-  ENull,
-#endif
-#ifdef full_charset
-  font_uscore, // _
-#else
-  ENull,
-#endif
-  ENull, // ``
-};
-
+GVectorFont *gVectorFont;
+// constructor
 GVectorFont::GVectorFont() {
-  scale = 0x100;
+  scale = 1.0;
   color = COLOR_TEXT;
+  gVectorFont = this;
 }
 
 #ifdef ENABLE_ROTATING_TEXT
-TInt8 GVectorFont::print_string_rotatedx(TInt8 x, TInt8 y, TFloat theta, const char *s) {
+TInt16 GVectorFont::print_string_rotatedx(TFloat x, TFloat y, TFloat theta, const char *s) {
   theta = float(theta) * 3.1415926 / 180;
   TFloat cost = cos(theta),
          sint = sin(theta);
   const char *p = s;
 
-  TFloat fscale = TFloat(scale >> 8) + TFloat(scale & 0xff) / 256.0;
+  const TInt16 size = 9;
 
-  const TInt8 size = 9;
-
-  TInt8 xo = x;
+  TInt16 xo = x;
   while (char c = *p++) {
-    const TInt8 *glyph = charset[toupper(c) - 32];
+    auto *glyph = (const TInt16 *)charset[toupper(c) - 32];
     if (glyph) {
-      TInt8 lines = *glyph++;
+      TInt16 lines = *glyph++;
 
-      for (TInt8 i = 0; i < lines; i++) {
-        TFloat x0 = (TInt8)*glyph++ * fscale + x,
-               y0 = (TInt8)*glyph++ * fscale + y,
-               x1 = (TInt8)*glyph++ * fscale + x,
-               y1 = (TInt8)*glyph++ * fscale + y;
+      for (TInt16 i = 0; i < lines; i++) {
+        TFloat x0 = *glyph++ * scale + x,
+               y0 = *glyph++ * scale + y,
+               x1 = *glyph++ * scale + x,
+               y1 = *glyph++ * scale + y;
 
         gDisplay.renderBitmap->DrawLine(
           gViewPort,
@@ -206,26 +47,25 @@ TInt8 GVectorFont::print_string_rotatedx(TInt8 x, TInt8 y, TFloat theta, const c
           ((y1 - y) * sint + cost + y),
           color);
       }
-      x += size * fscale;
+      x += size * scale;
     }
     else {
-      x += 6 * fscale;
+      x += 6 * scale;
     }
   }
   return x - xo;
 }
 #endif
 
-TInt8 GVectorFont::write(TInt8 x, TInt8 y, char c) {
+TInt16 GVectorFont::write(TFloat x, TFloat y, char c) {
   const TInt8 *glyph;
-  const TInt8 width = 9;
+  const TInt16 width = 9;
 
-  TFloat fscale = TFloat(scale >> 8) + TFloat(scale & 0xff) / 256.0;
-  glyph = charset[toupper(c) - 32];
+  glyph = (TInt8 *)charset[toupper(c) - 32];
   if (glyph) {
     TInt8 lines = *glyph++;
 
-    for (TInt8 i = 0; i < lines; i++) {
+    for (TInt16 i = 0; i < lines; i++) {
       TInt8 x0 = *glyph++,
             y0 = *glyph++,
             x1 = *glyph++,
@@ -233,24 +73,24 @@ TInt8 GVectorFont::write(TInt8 x, TInt8 y, char c) {
 
       gDisplay.renderBitmap->DrawLine(
         gViewPort,
-        x + x0 * fscale, y + y0 * fscale,
-        x + x1 * fscale, y + y1 * fscale,
+        x + x0 * scale, y + y0 * scale,
+        x + x1 * scale, y + y1 * scale,
         color);
     }
   }
-  return width * fscale;
+  return width * scale;
 }
 
-TInt8 GVectorFont::print_string(TInt8 x, TInt8 y, char *s) {
-  TInt8 xx = x;
+TInt16 GVectorFont::print_string(TFloat x, TFloat y, char *s) {
+  TInt16 xx = x;
   while (char c = *s++) {
-    TInt8 width = write(x, y, c);
+    TInt16 width = write(x, y, c);
     x += width;
   }
   return x - xx; // width of string printed
 }
 
-TInt8 GVectorFont::print_long(TInt8 x, TInt8 y, TInt64 n, TInt8 base) {
+TInt16 GVectorFont::print_long(TFloat x, TFloat y, TInt64 n, TInt16 base) {
   char buf[8 * sizeof(TInt64) + 1]; // Assumes 8-bit chars plus zero byte.
   char *str = &buf[sizeof(buf) - 1];
 
@@ -271,8 +111,8 @@ TInt8 GVectorFont::print_long(TInt8 x, TInt8 y, TInt64 n, TInt8 base) {
 }
 
 #ifdef PRINTF_TFloat
-TInt8 GVectorFont::print_float(TInt8 x, TInt8 y, double number, TInt8 digits) {
-  TInt8 xx = x;
+TInt16 GVectorFont::print_float(TInt16 x, TInt16 y, double number, TInt16 digits) {
+  TInt16 xx = x;
   if (isnan(number)) {
     x += write(x, y, 'n');
     x += write(x, y, 'a');
@@ -327,9 +167,9 @@ TInt8 GVectorFont::print_float(TInt8 x, TInt8 y, double number, TInt8 digits) {
 }
 #endif
 
-TInt8 GVectorFont::printf(TInt8 x, TInt8 y, const char *s, ...) {
+TInt16 GVectorFont::printf(TFloat x, TFloat y, const char *s, ...) {
   va_list ap;
-  TInt8 xx = x;
+  TInt16 xx = x;
   char c;
   const char *p = s;
   va_start(ap, s);

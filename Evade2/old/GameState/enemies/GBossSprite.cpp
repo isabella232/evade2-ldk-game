@@ -2,7 +2,7 @@
 #include "GResources.h"
 #include "GBossSprite.h"
 #include "GPlayer.h"
-#include "GameState/GCamera.h"
+#include "common/GCamera.h"
 
 static const TFloat z_dist = 256;
 static const TFloat frames = 32;

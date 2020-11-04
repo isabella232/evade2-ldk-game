@@ -8,19 +8,21 @@ public:
   GVectorFont();
 
 public:
-  TUint16 scale; // 8.8 fixed point
+  TFloat scale;
   TUint8 color; // color to render text in
 
 public:
   // these routine return the width of whatever is printed to the screen
-  TInt8 write(TInt8 x, TInt8 y, char c);
-  TInt8 printf(TInt8 x, TInt8 y, const char *s, ...);
+  TInt16 write(TFloat x, TFloat y, char c);
+  TInt16 printf(TFloat x, TFloat y, const char *s, ...);
 #ifdef ENABLE_ROTATING_TEXT
-  TInt8 print_string_rotatedx(TInt8 x, TInt8 y, TFloat angle, const char *s);
+  TInt16 print_string_rotatedx(TFloat x, TFloat y, TFloat angle, const char *s);
 #endif
-  TInt8 print_string(TInt8 x, TInt8 y, char *s);
-  TInt8 print_long(TInt8 x, TInt8 y, TInt64 n, TInt8 base = 10);
-  TInt8 print_float(TInt8 x, TInt8 y, TFloat number, TInt8 digits = 2);
+  TInt16 print_string(TFloat x, TFloat y, char *s);
+  TInt16 print_long(TFloat x, TFloat y, TInt64 n, TInt16 base = 10);
+//  TInt16 print_float(TInt16 x, TInt16 y, TFloat number, TInt16 digits = 2);
 };
+
+extern GVectorFont *gVectorFont;
 
 #endif

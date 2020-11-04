@@ -2,20 +2,20 @@
 // Created by Michael Schwartz on 10/29/20.
 //
 
-#include "GGamePlayfield.h"
+#include "GStarfield.h"
 #include "GCamera.h"
 
-GGamePlayfield::GGamePlayfield() : BPlayfield() {
+GStarfield::GStarfield() : BPlayfield() {
   for (TInt i = 0; i < NUM_STARS; i++) {
     InitStar(i);
   }
 }
 
-GGamePlayfield::~GGamePlayfield() noexcept {
+GStarfield::~GStarfield() noexcept {
 
 }
 
-void GGamePlayfield::Render() {
+void GStarfield::Render() {
   gDisplay.renderBitmap->Clear(0);
   TFloat cz = GCamera::z,
          sw = TFloat(SCREEN_WIDTH),
@@ -50,7 +50,7 @@ void GGamePlayfield::Render() {
   }
 }
 
-void GGamePlayfield::InitStar(TInt aIndex) {
+void GStarfield::InitStar(TInt aIndex) {
   mStarX[aIndex] = TFloat(256) - Random(0, 512) + GCamera::x;
   mStarY[aIndex] = TFloat(256) - Random(0, 512) + GCamera::y;
   mStarZ[aIndex] = GCamera::z + Random(200, 512);

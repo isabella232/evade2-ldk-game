@@ -3,7 +3,7 @@
 //
 
 #include "GGameState.h"
-#include "GGamePlayfield.h"
+#include "GStarfield.h"
 #include "GPlayerProcess.h"
 #include "GEnemyProcess.h"
 
@@ -12,7 +12,7 @@ GGameState *gGameState;
 GGameState::GGameState() : BGameEngine(gViewPort) {
   gGameEngine = this;
   gGameState = this;
-  mPlayfield = new GGamePlayfield();
+  mPlayfield = new GStarfield();
   // set colors
   gDisplay.SetColor(COLOR_BLACK, 0,0,0);
   for (TInt i=1; i<256; i++) {

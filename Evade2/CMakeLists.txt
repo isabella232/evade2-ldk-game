@@ -29,7 +29,7 @@ SET(EVADE2_INCLUDE_DIRS
     ${CMAKE_SOURCE_DIR}/src/resources
     ${CMAKE_SOURCE_DIR}/src/common
 #    ${CMAKE_SOURCE_DIR}/src/LoadGameState
-#    ${CMAKE_SOURCE_DIR}/src/GameState
+    ${CMAKE_SOURCE_DIR}/src/GameState
 #    ${CMAKE_SOURCE_DIR}/src/GameState/environment
 #    ${CMAKE_SOURCE_DIR}/src/GameState/player
 #    ${CMAKE_SOURCE_DIR}/src/GameState/inventory
@@ -46,7 +46,7 @@ SET(EVADE2_INCLUDE_DIRS
 #    ${CMAKE_SOURCE_DIR}/src/VictoryState
 #    ${CMAKE_SOURCE_DIR}/src/MainMenuState
 #    ${CMAKE_SOURCE_DIR}/src/MainOptionsState
-#    ${CMAKE_SOURCE_DIR}/src/SplashState
+    ${CMAKE_SOURCE_DIR}/src/SplashState
 #    ${CMAKE_SOURCE_DIR}/src/CreditsState
 #    ${CMAKE_SOURCE_DIR}/src/ResetState
     ${CMAKE_BINARY_DIR}/usr/local/include
@@ -65,7 +65,7 @@ ADD_EXECUTABLE(
     Resources.bin
     ${CREATIVE_ENGINE_SOURCE_FILES}
     ${EVADE2_SRC}
-        src/GameState/GGameState.cpp src/GameState/GGameState.h src/GameState/GGamePlayfield.cpp src/GameState/GGamePlayfield.h src/GameState/GPlayerBulletProcess.cpp src/GameState/GPlayerBulletProcess.h src/main.cpp src/GameState/GEnemyProcess.cpp src/GameState/GEnemyProcess.h src/GameState/GEnemyBulletProcess.cpp src/GameState/GEnemyBulletProcess.h)
+        src/GameState/GGameState.cpp src/GameState/GGameState.h src/common/GStarfield.cpp src/common/GStarfield.h src/GameState/GPlayerBulletProcess.cpp src/GameState/GPlayerBulletProcess.h src/main.cpp src/GameState/GEnemyProcess.cpp src/GameState/GEnemyProcess.h src/GameState/GEnemyBulletProcess.cpp src/GameState/GEnemyBulletProcess.h src/AttractState/GAttractState.cpp src/AttractState/GAttractState.h src/AttractState/GAttractProcess.cpp src/AttractState/GAttractProcess.h src/MainMenuState/GMainMenu.cpp src/MainMenuState/GMainMenu.h src/MainMenuState/GMainMenuProcess.cpp src/MainMenuState/GMainMenuProcess.h)
 
 ProcessorCount(N)
 if (NOT N EQUAL 0)

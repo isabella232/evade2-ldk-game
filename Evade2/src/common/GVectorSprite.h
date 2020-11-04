@@ -18,7 +18,7 @@ struct vec_segment_u8 {
 class GVectorSprite : public BSprite {
 
 public:
-  GVectorSprite(TUint64 aType = STYPE_DEFAULT) : BSprite(0 , 0, ENull, aType) {
+  explicit GVectorSprite(TUint64 aType = STYPE_DEFAULT) : BSprite(0 , 0, ENull, aType) {
     mColor = COLOR_WHITE;
     mPad = 0;
     x = y = z = 0;
@@ -28,15 +28,11 @@ public:
     mLines = ENull;
   }
 
-  void StartAnimation() {
-    printf("GVectorSprite::StartAnimation()\n");
-  }
-
-  TBool DrawVectorGraphic(const TInt8 *graphic, TFloat x, TFloat y, TFloat theta, TFloat scaleFactor, TUint8 color) {
+  static TBool DrawVectorGraphic(const TInt8 *graphic, TFloat x, TFloat y, TFloat theta, TFloat scaleFactor, TUint8 color) {
     return ExplodeVectorGraphic(graphic, x, y, theta, scaleFactor, 0, color);
   }
 
-  TBool ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat y,
+  static TBool ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat y,
                              TFloat theta, TFloat scaleFactor, TInt8 step, TUint8 color);
 
   TBool Render(BViewPort *aViewPort) OVERRIDE;

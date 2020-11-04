@@ -1,5 +1,5 @@
 #include "GVectorSprite.h"
-#include "GameState/GCamera.h"
+#include "GCamera.h"
 
 void GVectorSprite::SetLines(const TInt8 *aLines) {
   mLines = aLines;

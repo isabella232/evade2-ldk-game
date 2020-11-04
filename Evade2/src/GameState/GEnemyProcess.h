@@ -24,20 +24,32 @@ enum EState {
 class GEnemyProcess : public BProcess {
 public:
   GEnemyProcess();
-  ~GEnemyProcess();
+
+  ~GEnemyProcess() OVERRIDE;
 
 public:
-  TBool RunBefore();
-  TBool RunAfter();
+  static const TInt8 *Graphic(TInt aType);
+
+public:
+  TBool RunBefore() OVERRIDE;
+
+  TBool RunAfter() OVERRIDE;
 
 private:
   void init_assault(TBool left);
+
   void init_scout();
+
   void init_bomber();
+
   void init();
+
   void respawn();
+
   TBool death();
+
   void fire();
+
   void bank(TInt16 delta = 45);
 
 protected:
@@ -45,11 +57,17 @@ protected:
 
 protected:
   TBool StateSeek();
+
   TBool StateEvade();
+
   TBool StateOrbit();
+
   TBool StateWaitInit();
+
   TBool StateRunAway();
+
   TBool StateExplode();
+
 protected:
   EState mState;
 

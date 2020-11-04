@@ -7,7 +7,7 @@ class GSplashState : public BGameEngine {
 public:
   GSplashState();
 
-  virtual ~GSplashState();
+  ~GSplashState() OVERRIDE;
 };
 
 

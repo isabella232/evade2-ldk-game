@@ -2,7 +2,7 @@
 #include "GResources.h"
 #include "GEnemySprite.h"
 #include "GPlayer.h"
-#include "GameState/GCamera.h"
+#include "common/GCamera.h"
 
 
 const TInt8 *enemy_graphic(TInt16 n) {

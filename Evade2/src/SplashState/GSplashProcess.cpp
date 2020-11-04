@@ -4,8 +4,8 @@
 //static const char *splash_message2 = "Press any button";
 
 GSplashProcess::GSplashProcess() : BProcess() {
-  mColor       = 0;
-  mState       = STATE_FADEIN;
+  mColor = 0;
+  mState = STATE_FADEIN;
 //  mFont        = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
 //  mCurrentText = splash_message1;
 }
@@ -65,12 +65,12 @@ void GSplashProcess::RenderText() {
 
 TBool GSplashProcess::RunAfter() {
   if (gControls.WasPressed(BUTTON_ANY)) { // } || --mTimer <= 0) {
-    gGame->SetState(GAME_STATE_MAIN_MENU);
-//    gGame->SetState(GAME_STATE_VICTORY);
+    gGame->SetState(GAME_STATE_ATTRACT_MODE);
 
 #ifdef ENABLE_AUDIO
-    //gSoundPlayer.SfxStartGame();
+    gSoundPlayer.SfxStartGame();
 #endif
+
     return EFalse;
   }
 //  switch (mState) {
