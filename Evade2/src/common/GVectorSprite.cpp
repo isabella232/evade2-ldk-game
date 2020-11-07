@@ -78,20 +78,20 @@ TFloat GVectorSprite::DistanceTo(GVectorSprite *aOther) {
 };
 
 TBool GVectorSprite::Render(BViewPort *aViewPort) {
-  if (!mLines || z <= GCamera::z) {
+  if (!mLines || z <= gCamera->z) {
     // nothing to draw
     return EFalse;
   }
 
-  TFloat zz    = (z - GCamera::z) * 2;
+  TFloat zz    = (z - gCamera->z) * 2;
   TFloat ratio = 128 / (zz + 128);
   TFloat sw    = TFloat(SCREEN_WIDTH),
          sh    = TFloat(SCREEN_HEIGHT);
 
   bool   isEnemy = type == STYPE_ENEMY;
   // printf("is enemy = %i\n", isEnemy);
-  TFloat cx      = (GCamera::x - x) * ratio + sw / 2;
-  TFloat cy      = (GCamera::y - y) * ratio + sh / 2;
+  TFloat cx      = (gCamera->x - x) * ratio + sw / 2;
+  TFloat cy      = (gCamera->y - y) * ratio + sh / 2;
 
   // uint8_t color = isEnemy ? 5 : 255;
 
@@ -102,8 +102,8 @@ TBool GVectorSprite::Render(BViewPort *aViewPort) {
     if ((!drawn) && isEnemy) {
 
       // draw radar blip
-      TFloat dx    = GCamera::x - x,
-             dy    = GCamera::y - y,
+      TFloat dx    = gCamera->x - x,
+             dy    = gCamera->y - y,
              angle = atan2(dy, dx),
              midx  = sw / 2,
              midy  = sh / 2,
@@ -129,5 +129,5 @@ TBool GVectorSprite::Render(BViewPort *aViewPort) {
 
 
 TBool GVectorSprite::BehindCamera() {
-  return z <= GCamera::z;
+  return z <= gCamera->z;
 }

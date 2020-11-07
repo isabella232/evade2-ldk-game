@@ -12,14 +12,9 @@ class BFont;
 enum GAMESTATE {
   GAME_STATE_SPLASH,
   GAME_STATE_MAIN_MENU,
-//  GAME_STATE_LOAD_GAME,
-//  GAME_STATE_MAIN_OPTIONS,
-//  GAME_STATE_RESET_OPTIONS,
   GAME_STATE_ATTRACT_MODE,
-//  GAME_STATE_RESET_GAME,
   GAME_STATE_GAME,
-//  GAME_STATE_RESUME_GAME,
-//  GAME_STATE_LOAD_SAVEGAME,
+//  GAME_STATE_NEXT_WAVE,
   GAME_STATE_VICTORY,
   GAME_STATE_CREDITS,
 };
@@ -40,11 +35,7 @@ public:
 
   TBool IsGameState() const;
 
-public:
-  TUint8 mDifficulty;
-  TInt16 mKills;
-  TInt16 mWave;
-
+  TUint8       mDifficulty;
   static TBool mDebug;
 protected:
   TInt mState;

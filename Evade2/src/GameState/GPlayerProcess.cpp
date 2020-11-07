@@ -26,7 +26,7 @@ const TUint8 crosshair_right_4x8[] = {
 
 GPlayerProcess::GPlayerProcess() {
   color       = COLOR_WHITE;
-  GCamera::vz = CAMERA_VZ;
+  gCamera->vz = CAMERA_VZ;
   power       = MAX_POWER;
   shield      = MAX_LIFE;
   mNumBullets = 0;
@@ -124,7 +124,7 @@ void GPlayerProcess::recharge_power() {
 TBool GPlayerProcess::RunBefore() {
   if (gGame->GetState() != GAME_STATE_GAME) {
     // if (game_mode != MODE_GAME) {
-    GCamera::vx = GCamera::vy = 0;
+    gCamera->vx = gCamera->vy = 0;
     return ETrue;
   }
 
@@ -149,16 +149,16 @@ TBool GPlayerProcess::RunBefore() {
 
   if (gControls.IsPressed(CONTROL_BURST)) {
     if (power > 0) {
-      GCamera::vz = CAMERA_VZ * 2;
+      gCamera->vz = CAMERA_WARP_VZ;
       power--;
       if (power < 0) {
         power = 0;
       }
     } else {
-      GCamera::vz = CAMERA_VZ;
+      gCamera->vz = CAMERA_VZ;
     }
   } else {
-    GCamera::vz = CAMERA_VZ;
+    gCamera->vz = CAMERA_VZ;
     power++;
     if (power > MAX_POWER) {
       power = MAX_POWER;
@@ -166,19 +166,19 @@ TBool GPlayerProcess::RunBefore() {
   }
 
   if (gControls.IsPressed(CONTROL_JOYRIGHT)) {
-    GCamera::vx = -DELTACONTROL;
+    gCamera->vx = -DELTACONTROL;
   } else if (gControls.IsPressed(CONTROL_JOYLEFT)) {
-    GCamera::vx = DELTACONTROL;
+    gCamera->vx = DELTACONTROL;
   } else {
-    GCamera::vx = 0;
+    gCamera->vx = 0;
   }
 
   if (gControls.IsPressed(CONTROL_JOYDOWN)) {
-    GCamera::vy = DELTACONTROL;
+    gCamera->vy = DELTACONTROL;
   } else if (gControls.IsPressed(CONTROL_JOYUP)) {
-    GCamera::vy = -DELTACONTROL;
+    gCamera->vy = -DELTACONTROL;
   } else {
-    GCamera::vy = 0;
+    gCamera->vy = 0;
   }
   return ETrue;
 }

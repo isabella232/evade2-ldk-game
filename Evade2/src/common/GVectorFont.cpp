@@ -11,6 +11,7 @@
 #include "charset.h"
 
 GVectorFont *gVectorFont;
+
 // constructor
 GVectorFont::GVectorFont() {
   scale = 1.0;
@@ -20,7 +21,7 @@ GVectorFont::GVectorFont() {
 
 #ifdef ENABLE_ROTATING_TEXT
 TInt16 GVectorFont::print_string_rotatedx(TFloat x, TFloat y, TFloat theta, const char *s) {
-  theta = float(theta) * 3.1415926 / 180;
+  theta = TFloat(theta) * 3.1415926 / 180;
   TFloat cost = cos(theta),
          sint = sin(theta);
   const char *p = s;
@@ -29,9 +30,9 @@ TInt16 GVectorFont::print_string_rotatedx(TFloat x, TFloat y, TFloat theta, cons
 
   TInt16 xo = x;
   while (char c = *p++) {
-    auto *glyph = (const TInt16 *)charset[toupper(c) - 32];
+    auto *glyph = (const TInt8 *)charset[toupper(c) - 32];
     if (glyph) {
-      TInt16 lines = *glyph++;
+      TInt8 lines = *glyph++;
 
       for (TInt16 i = 0; i < lines; i++) {
         TFloat x0 = *glyph++ * scale + x,

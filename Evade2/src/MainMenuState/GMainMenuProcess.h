@@ -18,6 +18,9 @@ public:
 
   TBool RunAfter();
 
+protected:
+  TFloat mTheta;
+  TInt32 mTimer;
 };
 
 

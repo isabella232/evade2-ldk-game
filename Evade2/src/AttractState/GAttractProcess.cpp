@@ -123,19 +123,19 @@ TBool GAttractProcess::NextState() {
   ad->timer--;
   if (ad->timer < 0) {
     ad->screen++;
-    if ((game_mode == GAME_STATE_ATTRACT_MODE && ad->screen > MAX_SCREEN) ||
-        (game_mode == GAME_STATE_CREDITS && ad->screen > MAX_CREDITS)) {
+    if ((game_mode == GAME_STATE_ATTRACT_MODE && ad->screen > MAX_SCREEN)) {
       gGame->SetState(GAME_STATE_CREDITS);
       return EFalse;
-    } else {
-//      Sound::play_sound(SFX_NEXT_ATTRACT_SCREEN);
-      InitScreen();
-      mState = STATE_TYPEWRITER;
-      return ETrue;
     }
-  } else {
-    return ETrue;
+    if (game_mode == GAME_STATE_CREDITS && ad->screen > MAX_CREDITS) {
+      gGame->SetState(GAME_STATE_MAIN_MENU);
+      return EFalse;
+    }
+//      Sound::play_sound(SFX_NEXT_ATTRACT_SCREEN);
+    InitScreen();
+    mState = STATE_TYPEWRITER;
   }
+  return ETrue;
 }
 
 TBool GAttractProcess::TypewriterState() {
@@ -148,9 +148,10 @@ TBool GAttractProcess::TypewriterState() {
     gGame->SetState(GAME_STATE_GAME);
     return EFalse;
   }
+
   if (gControls.WasPressed(BUTTON_START)) {
     ad->timer = -1;
-//    me->sleep(1, next);
+    gGame->SetState(GAME_STATE_GAME);
     return EFalse;
   }
 

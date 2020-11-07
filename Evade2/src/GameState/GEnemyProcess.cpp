@@ -16,11 +16,11 @@
 const TInt8 *GEnemyProcess::Graphic(TInt aType) {
   switch (aType) {
     case ENEMY_ASSAULT:
-      return (const TInt8 *)&enemy_assault_1_img;
+      return (const TInt8 *) &enemy_assault_1_img;
     case ENEMY_BOMBER:
-      return (const TInt8 *)&enemy_heavy_bomber_1_img;
+      return (const TInt8 *) &enemy_heavy_bomber_1_img;
     case ENEMY_SCOUT:
-      return (const TInt8 *)&enemy_scout_1_img;
+      return (const TInt8 *) &enemy_scout_1_img;
     default:
       Panic("Invalid enemy type: %d\n", aType);
   }
@@ -42,7 +42,7 @@ GEnemyProcess::~GEnemyProcess() noexcept {
 
 TBool GEnemyProcess::death() {
   if (mSprite->flags & OFLAG_COLLISION) {
-    gGame->mKills++;
+    gGameState->mKills++;
     mSprite->flags &= OFLAG_EXPLODE;
     mSprite->mState = 0;
     return ETrue;
@@ -51,9 +51,12 @@ TBool GEnemyProcess::death() {
 }
 
 void GEnemyProcess::fire() {
+  if (gGameState->mState != STATE_PLAY) {
+    return;
+  }
   mSprite->mTimer--;
   if (mSprite->mTimer <= 0) {
-    if (GCamera::vx || GCamera::vy) {
+    if (gCamera->vx || gCamera->vy) {
       mSprite->mTimer = 1;
       return;
     }
@@ -85,7 +88,7 @@ void GEnemyProcess::bank(TInt16 delta) {
 }
 
 void GEnemyProcess::respawn() {
-  mSprite->mTimer = Random(gGame->mWave > 6 ? 30 : 30, 60) + 30;
+  mSprite->mTimer = Random(gGameState->mWave > 6 ? 30 : 30, 60) + 30;
 //  printf("RESPAWN %d\n", mSprite->mTimer);
 
   mState = ESTATE_WAITINIT;
@@ -94,8 +97,8 @@ void GEnemyProcess::respawn() {
 void GEnemyProcess::init_assault(TBool left) {
   TFloat angle = left ? 0 : (2 * PI);
   mSprite->x      = cos(angle) * 256;
-  mSprite->z      = GCamera::z + sin(angle) * 256;
-  mSprite->y      = GCamera::y; //  + 64 - random(0, 128);
+  mSprite->z      = gCamera->z + sin(angle) * 256;
+  mSprite->y      = gCamera->y; //  + 64 - random(0, 128);
   mSprite->vx     = mSprite->vy = mSprite->vz = 0;
   mSprite->mState = 0;
   mSprite->mColor = ASSAULT_COLOR;
@@ -105,9 +108,9 @@ void GEnemyProcess::init_assault(TBool left) {
  * Initialize object for scout enemy
  */
 void GEnemyProcess::init_scout() {
-  mSprite->x      = GCamera::x + Random(-256, 256);
-  mSprite->y      = GCamera::y + Random(-256, 256);
-  mSprite->z      = GCamera::z + 1024;
+  mSprite->x      = gCamera->x + Random(-256, 256);
+  mSprite->y      = gCamera->y + Random(-256, 256);
+  mSprite->z      = gCamera->z + 1024;
   mSprite->vz     = CAMERA_VZ - 3; // 12;
   mSprite->vx     = mSprite->vy = 0;
   mSprite->mTheta = Random(-50, 50);
@@ -118,10 +121,10 @@ void GEnemyProcess::init_scout() {
  * Initialize object for bomber enemy
  */
 void GEnemyProcess::init_bomber() {
-  mSprite->x      = GCamera::x + 128 - Random(0, 127);
-  mSprite->y      = GCamera::y + 128 - Random(0, 127);
-  mSprite->z      = GCamera::z - 30;
-  mSprite->vz     = CAMERA_VZ + 1 + gGame->mWave;
+  mSprite->x      = gCamera->x + 128 - Random(0, 127);
+  mSprite->y      = gCamera->y + 128 - Random(0, 127);
+  mSprite->z      = gCamera->z - 30;
+  mSprite->vz     = CAMERA_VZ + 1 + gGameState->mWave;
   mSprite->vx     = mSprite->vy = 0;
   mSprite->mColor = BOMBER_COLOR;
 }
@@ -133,7 +136,7 @@ void GEnemyProcess::init() {
   mSprite->mTheta = 0;
 
   // One enemy type enters per wave
-  switch (Random(0, (gGame->mWave > 3) ? 3 : gGame->mWave)) {
+  switch (Random(0, (gGameState->mWave > 3) ? 3 : gGameState->mWave)) {
     case 0:
       mSprite->SetLines((const TInt8 *) &enemy_scout_1_img);
       init_scout();
@@ -165,7 +168,7 @@ TBool GEnemyProcess::StateSeek() {
   // bank(o);
   fire();
   o->mTheta += 8;
-  if (o->z - GCamera::z < Random(256, 512)) {
+  if (o->z - gCamera->z < Random(256, 512)) {
     o->mState = -1;
     mState = ESTATE_RUNAWAY;
     return ETrue;
@@ -176,7 +179,7 @@ TBool GEnemyProcess::StateSeek() {
 
 TBool GEnemyProcess::StateEvade() {
   GVectorSprite *o = mSprite;
-  if (o->z - GCamera::z > 512) {
+  if (o->z - gCamera->z > 512) {
     o->mState = 1;
     mState = ESTATE_RUNAWAY;
     return ETrue;
@@ -217,11 +220,11 @@ TBool GEnemyProcess::StateOrbit() {
   }
 
   TFloat rad = RADIANS(o->mState);
-  o->vy = (GCamera::y > o->y) ? -2 : 2;
-  o->y  = GCamera::y;
+  o->vy = (gCamera->y > o->y) ? -2 : 2;
+  o->y  = gCamera->y;
   o->x  = cos(rad) * 256;
   if (gGame->GetState() == GAME_STATE_GAME) {
-    o->z = GCamera::z + sin(rad) * 256;
+    o->z = gCamera->z + sin(rad) * 256;
   }
 
   return ETrue;
@@ -248,7 +251,7 @@ TBool GEnemyProcess::StateRunAway() {
   }
   o->vx += o->vx > 0 ? .1 : -.1;
   o->vy += o->vy > 0 ? .1 : -.1;
-  if (o->BehindCamera() || (o->z - GCamera::z) > 1024) {
+  if (o->BehindCamera() || (o->z - gCamera->z) > 1024) {
     respawn();
     return ETrue;
   }
@@ -265,12 +268,18 @@ TBool GEnemyProcess::StateExplode() {
   mSprite->flags |= OFLAG_EXPLODE;
   mSprite->mState++;
   if (mSprite->BehindCamera() || mSprite->mState > 50) {
+    if (gGameState->mState != STATE_PLAY) {
+      return EFalse;
+    }
     respawn();
   }
   return ETrue;
 }
 
 TBool GEnemyProcess::RunBefore() {
+  if (gGameState->mState != STATE_PLAY) {
+    return EFalse;
+  }
   switch (mState) {
     case ESTATE_SEEK:
       return StateSeek();

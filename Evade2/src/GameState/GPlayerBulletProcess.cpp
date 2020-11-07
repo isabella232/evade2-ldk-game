@@ -12,19 +12,19 @@
 GPlayerBulletProcess::GPlayerBulletProcess(TFloat deltaX, TFloat deltaY, TBool alt) {
   mSprite = new GVectorSprite(STYPE_PBULLET);
   if (alt) {
-    mSprite->x = GCamera::x + 28;
-    mSprite->y = GCamera::y - 28;
-    mSprite->z = GCamera::z;
+    mSprite->x = gCamera->x + 28;
+    mSprite->y = gCamera->y - 28;
+    mSprite->z = gCamera->z;
     mSprite->mState = 20;
   } else {
-    mSprite->x = GCamera::x - 28;
-    mSprite->y = GCamera::y - 28;
-    mSprite->z = GCamera::z;
+    mSprite->x = gCamera->x - 28;
+    mSprite->y = gCamera->y - 28;
+    mSprite->z = gCamera->z;
     mSprite->mState = -20;
   }
   mSprite->vx = deltaX;
   mSprite->vy = deltaY;
-  mSprite->vz = GCamera::vz + BULLET_VZ;
+  mSprite->vz = gCamera->vz + BULLET_VZ;
   mSprite->SetLines(bullet_img);
   gGameEngine->AddSprite(mSprite);
 }
@@ -42,7 +42,7 @@ TBool GPlayerBulletProcess::RunBefore() {
 }
 
 TBool GPlayerBulletProcess::RunAfter() {
-  if (mSprite->z - GCamera::z > 512) {
+  if (mSprite->z - gCamera->z > 512) {
     return EFalse;
   }
   BSpriteList        &l = gGameState->mSpriteList;

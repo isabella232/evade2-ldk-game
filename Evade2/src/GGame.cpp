@@ -7,6 +7,7 @@
 // states
 #include "./GameState/GGameState.h"
 #include "./SplashState/GSplashState.h"
+#include "./MainMenuState/GMainMenuState.h"
 #include "./AttractState/GAttractState.h"
 
 static TUint32 start;
@@ -25,12 +26,10 @@ TBool GGame::mDebug = EFalse;
 GGame::GGame() {
   gGame = this;
   printf("Construct GGame\n");
-  mWave = 1;
-  mKills = 0;
-  mDifficulty     = 1;
-  gVectorFont     = new GVectorFont();
-  gGameEngine     = ENull;
-  mState = 0;
+  gVectorFont = new GVectorFont();
+  mDifficulty = 1;
+  gGameEngine = ENull;
+  mState      = 0;
   SetState(GAME_STATE_SPLASH);
 //  SetState(GAME_STATE_GAME);
 }
@@ -58,33 +57,57 @@ TInt GGame::GetState() const {
 }
 
 void GGame::SetState(GAMESTATE aNewState) {
-  delete gGameEngine;
+  for (TInt i = 0; i < 256; i++) {
+    gDisplay.SetColor(i, 255, 255, 255);
+  }
+
+  gDisplay.SetColor(COLOR_BLACK, 0, 0, 0);
+  gDisplay.SetColor(COLOR_WHITE, 255, 255, 255);
+
+  gDisplay.SetColor(COLOR_STAR, 255,255,255);
+
+  gDisplay.SetColor(ASSAULT_COLOR, 255, 50, 50);
+  gDisplay.SetColor(BOMBER_COLOR, 50, 255, 50);
+  gDisplay.SetColor(SCOUT_COLOR, 255, 50, 255);
+
+  gDisplay.SetColor(EBULLET_COLOR, 50, 50, 255);
+  gDisplay.SetColor(BOMB_COLOR, 255, 255, 50);
+
   mState = aNewState;
   switch (aNewState) {
     case GAME_STATE_SPLASH:
       printf("new State SPLASH\n");
+      delete gGameEngine;
       gGameEngine = new GSplashState();
       break;
     case GAME_STATE_ATTRACT_MODE:
       printf("new State ATTRACT\n");
+      delete gGameEngine;
       gGameEngine = new GAttractState();
       break;
     case GAME_STATE_GAME:
       printf("new State GAME\n");
+      delete gGameEngine;
       gGameEngine = new GGameState();
       break;
     case GAME_STATE_MAIN_MENU:
       printf("new State MAIN MENU\n");
-      gGameEngine = new GGameState();
+      delete gGameEngine;
+      gGameEngine = new GMainMenuState();
       break;
     case GAME_STATE_VICTORY:
       printf("new State VICTORY\n");
+      delete gGameEngine;
       gGameEngine = new GGameState();
       break;
     case GAME_STATE_CREDITS:
       printf("new State CREDITS\n");
+      delete gGameEngine;
       gGameEngine = new GAttractState();
       break;
+//    case GAME_STATE_NEXT_WAVE:
+//      printf("new State NEXT WAVE\n");
+//      break;
   }
 };
 
@@ -98,13 +121,15 @@ TBool GGame::IsGameState() const {
 
 void GGame::Run() {
   TBool done = EFalse;
+
   while (!done) {
     Random(); // randomize
     mShmoo.Set(TUint8(mShmoo.r + 16), TUint8(mShmoo.g + 16), TUint8(mShmoo.b + 16));
     gDisplay.displayBitmap->SetColor(COLOR_SHMOO, mShmoo);
-    GCamera::Move();
+    gCamera->Move();
     gGameEngine->GameLoop();
     gDisplay.Update();
+
     if (gControls.WasPressed(BUTTONQ)) {
       done = ETrue;
     }

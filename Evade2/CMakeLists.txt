@@ -25,63 +25,54 @@ INCLUDE(${CMAKE_CURRENT_SOURCE_DIR}/creative-engine/CreativeEngine.cmake)
 
 
 SET(EVADE2_INCLUDE_DIRS
-    ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/src/resources
-    ${CMAKE_SOURCE_DIR}/src/common
-#    ${CMAKE_SOURCE_DIR}/src/LoadGameState
-    ${CMAKE_SOURCE_DIR}/src/GameState
-#    ${CMAKE_SOURCE_DIR}/src/GameState/environment
-#    ${CMAKE_SOURCE_DIR}/src/GameState/player
-#    ${CMAKE_SOURCE_DIR}/src/GameState/inventory
-#    ${CMAKE_SOURCE_DIR}/src/GameState/enemies
-#    ${CMAKE_SOURCE_DIR}/src/GameState/enemies/final-boss
-#    ${CMAKE_SOURCE_DIR}/src/GameState/enemies/grunts
-#    ${CMAKE_SOURCE_DIR}/src/GameState/enemies/mid-bosses
-#    ${CMAKE_SOURCE_DIR}/src/GameState/status
-#    ${CMAKE_SOURCE_DIR}/src/img/
-#    ${CMAKE_SOURCE_DIR}/src/AttractState
-#    ${CMAKE_SOURCE_DIR}/src/GameMenuState
-#    ${CMAKE_SOURCE_DIR}/src/DebugMenuState
-#    ${CMAKE_SOURCE_DIR}/src/GameOverState
-#    ${CMAKE_SOURCE_DIR}/src/VictoryState
-#    ${CMAKE_SOURCE_DIR}/src/MainMenuState
-#    ${CMAKE_SOURCE_DIR}/src/MainOptionsState
-    ${CMAKE_SOURCE_DIR}/src/SplashState
-#    ${CMAKE_SOURCE_DIR}/src/CreditsState
-#    ${CMAKE_SOURCE_DIR}/src/ResetState
-    ${CMAKE_BINARY_DIR}/usr/local/include
-)
+        ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/src/resources
+        ${CMAKE_SOURCE_DIR}/src/common
+        ${CMAKE_SOURCE_DIR}/src/SplashState
+        ${CMAKE_SOURCE_DIR}/src/AttractState
+        ${CMAKE_SOURCE_DIR}/src/MainMenuState
+        ${CMAKE_SOURCE_DIR}/src/GameState
+        #    ${CMAKE_SOURCE_DIR}/src/img/
+        #    ${CMAKE_SOURCE_DIR}/src/GameMenuState
+        #    ${CMAKE_SOURCE_DIR}/src/DebugMenuState
+        #    ${CMAKE_SOURCE_DIR}/src/GameOverState
+        #    ${CMAKE_SOURCE_DIR}/src/VictoryState
+        #    ${CMAKE_SOURCE_DIR}/src/MainOptionsState
+        #    ${CMAKE_SOURCE_DIR}/src/CreditsState
+        #    ${CMAKE_SOURCE_DIR}/src/ResetState
+        ${CMAKE_BINARY_DIR}/usr/local/include
+        )
 
 INCLUDE_DIRECTORIES(
-    ${EVADE2_INCLUDE_DIRS}
-    ${CREATIVE_ENGINE_INCLUDE_DIRS}
+        ${EVADE2_INCLUDE_DIRS}
+        ${CREATIVE_ENGINE_INCLUDE_DIRS}
 )
 
 # gather Modite sources
 FILE(GLOB_RECURSE EVADE2_SRC RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
 
 ADD_EXECUTABLE(
-    ${PROJECT_NAME}
-    Resources.bin
-    ${CREATIVE_ENGINE_SOURCE_FILES}
-    ${EVADE2_SRC}
-        src/GameState/GGameState.cpp src/GameState/GGameState.h src/common/GStarfield.cpp src/common/GStarfield.h src/GameState/GPlayerBulletProcess.cpp src/GameState/GPlayerBulletProcess.h src/main.cpp src/GameState/GEnemyProcess.cpp src/GameState/GEnemyProcess.h src/GameState/GEnemyBulletProcess.cpp src/GameState/GEnemyBulletProcess.h src/AttractState/GAttractState.cpp src/AttractState/GAttractState.h src/AttractState/GAttractProcess.cpp src/AttractState/GAttractProcess.h src/MainMenuState/GMainMenu.cpp src/MainMenuState/GMainMenu.h src/MainMenuState/GMainMenuProcess.cpp src/MainMenuState/GMainMenuProcess.h)
+        ${PROJECT_NAME}
+        Resources.bin
+        ${CREATIVE_ENGINE_SOURCE_FILES}
+        ${EVADE2_SRC}
+        src/GameState/GGameState.cpp src/GameState/GGameState.h src/common/GStarfield.cpp src/common/GStarfield.h src/GameState/GPlayerBulletProcess.cpp src/GameState/GPlayerBulletProcess.h src/main.cpp src/GameState/GEnemyProcess.cpp src/GameState/GEnemyProcess.h src/GameState/GEnemyBulletProcess.cpp src/GameState/GEnemyBulletProcess.h src/AttractState/GAttractState.cpp src/AttractState/GAttractState.h src/AttractState/GAttractProcess.cpp src/AttractState/GAttractProcess.h src/MainMenuState/GMainMenuState.cpp src/MainMenuState/GMainMenuState.h src/MainMenuState/GMainMenuProcess.cpp src/MainMenuState/GMainMenuProcess.h src/GameState/GNextWaveProcess.cpp src/GameState/GNextWaveProcess.h src/GameState/GBossProcess.cpp src/GameState/GBossProcess.h)
 
 ProcessorCount(N)
 if (NOT N EQUAL 0)
-  set(${PROJECT_NAME}_FLAGS -j${N})
-  set(${PROJECT_NAME}_BUILD_FLAGS -j${N})
-  set(${PROJECT_NAME}_args ${${PROJECT_NAME}_args} PARALLEL_LEVEL ${N})
+    set(${PROJECT_NAME}_FLAGS -j${N})
+    set(${PROJECT_NAME}_BUILD_FLAGS -j${N})
+    set(${PROJECT_NAME}_args ${${PROJECT_NAME}_args} PARALLEL_LEVEL ${N})
 endif ()
 
 BUILD_COMMAND(
-    $(MAKE) --silent
+        $(MAKE) --silent
 )
 
 # make Modite.app
 if (APPLE)
-  SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE TRUE)
-  INSTALL(TARGETS ${PROJECT_NAME} DESTINATION ".")
+    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE TRUE)
+    INSTALL(TARGETS ${PROJECT_NAME} DESTINATION ".")
 endif (APPLE)
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${CREATIVE_ENGINE_LINK_LIBRARIES})

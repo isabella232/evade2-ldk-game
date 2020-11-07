@@ -12,15 +12,15 @@
 GEnemyBulletProcess::GEnemyBulletProcess(GVectorSprite *enemy, TInt8 type) {
   const TFloat FRAMES = 90 / gGame->mDifficulty;
   mSprite = new GVectorSprite(STYPE_EBULLET);
-  mSprite->SetLines( (type == EBULLET_BOMB) ? ebomb_img : ebullet_img);
+  mSprite->SetLines((type == EBULLET_BOMB) ? ebomb_img : ebullet_img);
   mSprite->mColor = (type == EBULLET_BOMB) ? BOMB_COLOR : EBULLET_COLOR;
   mSprite->mTimer = 256; // timeout
   mSprite->x      = enemy->x - 8;
   mSprite->y      = enemy->y - 8;
   mSprite->z      = enemy->z;
-  mSprite->vx = (GCamera::x - mSprite->x) / FRAMES;
-  mSprite->vy = (GCamera::y - mSprite->y) / FRAMES;
-  mSprite->vz = GCamera::vz - (mSprite->z - GCamera::z) / FRAMES;
+  mSprite->vx     = (gCamera->x - mSprite->x) / FRAMES;
+  mSprite->vy     = (gCamera->y - mSprite->y) / FRAMES;
+  mSprite->vz     = gCamera->vz - (mSprite->z - gCamera->z) / FRAMES;
 //  printf("Bullet vx,vy,vz = %f,%f,%f mState(%d)\n", mSprite->vx, mSprite->vy, mSprite->vz, mSprite->mTimer);
   gGameEngine->AddSprite(mSprite);
 }
@@ -32,14 +32,18 @@ GEnemyBulletProcess::~GEnemyBulletProcess() noexcept {
 }
 
 TBool GEnemyBulletProcess::RunBefore() {
+  if (gGameState->mState != STATE_PLAY) {
+    return EFalse;
+  }
   mSprite->mTheta += (mSprite->GetLines() == ebomb_img) ? mSprite->x : 40;
   return ETrue;
 }
 
 TBool GEnemyBulletProcess::RunAfter() {
-  if (GCamera::CollidesWith(mSprite)) {
+  if (gCamera->CollidesWith(mSprite)) {
     if (gGame->IsGameState()) {
       gGameState->mPlayerProcess->Hit(10);
+      return EFalse;
     }
   }
 
