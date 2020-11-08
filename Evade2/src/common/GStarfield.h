@@ -2,18 +2,18 @@
 // Created by Michael Schwartz on 10/29/20.
 //
 
-#ifndef EVADE2_GGAMEPLAYFIELD_H
-#define EVADE2_GGAMEPLAYFIELD_H
+#ifndef EVADE2_GSTARFIELD_H
+#define EVADE2_GSTARFIELD_H
 
 #include <BPlayfield.h>
 
 const int NUM_STARS = 128;
 
-class GGamePlayfield : public BPlayfield {
+class GStarfield : public BPlayfield {
 public:
-  GGamePlayfield();
+  GStarfield();
 
-  ~GGamePlayfield();
+  ~GStarfield();
 
 public:
   void Render() OVERRIDE;
@@ -26,4 +26,4 @@ protected:
 };
 
 
-#endif //EVADE2_GGAMEPLAYFIELD_H
+#endif //EVADE2_GSTARFIELD_H

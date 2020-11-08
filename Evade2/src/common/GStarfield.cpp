@@ -2,22 +2,23 @@
 // Created by Michael Schwartz on 10/29/20.
 //
 
-#include "GGamePlayfield.h"
+#include "GStarfield.h"
 #include "GCamera.h"
 
-GGamePlayfield::GGamePlayfield() : BPlayfield() {
+GStarfield::GStarfield() : BPlayfield() {
+  gCamera = new GCamera();
   for (TInt i = 0; i < NUM_STARS; i++) {
     InitStar(i);
   }
 }
 
-GGamePlayfield::~GGamePlayfield() noexcept {
+GStarfield::~GStarfield() noexcept {
 
 }
 
-void GGamePlayfield::Render() {
+void GStarfield::Render() {
   gDisplay.renderBitmap->Clear(0);
-  TFloat cz = GCamera::mZ,
+  TFloat cz = gCamera->z,
          sw = TFloat(SCREEN_WIDTH),
          sh = TFloat(SCREEN_HEIGHT);
 
@@ -29,8 +30,8 @@ void GGamePlayfield::Render() {
     }
     TFloat ratioX = sw / (zz + sw);
     TFloat ratioY = sh / (zz + sh);
-    TFloat x      = (sw / 2) - (mStarX[i] - GCamera::mX) * ratioX;
-    TFloat y      = (sh / 2) - (mStarY[i] - GCamera::mY) * ratioY;
+    TFloat x      = (sw / 2) - (mStarX[i] - gCamera->x) * ratioX;
+    TFloat y      = (sh / 2) - (mStarY[i] - gCamera->y) * ratioY;
 
     if (x < 0) {
 //      printf("InitStar x %f < 0\n", x);
@@ -50,9 +51,8 @@ void GGamePlayfield::Render() {
   }
 }
 
-void GGamePlayfield::InitStar(TInt aIndex) {
-  mStarX[aIndex] = 256 - Random(0, 512) + GCamera::mX;
-  mStarY[aIndex] = 256 - Random(0, 512) + GCamera::mY;
-  mStarZ[aIndex] = GCamera::mZ + Random(200, 512);
-
+void GStarfield::InitStar(TInt aIndex) {
+  mStarX[aIndex] = TFloat(256) - Random(0, 512) + gCamera->x;
+  mStarY[aIndex] = TFloat(256) - Random(0, 512) + gCamera->y;
+  mStarZ[aIndex] = gCamera->z + Random(200, 512);
 }

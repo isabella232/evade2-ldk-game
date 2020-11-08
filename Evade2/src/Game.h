@@ -1,25 +1,40 @@
 #ifndef MODITE_GAME_H
 #define MODITE_GAME_H
 
+#include <BTypes.h>
+
 #define WIDTH 640
 #define HEIGHT 400
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 200
-#define SCREEN_DEPTH 8
+//#define SCREEN_WIDTH 320
+//#define SCREEN_HEIGHT 200
+//#define SCREEN_DEPTH 8
 
-const float CAMERA_VZ = 4;
+const TFloat CAMERA_VZ = 2; // 4;
+const TFloat CAMERA_WARP_VZ = 4;
+const TFloat DELTACONTROL = 6; // 11;
+const TInt8 MAX_BULLETS = 6;
+const TFloat BULLET_VZ = 8; // 15;
+const TFloat ALERT_TOP = 30;
+
+// COLLISION_RADIUS = distance from player bullet to enemy required for a hit
+const TFloat COLLISION_RADIUS = 64;
+#define BANK_LEFT TUint32(1<<OFLAG_USER_BIT)
+#define ORBIT_LEFT TUint32(1<<(OFLAG_USER_BIT+1))
 
 #define FRAME_RATE_INFO 0
 #undef FRAME_RATE_INFO
 
 #define ENABLE_AUDIO
-//#undef ENABLE_AUDIO
+#undef ENABLE_AUDIO
 
 #define ENABLE_ROTATING_TEXT
 //#undef ENABLE_ROTATING_TEXT
 
 #define ENABLE_OPTIONS
 // #undef ENABLE_OPTIONS
+
+#define ENABLE_HUD_MOVEMENTS
+// #undef ENABLE_HUD_MOVEMENTS
 
 // Debug mode
 #define DEBUG_MODE
@@ -34,7 +49,7 @@ const float CAMERA_VZ = 4;
 #endif
 
 #ifndef RADIANS
-#define RADIANS(degrees) (FLOAT(degrees) * PI / 180)
+#define RADIANS(degrees) (TFloat(degrees) * PI / 180)
 #endif
 
 #include <stdio.h>
@@ -47,6 +62,7 @@ const float CAMERA_VZ = 4;
 //const TUint16 FACTOR = FRAMES_PER_SECOND / 30;
 
 #include "GResources.h"
+#include "common/GVectorFont.h"
 #include "GGame.h"
 //#include "common/GDialogWidget.h"
 //#include "common/GButtonWidget.h"
@@ -78,10 +94,10 @@ const TUint16 CONTROL_JOYDOWN = JOYDOWN;
 const TUint16 CONTROL_JOYLEFT = JOYLEFT;
 const TUint16 CONTROL_JOYRIGHT = JOYRIGHT;
 const TUint16 CONTROL_FIRE = BUTTONA;
-const TUint16 CONTROL_RUN = BUTTONB;
-const TUint16 CONTROL_SPELL = BUTTONX;
-const TUint16 CONTROL_INVENTORY = BUTTONR;
-const TUint16 CONTROL_TARGET = BUTTONL;
+const TUint16 CONTROL_BURST = BUTTONB;
+/* const TUint16 CONTROL_SPELL = BUTTONX; */
+/* const TUint16 CONTROL_INVENTORY = BUTTONR; */
+/* const TUint16 CONTROL_TARGET = BUTTONL; */
 const TUint16 CONTROL_DEBUG = BUTTON_SELECT;
 
 struct EnemyConfig {
@@ -97,19 +113,19 @@ struct EnemyConfig {
   TInt16 mVZ;
 };
 
-const TUint16 OFLAG_TYPE_MASK = 0x07;
-// Object is an enemy
-const TUint16 OTYPE_ENEMY = 0;
-// Object is player's bullet
-const TUint16 OTYPE_PLAYER_BULLET = 1;
-// Object is enemy bullet
-const TUint16 OTYPE_ENEMY_BULLET = 2;
-// STRING means lines is a character string to be rendered in 3D
-const TUint16 OTYPE_STRING = 3;
-const TUint16 OTYPE_ASTEROID = 4;
-// MOON means lines is ignored and a circle is rendered, as in a moon or planet
-// theta becomes radius
-const TUint16 OTYPE_MOON = 5;
+//const TUint16 OFLAG_TYPE_MASK = 0x07;
+//// Object is an enemy
+//const TUint16 OTYPE_ENEMY = 0;
+//// Object is player's bullet
+//const TUint16 OTYPE_PLAYER_BULLET = 1;
+//// Object is enemy bullet
+//const TUint16 OTYPE_ENEMY_BULLET = 2;
+//// STRING means lines is a character string to be rendered in 3D
+//const TUint16 OTYPE_STRING = 3;
+//const TUint16 OTYPE_ASTEROID = 4;
+//// MOON means lines is ignored and a circle is rendered, as in a moon or planet
+//// theta becomes radius
+//const TUint16 OTYPE_MOON = 5;
 
 // FLAGS
 // if set, the lines will explode

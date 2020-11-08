@@ -10,6 +10,7 @@ const TUint16 EVENT_SPELL_PROCESS_EXIT = 1;
 enum {
   FONT_8x8_SLOT,
   FONT_16x16_SLOT,
+  BKG_SLOT,
   SLOT_MAX,
 };
 
@@ -94,9 +95,9 @@ const TUint16 IMG_DAMAGE_UP = 40;
 const TUint8 COLOR_BLACK = 0;
 const TUint8 COLOR_WHITE = 1;
 const TUint8 COLOR_TEXT = 2;
-const TUint8 COLOR_STAR = 3;
-const TUint8 COLOR_ENEMY1 = 4;
-const TUint8 COLOR_SHMOO = 255;
+const TUint8 COLOR_TEXT_BG = 3;
+const TUint8 COLOR_STAR = 4;
+const TUint8 COLOR_HUD = 5;
 
 const TUint8 COLOR_BLUE = 201;
 const TUint8 COLOR_GREEN = 202;
@@ -113,6 +114,7 @@ const TUint8 COLOR_BRIGHT_RED = 212;
 const TUint8 COLOR_BRIGHT_MAGENTA = 213;
 const TUint8 COLOR_YELLOW = 214;
 const TUint8 COLOR_SPACE = 215;
+const TUint8 COLOR_SHMOO = 255;
 
 
 
@@ -122,11 +124,12 @@ const TUint8 COLOR_SPACE = 215;
 const TUint8 SHMOO_COLOR = 216;
 const TUint8 BULLET_COLOR = 217;
 const TUint8 EBULLET_COLOR = 218;
-const TUint8 BOSS_COLOR = 219;
-const TUint8 ASSAULT_COLOR = 220;
-const TUint8 BOMBER_COLOR = 221;
-const TUint8 SCOUT_COLOR = 222;
-const TUint8 STAR_COLOR = 223;
+const TUint8 BOMB_COLOR = 219;
+const TUint8 BOSS_COLOR = 220;
+const TUint8 ASSAULT_COLOR = 221;
+const TUint8 BOMBER_COLOR = 222;
+const TUint8 SCOUT_COLOR = 223;
+const TUint8 STAR_COLOR = 224;
 
 #define MAX_BBITMAP 5
 

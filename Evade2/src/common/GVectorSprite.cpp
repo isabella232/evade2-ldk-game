@@ -1,9 +1,15 @@
 #include "GVectorSprite.h"
 #include "GCamera.h"
 
+void GVectorSprite::SetLines(const TInt8 *aLines) {
+  mLines = aLines;
+  auto *p = (const TUint16 *) mLines;
+  w = p[0];
+  h = p[1];
+}
 
 TBool GVectorSprite::ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat y,
-                           TFloat theta, TFloat scaleFactor, TInt8 step, TUint8 color) {
+                                          TFloat theta, TFloat scaleFactor, TInt8 step, TUint8 color) {
   graphic += 2;
   TBool drawn = false;
 
@@ -13,7 +19,7 @@ TBool GVectorSprite::ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat
 
   for (TInt8 i = 0; i < numRows; i++) {
     struct vec_segment_u8 seg;
-    TFloat x0, y0, x1, y1;
+    TFloat                x0, y0, x1, y1;
 
     memcpy(&seg, graphic, sizeof(seg));
     graphic += sizeof(seg);
@@ -38,16 +44,15 @@ TBool GVectorSprite::ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat
     }
 
 
-
     TInt16 drawX1 = x0 * cost - y0 * sint + x,
-        drawY1 = y0 * cost + x0 * sint + y,
-        drawX2 = x1 * cost - y1 * sint + x,
-        drawY2 = y1 * cost + x1 * sint + y;
+           drawY1 = y0 * cost + x0 * sint + y,
+           drawX2 = x1 * cost - y1 * sint + x,
+           drawY2 = y1 * cost + x1 * sint + y;
 
     TBool xInBounds = (drawX1 >= 0) && (drawX1 <= DISPLAY_WIDTH) && (drawY1 >= 0) && (drawY1 < DISPLAY_HEIGHT),
-        yInBounds = (drawX2 >= 0) && (drawX2 <= DISPLAY_WIDTH) && (drawY2 >= 0) && (drawY2 < DISPLAY_HEIGHT);
+          yInBounds = (drawX2 >= 0) && (drawX2 <= DISPLAY_WIDTH) && (drawY2 >= 0) && (drawY2 < DISPLAY_HEIGHT);
 
-    if ((! xInBounds) && !(yInBounds)) {
+    if ((!xInBounds) && !(yInBounds)) {
       continue;
     }
 
@@ -64,41 +69,57 @@ TBool GVectorSprite::ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat
   return drawn;
 }
 
+static TFloat square(TFloat f) {
+  return f * f;
+}
+
+TFloat GVectorSprite::DistanceTo(GVectorSprite *aOther) {
+  return sqrt(square(aOther->x - x) + square(aOther->y - y) + square(aOther->z - z));
+};
+
 TBool GVectorSprite::Render(BViewPort *aViewPort) {
-  if (!mLines || mZ <= GCamera::mZ) {
+  if (!mLines || z <= gCamera->z) {
     // nothing to draw
     return EFalse;
   }
 
-  TFloat zz = (mZ - GCamera::mZ) * 2;
+  TFloat zz    = (z - gCamera->z) * 2;
   TFloat ratio = 128 / (zz + 128);
+  TFloat sw    = TFloat(SCREEN_WIDTH),
+         sh    = TFloat(SCREEN_HEIGHT);
 
-  bool isEnemy = Type() == OTYPE_ENEMY;
+  bool   isEnemy = type == STYPE_ENEMY;
   // printf("is enemy = %i\n", isEnemy);
-  TFloat cx = (GCamera::mX - mX) * ratio + SCREEN_WIDTH / 2;
-  TFloat cy = (GCamera::mY - mY) * ratio + SCREEN_HEIGHT / 2;
+  TFloat cx      = (gCamera->x - x) * ratio + sw / 2;
+  TFloat cy      = (gCamera->y - y) * ratio + sh / 2;
 
   // uint8_t color = isEnemy ? 5 : 255;
 
   if (flags & OFLAG_EXPLODE) {
     ExplodeVectorGraphic(mLines, cx, cy, mTheta, 1 / ratio, mState, this->mColor);
-  }
-  else {
+  } else {
     bool drawn = DrawVectorGraphic(mLines, cx, cy, mTheta, 1 / ratio, this->mColor);
     if ((!drawn) && isEnemy) {
 
       // draw radar blip
-      TFloat dx = GCamera::mX - mX,
-          dy = GCamera::mY - mY,
-          angle = atan2(dy, dx);
+      TFloat dx    = gCamera->x - x,
+             dy    = gCamera->y - y,
+             angle = atan2(dy, dx),
+             midx  = sw / 2,
+             midy  = sh / 2,
+             cxx    = midx + cos(angle) * (midx - 10),
+             cyy    = midy + sin(angle) * (midy - 10);
 
 //          printf("TODO: Fill Circle for enemy radar\n");
-        aViewPort->FillCircle(gDisplay.renderBitmap,
-            (int16_t)(SCREEN_WIDTH / 2 + cos(angle) * 75),
-            (int16_t)(SCREEN_HEIGHT / 2 + sin(angle) * 75),
-            3,
-            EBULLET_COLOR
-        );
+
+//      printf("Angle: %f, x: %f, y: %f, cx,cy: %f,%f\n", angle, x, y, cx, cy);
+      aViewPort->FillCircle(gDisplay.renderBitmap,
+                            (TInt16) cxx,
+                            (TInt16) cyy,
+                            4,
+                            COLOR_SHMOO
+//                            mColor
+      );
 
     }
   }
@@ -107,6 +128,6 @@ TBool GVectorSprite::Render(BViewPort *aViewPort) {
 }
 
 
-TBool GVectorSprite::BehindCamera()  {
-  return mZ <= GCamera::mZ;
+TBool GVectorSprite::BehindCamera() {
+  return z <= gCamera->z;
 }

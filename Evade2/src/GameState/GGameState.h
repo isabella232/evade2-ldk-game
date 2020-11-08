@@ -7,13 +7,31 @@
 
 #include <BGameEngine.h>
 
+enum {
+  STATE_PLAY,
+  STATE_BOSS,
+  STATE_NEXT_WAVE,
+};
+
+class GPlayerProcess;
+
 class GGameState : public BGameEngine {
 public:
   GGameState();
-  ~GGameState();
+
+  ~GGameState() OVERRIDE;
+
 public:
-//  void GameLoop() OVERRIDE;
+  void PostRender() OVERRIDE;
+
+public:
+  GPlayerProcess *mPlayerProcess;
+  TInt32         mState;
+  TInt16         mKills;
+  TInt16         mWave;
+
 };
 
+extern GGameState *gGameState;
 
 #endif //EVADE2_GGAMESTATE_H

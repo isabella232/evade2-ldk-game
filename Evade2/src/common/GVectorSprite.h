@@ -12,59 +12,61 @@ struct vec_segment_u8 {
   TInt8 y1;
 };
 
-#define FIRE_TIME (60 / Game::difficulty + random(1, 60 / Game::Game::difficulty))
+//#define FIRE_TIME (60 / Game::difficulty + random(1, 60 / Game::Game::difficulty))
 
 
 class GVectorSprite : public BSprite {
 
 public:
-  GVectorSprite() : BSprite(0 , 0, ENull, STYPE_DEFAULT) {
+  explicit GVectorSprite(TUint64 aType = STYPE_DEFAULT) : BSprite(0 , 0, ENull, aType) {
     mColor = COLOR_WHITE;
     mPad = 0;
-    mX = mY = mZ = 0;
-    mVX = mVY = mVZ = 0;
-    mFlags = mState = mTheta = 0;
+    x = y = z = 0;
+    vx = vy = vz = 0;
+    flags = mState = mTheta = 0;
     mTimer = 0;
     mLines = ENull;
   }
 
-  void StartAnimation() {
-    printf("GVectorSprite::StartAnimation()\n");
-  }
-
-  TBool DrawVectorGraphic(const TInt8 *graphic, TFloat x, TFloat y, TFloat theta, TFloat scaleFactor, TUint8 color) {
+  static TBool DrawVectorGraphic(const TInt8 *graphic, TFloat x, TFloat y, TFloat theta, TFloat scaleFactor, TUint8 color) {
     return ExplodeVectorGraphic(graphic, x, y, theta, scaleFactor, 0, color);
   }
 
-  TBool ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat y,
+  static TBool ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat y,
                              TFloat theta, TFloat scaleFactor, TInt8 step, TUint8 color);
 
   TBool Render(BViewPort *aViewPort) OVERRIDE;
 
   void Move() OVERRIDE {
-    mX += mVX;
-    mY += mVY;
-    mZ += mVZ;
+    x += vx;
+    y += vy;
+    z += vz;
   }
+public:
+  void SetLines(const TInt8 *aLines);
+  const TInt8 *GetLines() { return mLines; }
 
+protected:
   // if lines is NULL, then the variables in the Object structure can be used
   // for any purpose
   const TInt8 *mLines;
 
-  TFloat mX, mY, mZ;    // coordinates
-  TFloat mVX, mVY, mVZ; // velocity in x,y,z
-  TUint8 mFlags;
-  TInt8 mTimer;
+public:
+
+  TFloat z;    // coordinates
+  TFloat vz; // velocity in x,y,z
+  TInt16 mTimer;
   TInt16 mState; // arbitrary data TInt8 for AI use (can be explosion step, etc.)
   TFloat mTheta; // rotation around Z (in degrees, 0-60)
   TUint8 mColor;
   TUint8 mPad;
 
-  inline void SetType(TUint8 aType) {
-    mFlags = (mFlags & ~OFLAG_TYPE_MASK) | aType;
-  }
+//  inline void SetType(TUint8 aType) {
+//    mFlags = (mFlags & ~OFLAG_TYPE_MASK) | aType;
+//  }
 
   TBool BehindCamera();
+  TFloat DistanceTo(GVectorSprite *aOther);
 
   TBool do_death() {
 //    if (o->flags & OFLAG_COLLISION) {
@@ -76,10 +78,6 @@ public:
 //      return TRUE;
 //    }
     return EFalse;
-  }
-
-  inline TUint8 Type() {
-    return mFlags & OFLAG_TYPE_MASK;
   }
 };
 

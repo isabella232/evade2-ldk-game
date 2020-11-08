@@ -1,15 +1,16 @@
 #include "Game.h"
 #include "GGame.h"
 //#include "GPlayer.h"
-#include "GCamera.h"
+#include "common/GCamera.h"
 #include "GResources.h"
+
+// states
 #include "./GameState/GGameState.h"
+#include "./SplashState/GSplashState.h"
+#include "./MainMenuState/GMainMenuState.h"
+#include "./AttractState/GAttractState.h"
 
 static TUint32 start;
-
-BFont *gFont8x8, *gFont16x16;
-
-BViewPort gFullViewPort;
 
 #ifdef DEBUG_MODE
 //TBool GGame::mDebug = ETrue;
@@ -23,63 +24,14 @@ TBool GGame::mDebug = EFalse;
  *******************************************************************************/
 
 GGame::GGame() {
+  gGame = this;
   printf("Construct GGame\n");
-  gGameEngine = new GGameState();
-#if 0
-  mLocalData = ENull;
-  mLocalDataSize = 0;
-
-  gFullViewPort.SetRect(TRect (0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1));
-
-  // Load Game Options
-#ifdef ENABLE_OPTIONS
-  gOptions = new TOptions();
-#endif
-
-#ifdef ENABLE_AUDIO
-  gSoundPlayer.Init(6 /*channels*/);
-#endif
-
-  gDisplay.SetColor(COLOR_WHITE, 255, 255, 255);
-  gDisplay.SetColor(ASSAULT_COLOR, 255, 50, 50);
-  gDisplay.SetColor(BOMBER_COLOR, 50, 255, 50);
-  gDisplay.SetColor(SCOUT_COLOR, 255, 50, 255);
-  Camera::mZ = CAMERA_VZ;
-
-//  const TUint8 BULLET_COLOR = 217;
-//  const TUint8 EBULLET_COLOR = 218;
-//  const TUint8 BOSS_COLOR = 219;
-//  const TUint8 SCOUT_COLOR = 222;
-//  const TUint8 STAR_COLOR = 223;
-  // preload bitmaps
-  // MAX_BITMAP is defined in GResource.h.
-  //  for (TInt16 slot = 0; slot <= MAX_BBITMAP; slot++) {
-  //    gResourceManager.PreloadBitmap(slot);
-  //  }
-
-  gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
-  gResourceManager.CacheBitmapSlot(FONT_8x8_SLOT);
-  gFont8x8 = new BFont(gResourceManager.GetBitmap(FONT_8x8_SLOT), FONT_8x8);
-  gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
-  gResourceManager.CacheBitmapSlot(FONT_16x16_SLOT);
-  gFont16x16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
-
-  gViewPort = new BViewPort();
-  gViewPort->SetRect(TRect(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1));
-  gViewPort->Offset(0, 0);
-
-  mState = mNextState = -1;
+  gVectorFont = new GVectorFont();
+  mDifficulty = 1;
   gGameEngine = ENull;
-  mGameMenu = ENull;
-  mDebugMenu = ENull;
-  mInventory = ENull;
-//  SetState(GAME_STATE_SPLASH); <-- DEFAULT
-  SetState(GAME_STATE_MAIN_MENU); // <--- For debugging
-  start = Milliseconds();
-  mShmoo.Set(0, 0, 0);
-
-  mStarField = new GStarFieldProcess();
-#endif
+  mState      = 0;
+  SetState(GAME_STATE_SPLASH);
+//  SetState(GAME_STATE_GAME);
 }
 
 GGame::~GGame() {
@@ -95,126 +47,72 @@ GGame::~GGame() {
  *******************************************************************************
  *******************************************************************************/
 
-BGameEngine *GGame::CurrentState() {
-#if 0
-  if (gGameEngine->IsPaused()) {
-    if (mGameMenu) return mGameMenu;
-    else if (mInventory) return mInventory;
-    else if (mDebugMenu) return mDebugMenu;
-  }
-#endif
-  return gGameEngine;
-}
+//BGameEngine *GGame::CurrentState() {
+//  return gGameEngine;
+//}
 
-#if 0
-void GGame::ToggleInGameMenu() {
-  if (GPlayer::mGameOver || mDebugMenu || mInventory) {
-    return;
-  }
-  if (mGameMenu) {
-    delete mGameMenu;
-    mGameMenu = ENull;
-    gGameEngine->Resume();
-  }
-  else {
-    mGameMenu = new GGameMenuState((GGameState *)gGameEngine);
-    gGameEngine->Pause();
-  }
-  gControls.dKeys = 0;
-}
 
-#endif
-
-#if 0
-void GGame::ToggleDebugMenu() {
-  if (GPlayer::mGameOver || mGameMenu || mInventory) {
-    return;
-  }
-  if (mDebugMenu) {
-    delete mDebugMenu;
-    mDebugMenu = ENull;
-    gGameEngine->Resume();
-  }
-  else {
-    mDebugMenu = new GDebugMenuState();
-    gGameEngine->Pause();
-  }
-  gControls.dKeys = 0;
-}
-#endif
-
-/*******************************************************************************
- *******************************************************************************
- *******************************************************************************/
-
-#if 0
-void GGame::ToggleInventory() {
-//  if (GPlayer::mGameOver || mGameMenu) {
-//    return;
-//  }
-//  if (mInventory) {
-//    delete mInventory;
-//    mInventory = ENull;
-//    if (!mDebugMenu) {
-//      gGameEngine->Resume();
-//    }
-//  }
-//  else {
-//    gGameEngine->Pause();
-//  }
-//  gControls.dKeys = 0;
-}
-#endif
-
-/*******************************************************************************
- *******************************************************************************
- *******************************************************************************/
-
-#if 0
-void GGame::SetState(TInt aNewState, TAny *aLocalData, TUint32 aSize) {
-  mNextState = aNewState;
-  if (aLocalData) {
-    delete (TUint8 *)mLocalData;
-    mLocalDataSize = aSize;
-    mLocalData = new TUint8[mLocalDataSize];
-    memcpy((TUint8 *)mLocalData, (TUint8 *)aLocalData, mLocalDataSize);
-  }
-  else {
-    delete (TUint8 *)mLocalData;
-    mLocalData = ENull;
-    mLocalDataSize = 0;
-  }
-}
-#endif
-
-TInt GGame::GetState() {
+TInt GGame::GetState() const {
   return mState;
 }
 
-void GGame::StartGame(char *aGameName) {
-#if 0
-#ifdef DEBUG_MODE
-  printf("START GAME (%s)\n", aGameName);
-#endif
-  SetState(
-    mState == GAME_STATE_RESUME_GAME ? GAME_STATE_LOAD_SAVEGAME : GAME_STATE_RESUME_GAME,
-    aGameName,
-    strlen(aGameName)+1
-  );
-#endif
-}
-
-TBool GGame::IsGameState() {
-  TBool state = mState == GAME_STATE_RESUME_GAME ||
-                mState == GAME_STATE_GAME ||
-                mState == GAME_STATE_LOAD_SAVEGAME;
-
-  if (!state) {
-    return EFalse;
+void GGame::SetState(GAMESTATE aNewState) {
+  for (TInt i = 0; i < 256; i++) {
+    gDisplay.SetColor(i, 255, 255, 255);
   }
-  return ETrue;
-//  GGameState *s = (GGameState *)gGameEngine;
-//  return !s->IsGameOver();
+
+  gDisplay.SetColor(COLOR_BLACK, 0, 0, 0);
+  gDisplay.SetColor(COLOR_WHITE, 255, 255, 255);
+
+  gDisplay.SetColor(COLOR_STAR, 255,255,255);
+
+  gDisplay.SetColor(ASSAULT_COLOR, 255, 50, 50);
+  gDisplay.SetColor(BOMBER_COLOR, 50, 255, 50);
+  gDisplay.SetColor(SCOUT_COLOR, 255, 50, 255);
+
+  gDisplay.SetColor(EBULLET_COLOR, 50, 50, 255);
+  gDisplay.SetColor(BOMB_COLOR, 255, 255, 50);
+
+  mState = aNewState;
+  switch (aNewState) {
+    case GAME_STATE_SPLASH:
+      printf("new State SPLASH\n");
+      delete gGameEngine;
+      gGameEngine = new GSplashState();
+      break;
+    case GAME_STATE_ATTRACT_MODE:
+      printf("new State ATTRACT\n");
+      delete gGameEngine;
+      gGameEngine = new GAttractState();
+      break;
+    case GAME_STATE_GAME:
+      printf("new State GAME\n");
+      delete gGameEngine;
+      gGameEngine = new GGameState();
+      break;
+    case GAME_STATE_MAIN_MENU:
+      printf("new State MAIN MENU\n");
+      delete gGameEngine;
+      gGameEngine = new GMainMenuState();
+      break;
+    case GAME_STATE_VICTORY:
+      printf("new State VICTORY\n");
+      delete gGameEngine;
+      gGameEngine = new GGameState();
+      break;
+    case GAME_STATE_CREDITS:
+      printf("new State CREDITS\n");
+      delete gGameEngine;
+      gGameEngine = new GAttractState();
+      break;
+//    case GAME_STATE_NEXT_WAVE:
+//      printf("new State NEXT WAVE\n");
+//      break;
+  }
+};
+
+TBool GGame::IsGameState() const {
+  return mState == GAME_STATE_GAME;
 }
 
 /*******************************************************************************
@@ -222,15 +120,16 @@ TBool GGame::IsGameState() {
  *******************************************************************************/
 
 void GGame::Run() {
-  printf("run\n");
   TBool done = EFalse;
+
   while (!done) {
     Random(); // randomize
     mShmoo.Set(TUint8(mShmoo.r + 16), TUint8(mShmoo.g + 16), TUint8(mShmoo.b + 16));
     gDisplay.displayBitmap->SetColor(COLOR_SHMOO, mShmoo);
-    GCamera::Move();
+    gCamera->Move();
     gGameEngine->GameLoop();
     gDisplay.Update();
+
     if (gControls.WasPressed(BUTTONQ)) {
       done = ETrue;
     }

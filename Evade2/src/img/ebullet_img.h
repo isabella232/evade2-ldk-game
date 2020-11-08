@@ -3,7 +3,7 @@
 
 #include "BTypes.h"
 
-const TInt16 ebullet_img[] = {
+const TInt8 ebullet_img[] = {
   8, // width
   8, // height
   4, // num rows

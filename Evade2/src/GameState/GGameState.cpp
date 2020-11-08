@@ -3,21 +3,39 @@
 //
 
 #include "GGameState.h"
-#include "GGamePlayfield.h"
+#include "GStarfield.h"
+#include "GPlayerProcess.h"
+#include "GEnemyProcess.h"
+#include "GNextWaveProcess.h"
+#include "GBossProcess.h"
+
+GGameState *gGameState;
 
 GGameState::GGameState() : BGameEngine(gViewPort) {
-  mPlayfield = new GGamePlayfield();
+  gGameEngine = this;
+  gGameState  = this;
+  mState      = STATE_PLAY;
+  mWave       = 1;
+  mKills      = 0;
+  mPlayfield  = new GStarfield();
   // set colors
-  gDisplay.SetColor(COLOR_BLACK, 0,0,0);
-  for (TInt i=1; i<256; i++) {
-    gDisplay.SetColor(i, 255,255,255);
-  }
-//  gDisplay.SetColor(COLOR_WHITE, 255,255,255);
-//  gDisplay.SetColor(COLOR_STAR, 255,255,255);
+  AddProcess(new GEnemyProcess());
+  AddProcess(new GEnemyProcess());
+  AddProcess(new GEnemyProcess());
+  mPlayerProcess = new GPlayerProcess();
+  AddProcess(mPlayerProcess);
 }
 
 GGameState::~GGameState() {
 //  delete mPlayfield;
 }
 
+void GGameState::PostRender() {
+  if (mState != STATE_PLAY) {
+    return;
+  }
+  if (mKills > (10 + mWave) * gGame->mDifficulty) {
+    AddProcess(new GBossProcess());
+  }
+}
 

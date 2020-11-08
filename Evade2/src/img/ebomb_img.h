@@ -4,7 +4,7 @@
 #include "BTypes.h"
 
 
-const TInt16 ebomb_img[] = {
+const TInt8 ebomb_img[] = {
   16, // width
   16, // height
   9, // num rows
