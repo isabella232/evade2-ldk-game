@@ -6,7 +6,6 @@
 #include "GCamera.h"
 
 GStarfield::GStarfield() : BPlayfield() {
-  gCamera = new GCamera();
   for (TInt i = 0; i < NUM_STARS; i++) {
     InitStar(i);
   }
