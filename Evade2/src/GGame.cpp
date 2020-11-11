@@ -145,7 +145,7 @@ void GGame::Run() {
 
     gGameEngine->GameLoop();
     gDisplay.Update();
-    printf(" gCamera vz %2f, z %2f \n", gCamera->vz, gCamera->z);
+//    printf(" gCamera vz %2f, z %2f \n", gCamera->vz, gCamera->z);
 
     if (gControls.WasPressed(BUTTONQ)) {
       done = ETrue;

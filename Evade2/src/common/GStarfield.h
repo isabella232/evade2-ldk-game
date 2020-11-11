@@ -20,6 +20,7 @@ static const TUint16 RANDOM_Z_MAX = 600;
 
 
 #define OLD_STARFIELD 1
+#undef OLD_STARFIELD
 
 #ifdef OLD_STARFIELD
 class GStarfield : public BPlayfield {
@@ -38,32 +39,31 @@ protected:
   TFloat mStarX[NUM_STARS], mStarY[NUM_STARS], mStarZ[NUM_STARS];
 };
 
-
+#else
 
 class GStar {
 public:
-    GStar() {
-      mX = 0;
-      mY = 0;
-      mZ = 0;
-      mSpeed = 0;
-      mScreenX = 0;
-      mScreenY = 0;
-      mOldScreenX = 0;
-      mOldScreenY = 0;
-    }
+  GStar() {
+    mX = 0;
+    mY = 0;
+    mZ = 0;
+    mSpeed = 0;
+    mScreenX = 0;
+    mScreenY = 0;
+    mOldScreenX = 0;
+    mOldScreenY = 0;
+  }
 
-    void Randomize(TInt16 xMin, TInt16 xMax, TInt16 yMin, TInt16 yMax, TInt16 zMin, TInt16 zMax, TInt16 speedMin, TInt16 speedMax)  {
-      mX = Random(xMin, xMax);
-      mY = Random(yMin, yMax);
-      mZ = Random(zMin, zMax);
-      mSpeed = Random(speedMin, speedMax + 1);
-    }
-    TFloat mX, mY, mZ, mSpeed;
-    TInt16 mScreenX, mScreenY, mOldScreenX, mOldScreenY;
+  void Randomize(TInt16 xMin, TInt16 xMax, TInt16 yMin, TInt16 yMax, TInt16 zMin, TInt16 zMax, TInt16 speedMin, TInt16 speedMax)  {
+    mX = Random(xMin, xMax);
+    mY = Random(yMin, yMax);
+    mZ = Random(zMin, zMax);
+    mSpeed = Random(speedMin, speedMax + 1);
+  }
+  TFloat mX, mY, mZ, mSpeed;
+  TInt16 mScreenX, mScreenY, mOldScreenX, mOldScreenY;
 };
 
-#else
 
 static GStar stars[NUM_STARS];  // An array of star instances.
 static TUint8 colors[NUM_STARS];
