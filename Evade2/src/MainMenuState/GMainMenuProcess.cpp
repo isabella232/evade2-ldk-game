@@ -37,11 +37,11 @@ TBool GMainMenuProcess::RunAfter() {
 }
 
 TBool GMainMenuProcess::RunBefore() {
-  if (gControls.WasPressed(BUTTON_START)) {
+  if (gControls.WasPressed(BUTTON_START|BUTTONA|BUTTONB|BUTTONX|BUTTONY) ) {
     gGame->SetState(GAME_STATE_GAME);
     return EFalse;
   }
-  if (mTimer < 0 || gControls.WasPressed(BUTTONA|BUTTONB)) {
+  if (mTimer < 0 ) {
     gGame->SetState(GAME_STATE_ATTRACT_MODE);
     return EFalse;
   }
