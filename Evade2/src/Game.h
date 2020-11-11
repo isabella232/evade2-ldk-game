@@ -9,11 +9,11 @@
 //#define SCREEN_HEIGHT 200
 //#define SCREEN_DEPTH 8
 
-const TFloat CAMERA_VZ = 2; // 4;
+const TFloat CAMERA_VZ = 8; // 4;
 const TFloat CAMERA_WARP_VZ = 4;
-const TFloat DELTACONTROL = 6; // 11;
+const TFloat DELTACONTROL = 11; // 11;
 const TInt8 MAX_BULLETS = 6;
-const TFloat BULLET_VZ = 8; // 15;
+const TFloat BULLET_VZ = 10; // 15;
 const TFloat ALERT_TOP = 30;
 
 // COLLISION_RADIUS = distance from player bullet to enemy required for a hit

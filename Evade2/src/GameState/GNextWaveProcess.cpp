@@ -9,7 +9,7 @@
 
 GNextWaveProcess::GNextWaveProcess() : BProcess() {
   mTimer      = 240;
-  gCamera->vz = 30;
+  gCamera->vz = CAMERA_VZ;
   gGameState->mState = STATE_NEXT_WAVE;
 }
 

@@ -10,7 +10,7 @@
 #include "img/ebullet_img.h"
 
 GEnemyBulletProcess::GEnemyBulletProcess(GVectorSprite *enemy, TInt8 type) {
-  const TFloat FRAMES = 90 / gGame->mDifficulty;
+  const TFloat FRAMES = 90.0f / (TFloat)gGame->mDifficulty;
   mSprite = new GVectorSprite(STYPE_EBULLET);
   mSprite->SetLines((type == EBULLET_BOMB) ? ebomb_img : ebullet_img);
   mSprite->mColor = (type == EBULLET_BOMB) ? BOMB_COLOR : EBULLET_COLOR;

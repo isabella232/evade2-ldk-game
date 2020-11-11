@@ -103,7 +103,7 @@ TBool GBossProcess::WarpState() {
   }
 
   gVectorFont->scale = 1.5;
-  gCamera->vz        = 30;
+  gCamera->vz        = CAMERA_VZ;
   gVectorFont->printf(90, ALERT_TOP, "WARP TO ACE!");
   gGameState->mPlayerProcess->recharge_shield();
   gGameState->mPlayerProcess->recharge_power();
@@ -553,7 +553,7 @@ void Boss::entry(Process *me, Object *o) {
   // production
   game_mode   = MODE_NEXT_WAVE;
   Game::kills = 0;
-  gCamera->vz = -10;
+  gCamera->vz = -CAMERA_VZ;
 
   mSprite->set_type(OTYPE_ENEMY);
   mSprite->z = gCamera->z + z_dist - 150;
