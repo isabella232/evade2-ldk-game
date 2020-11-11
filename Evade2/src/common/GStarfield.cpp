@@ -1,9 +1,7 @@
-//
-// Created by Michael Schwartz on 10/29/20.
-//
-
 #include "GStarfield.h"
 #include "GCamera.h"
+
+// Based off of https://github.com/ankorite/Arduboy-Starfield-Demo/blob/master/src/starfield/starfield.ino
 //
 //GStarfield::GStarfield() : BPlayfield() {
 //  for (TInt i = 0; i < NUM_STARS; i++) {
@@ -104,17 +102,16 @@ void GStarfield::Render() {
       travelZ = .015;
     }
 
-    if (jsLButton) {
-      printf("TODO: Rotate stars & play field on L button\n");
-      travelX = .02;
-    }
-    if (jsRButton) {
-      printf("TODO: Rotate stars & play field on R button\n");
-      travelX = -.02;
-    }
+//    if (jsLButton) {
+//      printf("TODO: Rotate stars & play field on L button\n");
+//      travelX = .02;
+//    }
+//    if (jsRButton) {
+//      printf("TODO: Rotate stars & play field on R button\n");
+//      travelX = -.02;
+//    }
 
   }
-  //TODO: Investigate @Jay! If you turn travelZ above to travelX, the star field rotates!
   if (gCamera->vz == CAMERA_WARP_VZ) {
     mBoostSpeed = ETrue;
   }
@@ -147,6 +144,22 @@ void GStarfield::Render() {
       stars[i].mZ = temp_z * cos(travelZ) + temp_x * sin(travelZ);
     }
 
+//    if (travelX != 0) {
+//      TFloat temp_x = stars[i].mX;
+//      TFloat temp_y = stars[i].mY;
+//      stars[i].mX = temp_x * cos(travelX) - temp_y * sin(travelX);
+//      stars[i].mY = temp_y * cos(travelX) + temp_x * sin(travelX);
+//    }
+//
+//    if (travelZ != 0) {
+//      TFloat temp_x = stars[i].mX;
+//      TFloat temp_z = stars[i].mZ;
+//      stars[i].mX = temp_x * cos(travelZ) - temp_z * sin(travelZ);
+//      stars[i].mZ = temp_z * cos(travelZ) + temp_x * sin(travelZ);
+//    }
+
+
+
     stars[i].mScreenX = stars[i].mX / stars[i].mZ * 100 + SCREEN_WIDTH / 2;
     stars[i].mScreenY = stars[i].mY / stars[i].mZ * 100 + SCREEN_HEIGHT / 2;
 
@@ -167,8 +180,9 @@ void GStarfield::Render() {
 
     //If the stars go off the screen remove them and re-draw. If the stars hang out in the center remove them also
     if (stars[i].mScreenX > SCREEN_WIDTH || stars[i].mScreenX < 0 || stars[i].mScreenY > SCREEN_HEIGHT ||
-        stars[i].mScreenY < 0 ||
-        (stars[i].mScreenX == SCREEN_WIDTH >> 1 && stars[i].mScreenY == SCREEN_HEIGHT >> 1)) {
+        stars[i].mScreenY < 0
+       ) {
+
       int xMin = -1000,
           xMax = 1000,
           yMin = -500,
