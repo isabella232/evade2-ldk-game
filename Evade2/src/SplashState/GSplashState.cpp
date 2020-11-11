@@ -10,7 +10,7 @@ GSplashState::GSplashState() : BGameEngine(gViewPort) {
 }
 
 GSplashState::~GSplashState()  {
-  delete mPlayfield;
-  mPlayfield = ENull;
+//  delete mPlayfield;
+//  mPlayfield = ENull;
 }
 

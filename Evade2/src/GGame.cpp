@@ -31,6 +31,7 @@ GGame::GGame() {
   mDifficulty = 1;
   gGameEngine = ENull;
   mState      = 0;
+  mNextState = GAME_STATE_NONE;
   SetState(GAME_STATE_SPLASH);
 //  SetState(GAME_STATE_GAME);
 }
@@ -74,42 +75,7 @@ void GGame::SetState(GAMESTATE aNewState) {
   gDisplay.SetColor(EBULLET_COLOR, 50, 50, 255);
   gDisplay.SetColor(BOMB_COLOR, 255, 255, 50);
 
-  mState = aNewState;
-  switch (aNewState) {
-    case GAME_STATE_SPLASH:
-      printf("new State SPLASH\n");
-      delete gGameEngine;
-      gGameEngine = new GSplashState();
-      break;
-    case GAME_STATE_ATTRACT_MODE:
-      printf("new State ATTRACT\n");
-      delete gGameEngine;
-      gGameEngine = new GAttractState();
-      break;
-    case GAME_STATE_GAME:
-      printf("new State GAME\n");
-      delete gGameEngine;
-      gGameEngine = new GGameState();
-      break;
-    case GAME_STATE_MAIN_MENU:
-      printf("new State MAIN MENU\n");
-      delete gGameEngine;
-      gGameEngine = new GMainMenuState();
-      break;
-    case GAME_STATE_VICTORY:
-      printf("new State VICTORY\n");
-      delete gGameEngine;
-      gGameEngine = new GGameState();
-      break;
-    case GAME_STATE_CREDITS:
-      printf("new State CREDITS\n");
-      delete gGameEngine;
-      gGameEngine = new GAttractState();
-      break;
-//    case GAME_STATE_NEXT_WAVE:
-//      printf("new State NEXT WAVE\n");
-//      break;
-  }
+  mNextState = aNewState;
 };
 
 TBool GGame::IsGameState() const {
@@ -128,148 +94,52 @@ void GGame::Run() {
     mShmoo.Set(TUint8(mShmoo.r + 16), TUint8(mShmoo.g + 16), TUint8(mShmoo.b + 16));
     gDisplay.displayBitmap->SetColor(COLOR_SHMOO, mShmoo);
     gCamera->Move();
-    gGameEngine->GameLoop();
-    gDisplay.Update();
-
-    if (gControls.WasPressed(BUTTONQ)) {
-      done = ETrue;
-    }
-  }
-
-#if 0
-#ifdef ENABLE_OPTIONS
-  TBool muted = gOptions->muted;
-#endif
-
-
-  TBool done = EFalse;
-  while (!done) {
-    Random(); // randomize
-    mShmoo.Set(TUint8(mShmoo.r + 16), TUint8(mShmoo.g + 16), TUint8(mShmoo.b + 16));
-    Camera::Move();
-
-    gDisplay.displayBitmap->SetColor(COLOR_SHMOO, mShmoo);
-    gDisplay.displayBitmap->SetColor(COLOR_SHMOO_RED, mShmoo.r, 20, 20);
-    gDisplay.displayBitmap->SetColor(COLOR_SHMOO_GREEN, 20, mShmoo.g, 20);
-
-    // TODO: Add all the basic colors here
-    gDisplay.SetColor(STAR_COLOR, 180, 180, 180);
-    gDisplay.SetColor(COLOR_SPACE, 0, 0, 0);
-
-    // The master game loop needs to clear the screen because the star field is ALWAYS running
-    gDisplay.renderBitmap->Clear(COLOR_SPACE);
-
-    mStarField->Render();
 
     if (mNextState != mState) {
+      mState = mNextState;
       switch (mNextState) {
         case GAME_STATE_SPLASH:
+          printf("new State SPLASH\n");
           delete gGameEngine;
           gGameEngine = new GSplashState();
           break;
-        case GAME_STATE_MAIN_MENU:
-          delete gGameEngine;
-          gGameEngine = new GMainMenuState((GGameState *)gGameEngine);
-          break;
-        case GAME_STATE_MAIN_OPTIONS:
-          delete gGameEngine;
-          gGameEngine = new GMainOptionsState();
-          break;
-        case GAME_STATE_RESET_OPTIONS:
-          delete gGameEngine;
-          gGameEngine = new GResetOptionsState();
-          break;
         case GAME_STATE_ATTRACT_MODE:
+          printf("new State ATTRACT\n");
           delete gGameEngine;
-          gGameEngine = new GAttractModeState();
+          gGameEngine = new GAttractState();
           break;
-        case GAME_STATE_RESET_GAME:
         case GAME_STATE_GAME:
+          printf("new State GAME\n");
           delete gGameEngine;
           gGameEngine = new GGameState();
           break;
-        case GAME_STATE_LOAD_SAVEGAME:
-        case GAME_STATE_RESUME_GAME:
+        case GAME_STATE_MAIN_MENU:
+          printf("new State MAIN MENU\n");
           delete gGameEngine;
-          gGameEngine = new GGameState((char *)mLocalData);
+          gGameEngine = new GMainMenuState();
           break;
-
         case GAME_STATE_VICTORY:
+          printf("new State VICTORY\n");
           delete gGameEngine;
-          gGameEngine = new GVictoryState((GGameState *)gGameEngine);
+          gGameEngine = new GGameState();
           break;
-
         case GAME_STATE_CREDITS:
+          printf("new State CREDITS\n");
           delete gGameEngine;
-          gGameEngine = new GCreditsState((GGameState *)gGameEngine);
+          gGameEngine = new GAttractState();
           break;
-
-        case GAME_STATE_QUIT:
-          done = ETrue;
-        default:
-          continue;
+//    case GAME_STATE_NEXT_WAVE:
+//      printf("new State NEXT WAVE\n");
+//      break;
       }
-      // reset dKeys so next state doesn't react to any keys already pressed
-      gControls.dKeys = 0;
-      mState = mNextState;
     }
 
-
-
-    if (mInventory) {
-      mInventory->GameLoop();
-    }
-    else if (mGameMenu) {
-      gGameEngine->GameLoop();
-      mGameMenu->GameLoop();
-    }
-    else if (mDebugMenu) {
-      gGameEngine->GameLoop();
-      mDebugMenu->GameLoop();
-    }
-    else {
-      gGameEngine->GameLoop();
-    }
-
+    gGameEngine->GameLoop();
     gDisplay.Update();
-    TUint32 now = Milliseconds();
-    start = now;
 
-#ifdef FRAME_RATE_INFO
-    TUint32 elapsed = now - start;
-    printf("elapsed %4d\r", elapsed);
-#endif
-
-#ifdef DEBUG_MODE
-    if (gControls.WasPressed(CONTROL_DEBUG)) {
-      if (IsGameState()) {
-        ToggleDebugMenu();
-      }
-    }
-#endif
-
-    if (IsGameState() && gControls.WasPressed(BUTTON_START)) {
-      ToggleInGameMenu();
-    }
-
-    // right shoulder button brings up inventory
-    if (IsGameState() && gControls.WasPressed(CONTROL_INVENTORY)) {
-      ToggleInventory();
-    }
-
+    // TODO: @Jay there is no BUTTONQ on device... maybe we want to exit the game on device by some keys?
     if (gControls.WasPressed(BUTTONQ)) {
       done = ETrue;
     }
-#ifdef ENABLE_OPTIONS
-    if (gControls.WasPressed(BUTTON2)) {
-      muted = !muted;
-      gOptions->muted = muted;
-      gOptions->Save();
-#ifdef ENABLE_AUDIO
-      //      //gSoundPlayer.MuteMusic(muted);
-#endif
-    }
-#endif
   }
-#endif
 }

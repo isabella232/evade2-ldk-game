@@ -10,7 +10,6 @@ include(ProcessorCount)
 
 SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/creative-engine/cmake.files)
 
-
 #ADD_COMPILE_DEFINITIONS(__DINGUX__=true)
 ADD_COMPILE_DEFINITIONS(__MODUS_TARGET_SDL2_AUDIO__=true)
 ADD_COMPILE_DEFINITIONS(__MODUS_TARGET_DESKTOP_CONTROLS__=true)
@@ -48,7 +47,7 @@ INCLUDE_DIRECTORIES(
         ${CREATIVE_ENGINE_INCLUDE_DIRS}
 )
 
-# gather Modite sources
+# gather Evade 2 sources
 FILE(GLOB_RECURSE EVADE2_SRC RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
 
 ADD_EXECUTABLE(
@@ -56,7 +55,7 @@ ADD_EXECUTABLE(
         Resources.bin
         ${CREATIVE_ENGINE_SOURCE_FILES}
         ${EVADE2_SRC}
-        src/GameState/GGameState.cpp src/GameState/GGameState.h src/common/GStarfield.cpp src/common/GStarfield.h src/GameState/GPlayerBulletProcess.cpp src/GameState/GPlayerBulletProcess.h src/main.cpp src/GameState/GEnemyProcess.cpp src/GameState/GEnemyProcess.h src/GameState/GEnemyBulletProcess.cpp src/GameState/GEnemyBulletProcess.h src/AttractState/GAttractState.cpp src/AttractState/GAttractState.h src/AttractState/GAttractProcess.cpp src/AttractState/GAttractProcess.h src/MainMenuState/GMainMenuState.cpp src/MainMenuState/GMainMenuState.h src/MainMenuState/GMainMenuProcess.cpp src/MainMenuState/GMainMenuProcess.h src/GameState/GNextWaveProcess.cpp src/GameState/GNextWaveProcess.h src/GameState/GBossProcess.cpp src/GameState/GBossProcess.h)
+        src/GameState/GGameState.cpp src/GameState/GGameState.h src/common/GStarfield.cpp src/common/GStarfield.h src/GameState/GPlayerBulletProcess.cpp src/GameState/GPlayerBulletProcess.h src/main.cpp src/GameState/GEnemyProcess.cpp src/GameState/GEnemyProcess.h src/GameState/GEnemyBulletProcess.cpp src/GameState/GEnemyBulletProcess.h src/AttractState/GAttractState.cpp src/AttractState/GAttractState.h src/AttractState/GAttractProcess.cpp src/AttractState/GAttractProcess.h src/MainMenuState/GMainMenuState.cpp src/MainMenuState/GMainMenuState.h src/MainMenuState/GMainMenuProcess.cpp src/MainMenuState/GMainMenuProcess.h src/GameState/GNextWaveProcess.cpp src/GameState/GNextWaveProcess.h src/GameState/GBossProcess.cpp src/GameState/GBossProcess.h src/GameState/GGameOverProcess.cpp src/GameState/GGameOverProcess.h)
 
 ProcessorCount(N)
 if (NOT N EQUAL 0)
@@ -69,7 +68,7 @@ BUILD_COMMAND(
         $(MAKE) --silent
 )
 
-# make Modite.app
+# make Evade2.app
 if (APPLE)
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE TRUE)
     INSTALL(TARGETS ${PROJECT_NAME} DESTINATION ".")
