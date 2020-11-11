@@ -12,7 +12,7 @@
 
 GAttractState::GAttractState() : BGameEngine(gViewPort) {
   gGameEngine = this;
-  mPlayfield = new GStarfield();
+//  mPlayfield = new GStarfield();
   AddProcess(new GAttractProcess());
   gCamera->vx = gCamera->vy = 0;
   gCamera->vz = CAMERA_VZ;

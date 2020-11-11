@@ -17,7 +17,7 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mState      = STATE_PLAY;
   mWave       = 1;
   mKills      = 0;
-  mPlayfield  = new GStarfield();
+//  mPlayfield  = new GStarfield();
   // set colors
   AddProcess(new GEnemyProcess());
   AddProcess(new GEnemyProcess());

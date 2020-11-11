@@ -33,6 +33,12 @@ GGame::GGame() {
   mState      = 0;
   mNextState = GAME_STATE_NONE;
   SetState(GAME_STATE_SPLASH);
+  gOptions = new TOptions();
+
+#ifdef ENABLE_AUDIO
+  gSoundPlayer.Init(6 /*channels*/);
+#endif
+  mStarfield = new GStarfield();
 //  SetState(GAME_STATE_GAME);
 }
 
@@ -95,6 +101,9 @@ void GGame::Run() {
     gDisplay.displayBitmap->SetColor(COLOR_SHMOO, mShmoo);
     gCamera->Move();
 
+    mStarfield->Animate();
+    mStarfield->Render();
+
     if (mNextState != mState) {
       mState = mNextState;
       switch (mNextState) {
@@ -136,6 +145,7 @@ void GGame::Run() {
 
     gGameEngine->GameLoop();
     gDisplay.Update();
+    printf(" gCamera vz %2f, z %2f \n", gCamera->vz, gCamera->z);
 
     if (gControls.WasPressed(BUTTONQ)) {
       done = ETrue;

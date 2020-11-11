@@ -7,23 +7,6 @@
 
 #include <BPlayfield.h>
 
-//
-//class GStarfield : public BPlayfield {
-//public:
-//  GStarfield();
-//
-//  ~GStarfield();
-//
-//public:
-//  void Render() OVERRIDE;
-//
-//protected:
-//  void InitStar(TInt aIndex);
-//
-//protected:
-//  TFloat mStarX[NUM_STARS], mStarY[NUM_STARS], mStarZ[NUM_STARS];
-//};
-
 static const TInt16 NUM_STARS = 90;
 
 static TUint32 actualTime = 0;
@@ -34,6 +17,27 @@ static const TInt16 STAR_SPEED_MAX = 15; // Maximum movement in pixels per updat
 
 static const TUint16 RANDOM_Z_MIN = 400;
 static const TUint16 RANDOM_Z_MAX = 600;
+
+
+#define OLD_STARFIELD 1
+
+#ifdef OLD_STARFIELD
+class GStarfield : public BPlayfield {
+public:
+  GStarfield();
+
+  ~GStarfield();
+
+public:
+  void Render() OVERRIDE;
+
+protected:
+  void InitStar(TInt aIndex);
+
+protected:
+  TFloat mStarX[NUM_STARS], mStarY[NUM_STARS], mStarZ[NUM_STARS];
+};
+
 
 
 class GStar {
@@ -59,7 +63,7 @@ public:
     TInt16 mScreenX, mScreenY, mOldScreenX, mOldScreenY;
 };
 
-
+#else
 
 static GStar stars[NUM_STARS];  // An array of star instances.
 static TUint8 colors[NUM_STARS];
@@ -115,4 +119,8 @@ protected:
     TInt mMinSpeed;
 
 };
+
+#endif //OLD_STARFIELD
+
+
 #endif //EVADE2_GSTARFIELD_H

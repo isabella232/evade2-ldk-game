@@ -13,8 +13,8 @@ public:
   GPlayerProcess();
 
 public:
-  TInt16  power;
-  TInt16  shield;
+  TFloat  mBoostPower;
+  TFloat  mShield;
   TInt16  mNumBullets;
 //  TUint8 flags;
   TUint8 color;

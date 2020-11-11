@@ -9,10 +9,12 @@
 
 GMainMenuState::GMainMenuState() : BGameEngine(gViewPort) {
 //  gGameEngine = this;
-  mPlayfield  = new GStarfield();
+//  mPlayfield  = new GStarfield();
   gCamera->vx = gCamera->vy = 0;
   gCamera->vz = CAMERA_VZ;
   AddProcess(new GMainMenuProcess());
+  gSoundPlayer.PlayMusic(S00_INTRO_XM);
+
 }
 
 GMainMenuState::~GMainMenuState() noexcept {}

@@ -35,8 +35,8 @@ const TUint8 crosshair_right_4x8[] = {
 GPlayerProcess::GPlayerProcess() {
   color = COLOR_WHITE;
   gCamera->vz = CAMERA_VZ;
-  power       = MAX_POWER;
-  shield      = MAX_LIFE;
+  mBoostPower       = MAX_POWER;
+  mShield      = MAX_LIFE;
   mNumBullets = 0;
   mAlt        = EFalse;
   mHit        = EFalse;
@@ -62,8 +62,8 @@ void GPlayerProcess::DrawBitmap(TInt16 x, TInt16 y, const TUint8 *bitmap, TUint8
 }
 
 void GPlayerProcess::Hit(TInt8 amount) {
-  shield -= amount;
-  if (shield <= 0) {
+  mShield -= amount;
+  if (mShield <= 0) {
     gGameEngine->AddProcess(new GGameOverProcess());
     // ProcessManager::birth(GameOver::entry);
   } else {
@@ -73,14 +73,14 @@ void GPlayerProcess::Hit(TInt8 amount) {
 }
 
 void GPlayerProcess::recharge_shield() {
-  if (shield < MAX_LIFE) {
-    shield++;
+  if (mShield < MAX_LIFE) {
+    mShield++;
   }
 }
 
 void GPlayerProcess::recharge_power() {
-  if (power < MAX_POWER) {
-    power++;
+  if (mBoostPower < MAX_POWER) {
+    mBoostPower++;
   }
 }
 
@@ -111,20 +111,20 @@ TBool GPlayerProcess::RunBefore() {
   }
 
   if (gControls.IsPressed(CONTROL_BURST)) {
-    if (power > 0) {
+    if (mBoostPower > 0) {
       gCamera->vz = CAMERA_WARP_VZ;
-      power--;
-      if (power < 0) {
-        power = 0;
+      mBoostPower--;
+      if (mBoostPower < 0) {
+        mBoostPower = 0;
       }
     } else {
       gCamera->vz = CAMERA_VZ;
     }
   } else {
     gCamera->vz = CAMERA_VZ;
-    power++;
-    if (power > MAX_POWER) {
-      power = MAX_POWER;
+    mBoostPower += .5;
+    if (mBoostPower > MAX_POWER) {
+      mBoostPower = MAX_POWER;
     }
   }
 
@@ -289,8 +289,8 @@ TBool GPlayerProcess::RunAfter() {
   DrawPixel(screenMidX + deltaXCrossHairs - 5,
             screenMidY + deltaYCrossHairs + 5, 255);
 
-  DrawMeter(0, shield, deltaXMeter, deltaYMeter);
-  DrawMeter(1, power, deltaXMeter, deltaYMeter);
+  DrawMeter(0, mShield, deltaXMeter, deltaYMeter);
+  DrawMeter(1, mBoostPower, deltaXMeter, deltaYMeter);
 
 
   return ETrue;
