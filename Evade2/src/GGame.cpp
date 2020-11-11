@@ -137,7 +137,6 @@ void GGame::Run() {
     gGameEngine->GameLoop();
     gDisplay.Update();
 
-    // TODO: @Jay there is no BUTTONQ on device... maybe we want to exit the game on device by some keys?
     if (gControls.WasPressed(BUTTONQ)) {
       done = ETrue;
     }
