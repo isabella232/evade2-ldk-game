@@ -28,7 +28,7 @@ TBool GMainMenuProcess::RunAfter() {
     gVectorFont->printf(130, 155, "START");
   }
 
- mTheta += 2;
+ mTheta += 1;
   if (mTheta > 90 + 360 * 2) {
     mTheta = 90 + 360 * 2;
   }

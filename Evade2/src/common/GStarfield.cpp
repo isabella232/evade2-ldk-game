@@ -166,12 +166,12 @@ void GStarfield::Render() {
 
     actualTime = Milliseconds() * .05;
     if (mBoostSpeed && mCurrSpeed <= STAR_SPEED_MAX && actualTime - speedMills >= 25) {
-      mCurrSpeed = mCurrSpeed + 5;
+      mCurrSpeed = mCurrSpeed + 2.5;
       speedMills = actualTime;
     }
 
     if (!mBoostSpeed && mCurrSpeed > STAR_SPEED_MIN && actualTime - speedMills >= 10) {
-      mCurrSpeed -= 5;
+      mCurrSpeed -= 2.5;
       speedMills = actualTime;
     }
     if (mCurrSpeed < STAR_SPEED_MIN) {

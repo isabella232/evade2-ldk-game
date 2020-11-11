@@ -273,6 +273,7 @@ TBool GEnemyProcess::StateExplode() {
     }
     respawn();
   }
+  printf("StateEXPLODE()\n");
   return ETrue;
 }
 

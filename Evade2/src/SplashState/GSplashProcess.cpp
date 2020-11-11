@@ -54,10 +54,6 @@ TBool GSplashProcess::RunAfter() {
   if (gControls.WasPressed(BUTTON_ANY)) { // } || --mTimer <= 0) {
     gGame->SetState(GAME_STATE_MAIN_MENU);
 
-#ifdef ENABLE_AUDIO
-    gSoundPlayer.SfxStartGame();
-#endif
-
     return EFalse;
   }
 //  switch (mState) {

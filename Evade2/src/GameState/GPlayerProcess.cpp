@@ -68,19 +68,19 @@ void GPlayerProcess::Hit(TInt8 amount) {
     // ProcessManager::birth(GameOver::entry);
   } else {
     mHit = ETrue;
-    // Sound::play_sound(SFX_PLAYER_HIT_BY_ENEMY);
+    gSoundPlayer.TriggerSfx(SFX_PLAYER_HIT_WAV, 4);
   }
 }
 
 void GPlayerProcess::recharge_shield() {
   if (mShield < MAX_LIFE) {
-    mShield++;
+    mShield += .5;
   }
 }
 
 void GPlayerProcess::recharge_power() {
   if (mBoostPower < MAX_POWER) {
-    mBoostPower++;
+    mBoostPower += .5;
   }
 }
 
@@ -113,7 +113,7 @@ TBool GPlayerProcess::RunBefore() {
   if (gControls.IsPressed(CONTROL_BURST)) {
     if (mBoostPower > 0) {
       gCamera->vz = CAMERA_WARP_VZ;
-      mBoostPower--;
+      mBoostPower -= .65;
       if (mBoostPower < 0) {
         mBoostPower = 0;
       }
@@ -212,9 +212,11 @@ void GPlayerProcess::DrawMeter(TInt8 side, TInt8 value, TInt8 deltaXMeter, TInt8
 
 TBool GPlayerProcess::RunAfter() {
   if (gGameState->mState == STATE_GAME_OVER) {
+    gDisplay.SetColor(0, 255, 255, 255);
     return EFalse;
   }
   if (mHit) {
+    gSoundPlayer.TriggerSfx(SFX_PLAYER_HIT_WAV, 4);
     gDisplay.SetColor(0, 255, 255, 255);
   } else {
     gDisplay.SetColor(0, 0, 0, 0);

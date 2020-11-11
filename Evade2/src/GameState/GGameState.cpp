@@ -24,6 +24,7 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   AddProcess(new GEnemyProcess());
   mPlayerProcess = new GPlayerProcess();
   AddProcess(mPlayerProcess);
+  gSoundPlayer.PlayMusic(S01_STAGE_1_XM);
 }
 
 GGameState::~GGameState() {

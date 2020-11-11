@@ -97,7 +97,7 @@ void GGame::Run() {
 
   while (!done) {
     Random(); // randomize
-    mShmoo.Set(TUint8(mShmoo.r + 16), TUint8(mShmoo.g + 16), TUint8(mShmoo.b + 16));
+    mShmoo.Set(TUint8(mShmoo.r + 4), TUint8(mShmoo.g + 4), TUint8(mShmoo.b + 4));
     gDisplay.displayBitmap->SetColor(COLOR_SHMOO, mShmoo);
     gCamera->Move();
 
