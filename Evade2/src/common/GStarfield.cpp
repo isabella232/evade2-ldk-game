@@ -180,8 +180,9 @@ void GStarfield::Render() {
 
     //If the stars go off the screen remove them and re-draw. If the stars hang out in the center remove them also
     if (stars[i].mScreenX > SCREEN_WIDTH || stars[i].mScreenX < 0 || stars[i].mScreenY > SCREEN_HEIGHT ||
-        stars[i].mScreenY < 0
-       ) {
+        stars[i].mScreenY < 0 ||
+        (stars[i].mScreenX == SCREEN_WIDTH >> 1 && stars[i].mScreenY == SCREEN_HEIGHT >> 1)) {
+
 
       int xMin = -1000,
           xMax = 1000,

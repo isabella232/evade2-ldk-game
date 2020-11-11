@@ -90,9 +90,9 @@ protected:
     void InitStar(TInt aIndex, TInt32 aXStartIndex = 319) {
       stars[aIndex].Randomize(
           -500,
-          500,
+          1000,
           -500,
-          500,
+          1000,
           0,
           1,
           STAR_SPEED_MIN,
