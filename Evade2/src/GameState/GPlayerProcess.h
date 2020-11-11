@@ -34,17 +34,11 @@ public:
 
   void DrawLine(TFloat x1, TFloat y1, TFloat x2, TFloat y2) const;
 
+
 protected:
-#ifdef ENABLE_HUD_MOVEMENTS
 
   void DrawHud(TFloat x, TFloat y);
-
   void DrawMeter(TInt8 side, TInt8 value, TInt8 deltaXMeter, TInt8 deltaYMeter);
-
-#else
-  }
-  void DrawMeter(TInt8 side, TInt8 value);
-#endif
 
   void DrawBitmap(TInt16 x, TInt16 y, const TUint8 *bitmap, TUint8 w, TUint8 h, TUint8 aColor = COLOR_WHITE) const;
 
