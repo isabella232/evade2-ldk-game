@@ -13,9 +13,9 @@ public:
   GPlayerProcess();
 
 public:
-  TInt8  power;
-  TInt8  shield;
-  TInt8  mNumBullets;
+  TInt16  power;
+  TInt16  shield;
+  TInt16  mNumBullets;
 //  TUint8 flags;
   TUint8 color;
   TBool  mAlt;

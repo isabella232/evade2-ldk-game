@@ -5,6 +5,8 @@
 
 #include "Game.h"
 #include "GCamera.h"
+#include "GGameState.h"
+#include "GGameOverProcess.h"
 #include "GPlayerBulletProcess.h"
 #include "img/hud_console_img.h"
 
@@ -25,7 +27,7 @@ const TUint8 crosshair_right_4x8[] = {
 #define MAX_LIFE 100
 
 GPlayerProcess::GPlayerProcess() {
-  color       = COLOR_WHITE;
+  color = COLOR_WHITE;
   gCamera->vz = CAMERA_VZ;
   power       = MAX_POWER;
   shield      = MAX_LIFE;
@@ -47,7 +49,7 @@ void GPlayerProcess::DrawLine(TFloat x1, TFloat y1, TFloat x2, TFloat y2) const 
   gDisplay.renderBitmap->DrawLine(gViewPort, x1, y1, x2, y2, color);
 }
 
-void GPlayerProcess::DrawBitmap(TInt16 x, TInt16 y, const TUint8 *bitmap, TUint8 w, TUint8 h, TUint8 aColor)  const {
+void GPlayerProcess::DrawBitmap(TInt16 x, TInt16 y, const TUint8 *bitmap, TUint8 w, TUint8 h, TUint8 aColor) const {
   if (x + w < 0 || x > SCREEN_WIDTH - 1 || y + h < 0 || y > SCREEN_HEIGHT - 1) {
     return;
   }
@@ -102,6 +104,7 @@ void GPlayerProcess::DrawBitmap(TInt16 x, TInt16 y, const TUint8 *bitmap, TUint8
 void GPlayerProcess::Hit(TInt8 amount) {
   shield -= amount;
   if (shield <= 0) {
+    gGameEngine->AddProcess(new GGameOverProcess());
     // ProcessManager::birth(GameOver::entry);
   } else {
     mHit = ETrue;
@@ -122,15 +125,16 @@ void GPlayerProcess::recharge_power() {
 }
 
 TBool GPlayerProcess::RunBefore() {
+  if (gGameState->mState == STATE_GAME_OVER) {
+    return EFalse;
+  }
   if (gGame->GetState() != GAME_STATE_GAME) {
-    // if (game_mode != MODE_GAME) {
     gCamera->vx = gCamera->vy = 0;
     return ETrue;
   }
 
   if (gControls.WasPressed(CONTROL_FIRE)) {
     if (mNumBullets < MAX_BULLETS) {
-
       TInt8 deltaX = 0,
             deltaY = 0;
 
@@ -139,7 +143,6 @@ TBool GPlayerProcess::RunBefore() {
 
       deltaY = gControls.IsPressed(CONTROL_JOYUP) ? -11 : deltaY;
       deltaY = gControls.IsPressed(CONTROL_JOYDOWN) ? 13 : deltaY;
-
 
       gGameEngine->AddProcess(new GPlayerBulletProcess(deltaX, deltaY, mAlt));
 
@@ -190,12 +193,12 @@ TBool GPlayerProcess::RunBefore() {
 void GPlayerProcess::DrawHud(TFloat x, TFloat y) {
 
   const TUint8 color   = COLOR_WHITE;
-  const TFloat  width   = 0x30, height = 0x08;
+  const TFloat width   = 0x30, height = 0x08;
   const TUint8 *bitmap = hud_console_img;
 
   for (TInt xx = 0, xxx = 0; xx < width; xx++, xxx += 2) {
     for (TInt yy = 0, yyy = 0; yy < height; yy++, yyy += 2) {
-      if (y + yy > SCREEN_HEIGHT-1) {
+      if (y + yy > SCREEN_HEIGHT - 1) {
         continue;
       }
       TInt8 byte = bitmap[xx + (yy / 8)];
@@ -253,6 +256,7 @@ void GPlayerProcess::DrawMeter(TInt8 side, TInt8 value, TInt8 deltaXMeter, TInt8
 }
 
 #else
+// TODO: @Jay - we should probably remove this code/condition.  This else code is not touched/ported to CE
 
 // 13 == full. Anything less, and we draw "less meter"
 void GPlayerProcess::DrawMeter(TInt8 side, TInt8 value) {
@@ -293,6 +297,9 @@ void GPlayerProcess::DrawMeter(TInt8 side, TInt8 value) {
 #endif // #if ENABLE_HUD_MOVEMENTS
 
 TBool GPlayerProcess::RunAfter() {
+  if (gGameState->mState == STATE_GAME_OVER) {
+    return EFalse;
+  }
   if (mHit) {
     gDisplay.SetColor(0, 255, 255, 255);
   } else {
@@ -328,7 +335,7 @@ TBool GPlayerProcess::RunAfter() {
     }
   }
 
-  const TFloat screenMidX = TFloat(SCREEN_WIDTH)/2, screenMidY = TFloat(SCREEN_HEIGHT)/2;
+  const TFloat screenMidX = TFloat(SCREEN_WIDTH) / 2, screenMidY = TFloat(SCREEN_HEIGHT) / 2;
 
   DrawHud(screenMidX - (0x30) + consoleX, (240 + consoleY) - 12);
 

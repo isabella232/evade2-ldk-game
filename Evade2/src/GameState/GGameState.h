@@ -11,6 +11,7 @@ enum {
   STATE_PLAY,
   STATE_BOSS,
   STATE_NEXT_WAVE,
+  STATE_GAME_OVER
 };
 
 class GPlayerProcess;
@@ -29,7 +30,6 @@ public:
   TInt32         mState;
   TInt16         mKills;
   TInt16         mWave;
-
 };
 
 extern GGameState *gGameState;

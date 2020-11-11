@@ -20,19 +20,6 @@ TBool GSplashProcess::RunBefore() {
   return ETrue;
 }
 
-TBool GSplashProcess::FadeInState() {
-//  mColor += (255 / 30);
-//  if (mColor > 255) {
-//    mColor = 255;
-//  }
-//  gDisplay.SetColor(COLOR_TEXT, mColor, mColor, mColor);
-//  if (mColor == 255) {
-//    mState = STATE_WAIT;
-//    mTimer = 2 * 30;
-//  }
-  return ETrue;
-}
-
 TBool GSplashProcess::FadeOutState() {
 //  mColor -= (255 / 30);
 //  if (mColor < 0) {
