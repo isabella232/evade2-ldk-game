@@ -59,11 +59,11 @@ export BUILD_DIR=${WORKING_DIR}/build/ldk
 export CREATIVE_ENGINE_PATH=${WORKING_DIR}/creative-engine
 export CREATIVE_ENGINE_SOURCE_DIR=${CREATIVE_ENGINE_PATH}/src
 
-export TARGET=${BUILD_DIR}/modite-adventure.dge
+export TARGET=${BUILD_DIR}/evade2.dge
 
 export IPK_WORKING_DIR=${BUILD_DIR}/ipk
-export IPK_EXEC_DIR=${IPK_WORKING_DIR}/home/retrofw/games/modite-adventure
+export IPK_EXEC_DIR=${IPK_WORKING_DIR}/home/retrofw/games/evade2
 export LDK_FILES_DIR=${WORKING_DIR}/src/resources/ldk-files
 export LNK_DESTINATION_DIR=${IPK_WORKING_DIR}/home/retrofw/apps/gmenu2x/sections/games/
 
-export ALREADY_DEPLOYED_DIR=/home/retrofw/games/modite-adventure
+export ALREADY_DEPLOYED_DIR=/home/retrofw/games/evade2

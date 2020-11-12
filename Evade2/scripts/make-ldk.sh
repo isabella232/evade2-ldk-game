@@ -122,7 +122,7 @@ cd /home/retrofw/
 mkdir tmp
 cd tmp/
 bin
-put modite-adventure.ipk
+put evade2.ipk
 quit
 EOT
 
@@ -132,7 +132,7 @@ EOT
   PRINT_GREEN "Next Steps:"
   echo " - Launch Explorer on device"
   echo " - Navigate to /home/retrofw/tmp"
-  echo " - Install 'modite-adventure.ipk'"
+  echo " - Install 'evade2.ipk'"
   echo "Further invocations of this script should not require \"deploy-ipk\" argument."
 }
 
