@@ -91,6 +91,7 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels) {
 }
 
 TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
+//  return ETrue;
 //    aResourceId = EMPTYSONG_XM;
 //  printf("%s %i\n", __PRETTY_FUNCTION__, aResourceId);
 
@@ -129,6 +130,7 @@ BRaw *GSoundPlayer::FindRawSongFileById(TInt16 aResourceId) {
 
 
 TBool GSoundPlayer::LoadEffects() {
+
   for (TUint8 index = 0; index < mMaxEffects; index++) {
     soundEngine.LoadEffect(index, effectsList[index], SFX1_SLOT + index);
 //    return ETrue;
@@ -144,6 +146,6 @@ void  GSoundPlayer::MuteMusic(TBool aMuted) {
 
 
 void GSoundPlayer::TriggerSfx(TUint16 aSfxNumber, TInt8 aChannel) {
-  printf("GSoundPlayer::%s(sfx%i, chan%i)\n", __FUNCTION__, aSfxNumber, aChannel);
+//  printf("GSoundPlayer::TriggerSfx(sfx%i, chan%i)\n", aSfxNumber, aChannel);
   soundEngine.PlaySfx(FindSfxNumber(aSfxNumber), aChannel);
 }

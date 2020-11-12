@@ -4,7 +4,7 @@
 #include "BTypes.h"
 // SVG Graphic source: svg_docs/enemies_output_from_ai/console2_img.svg
 // Number bytes 147
-const TInt8 enemy_console2_img[] = {
+const TInt8 console2_img[] = {
     45,    // Width (45 px)
     15,    // Height (15 px)
     36,    // Number of rows of coords (36)

@@ -3,6 +3,7 @@
 #
 PATH resources/
 BITMAP splash.bmp
+BITMAP hud_console.bmp
 //BITMAP title.bmp
 
 #
@@ -11,6 +12,7 @@ BITMAP splash.bmp
 PATH resources/charset
 BITMAP charset_8x8.bmp
 BITMAP charset_16x16.bmp
+
 
 ########### SOUND :: MUSIC ###########
 PATH resources/music/

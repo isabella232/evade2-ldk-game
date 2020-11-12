@@ -48,6 +48,7 @@ GGame::~GGame() {
 #endif
   delete gGameEngine;
   delete gViewPort;
+  delete mStarfield;
 //  delete mGameMenu;
 }
 

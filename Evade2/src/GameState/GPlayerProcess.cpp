@@ -8,25 +8,11 @@
 #include "GGameState.h"
 #include "GGameOverProcess.h"
 #include "GPlayerBulletProcess.h"
-#include "img/hud_console_img.h"
+#include "img/console_img.h"
 
 enum {
-    HUD_SIDE_LEFT,
-    HUD_SIDE_RIGHT
-};
-
-
-//TODO: Put in own files
-const TUint8 crosshair_left_4x8[] = {
-  // width, height4, 8,
-  0x81, 0x42, 0x24, 0x99
-};
-
-// crosshair_right.png
-// 4x8
-const TUint8 crosshair_right_4x8[] = {
-  // width, height 4, 8,
-  0x99, 0x24, 0x42, 0x81
+  HUD_SIDE_LEFT,
+  HUD_SIDE_RIGHT
 };
 
 #define MAX_POWER 100
@@ -35,11 +21,12 @@ const TUint8 crosshair_right_4x8[] = {
 GPlayerProcess::GPlayerProcess() {
   color = COLOR_WHITE;
   gCamera->vz = CAMERA_VZ;
-  mBoostPower       = MAX_POWER;
+  mBoostPower  = MAX_POWER;
   mShield      = MAX_LIFE;
   mNumBullets = 0;
   mAlt        = EFalse;
   mHit        = EFalse;
+
   printf("screen %d,%d\n", gDisplay.renderBitmap->Width(), gDisplay.renderBitmap->Height());
 }
 
@@ -152,27 +139,14 @@ TBool GPlayerProcess::RunBefore() {
 
 void GPlayerProcess::DrawHud(TFloat x, TFloat y) {
 
-  const TUint8 color   = COLOR_WHITE;
-  const TFloat width   = 0x30, height = 0x08;
-  const TUint8 *bitmap = hud_console_img;
-
-  for (TInt xx = 0, xxx = 0; xx < width; xx++, xxx += 2) {
-    for (TInt yy = 0, yyy = 0; yy < height; yy++, yyy += 2) {
-      if (y + yy > SCREEN_HEIGHT - 1) {
-        continue;
-      }
-      TInt8 byte = bitmap[xx + (yy / 8)];
-      TInt8 bit  = (yy % 8);
-      if (byte & (1 << bit)) {
-        //        Graphics::drawPixel(x + xx, y + yy, color);
-        DrawPixel(x + xxx, y + yyy, COLOR_HUD);
-        DrawPixel(x + xxx + 1, y + yyy, COLOR_HUD);
-        DrawPixel(x + xxx, y + yyy + 1, COLOR_HUD);
-        DrawPixel(x + xxx + 1, y + yyy + 1, COLOR_HUD);
-        //        Graphics::drawPixel(x + xx * 2 + 1, y + yy * 2 + 1, color);
-      }
-    }
-  }
+  GVectorSprite::DrawVectorGraphic(
+    console_img,
+     x,
+     y,
+     0.0,
+     .5, // Originally 2.0
+    COLOR_WHITE
+   );
 }
 
 
@@ -250,6 +224,7 @@ TBool GPlayerProcess::RunAfter() {
     }
   }
 
+//  return ETrue;
   const TFloat screenMidX = TFloat(SCREEN_WIDTH) / 2, screenMidY = TFloat(SCREEN_HEIGHT) / 2;
 
   DrawHud(screenMidX - (0x30) + consoleX, (240 + consoleY) - 12);

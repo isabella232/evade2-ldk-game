@@ -7,6 +7,7 @@
 #define PLAYER_FLAG_ALT (1 << 1)
 
 #include "Game.h"
+#include "GVectorSprite.h"
 
 class GPlayerProcess : public BProcess {
 public:
@@ -36,7 +37,6 @@ public:
 
 
 protected:
-
   void DrawHud(TFloat x, TFloat y);
   void DrawMeter(TInt8 side, TInt8 value, TInt8 deltaXMeter, TInt8 deltaYMeter);
 
