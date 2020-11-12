@@ -140,12 +140,12 @@ TBool GPlayerProcess::RunBefore() {
 void GPlayerProcess::DrawHud(TFloat x, TFloat y) {
 
   GVectorSprite::DrawVectorGraphic(
-    console_img,
-     x,
-     y,
-     0.0,
-     .5, // Originally 2.0
-    COLOR_WHITE
+      console_img,
+      x,
+      y,
+      0.0,
+      .25, // Originally 2.0
+      COLOR_WHITE
    );
 }
 
@@ -224,10 +224,9 @@ TBool GPlayerProcess::RunAfter() {
     }
   }
 
-//  return ETrue;
   const TFloat screenMidX = TFloat(SCREEN_WIDTH) / 2, screenMidY = TFloat(SCREEN_HEIGHT) / 2;
 
-  DrawHud(screenMidX - (0x30) + consoleX, (240 + consoleY) - 12);
+  DrawHud(screenMidX + consoleX, (240 + consoleY) - 20);
 
   /** Reticle **/
   // Top left
