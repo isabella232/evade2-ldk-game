@@ -20,7 +20,7 @@ static const TUint16 RANDOM_Z_MAX = 600;
 
 
 #define OLD_STARFIELD 1
-//#undef OLD_STARFIELD
+#undef OLD_STARFIELD
 
 #ifdef OLD_STARFIELD
 class GStarfield : public BPlayfield {
