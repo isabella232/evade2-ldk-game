@@ -56,11 +56,11 @@ md5=''
 
 if [[ ${VERBOSE} -eq 1 ]]; then
   make -j `nproc` ipk
-  md5=`md5sum build/ldk/modite-adventure.dge | awk '{print $1}'`
+  md5=`md5sum build/ldk/evade2.dge | awk '{print $1}'`
   md5=${md5: -6}
 else
   make -j `nproc` ipk >/dev/null 2>&1
-  md5=`md5sum build/ldk/modite-adventure.dge | awk '{print $1}'`
+  md5=`md5sum build/ldk/evade2.dge | awk '{print $1}'`
   md5=${md5: -6}
 fi
 
@@ -101,10 +101,10 @@ prompt
 passive
 lcd build/ldk
 cd /home/retrofw/games
-mkdir modite-adventure
-cd modite-adventure
+mkdir evade2
+cd evade2
 bin
-put modite-adventure.dge
+put evade2.dge
 quit
 EOT
 
