@@ -12,9 +12,9 @@ GGameOverProcess::GGameOverProcess() : BProcess() {
   mTheta = 0;
   mTimer = 200;
   gCamera->vx = gCamera->vy = 0;
-  gCamera->vz = CAMERA_WARP_VZ;
+  gCamera->vz = CAMERA_VZ;
   gControls.Reset();
-  // TODO: @Jay game over sound here
+  gSoundPlayer.PlayMusic(S10_GAME_OVER_XM);
 }
 
 GGameOverProcess::~GGameOverProcess() noexcept = default;

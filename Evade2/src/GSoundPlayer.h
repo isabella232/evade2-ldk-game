@@ -31,23 +31,6 @@ public:
   TBool SetEffectsVolume(TFloat aPercent) {
     return soundEngine.SetEffectsVolume(aPercent);
   }
-  // SFX Methods //
-
-  void SfxSaveGame();
-  void SfxStartGame();
-  void SfxMenuNavDown();
-  void SfxMenuNavUp();
-  void SfxMenuIn();
-  void SfxMenuOut();
-
-  void SfxOptionSelect();
-
-  // SFX PLAYER //
-
-  void SfxPlayerSlash();
-
-  void SfxItemHeart();
-  void SfxItemPickupGeneric();
 
 };
 

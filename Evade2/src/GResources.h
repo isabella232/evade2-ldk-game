@@ -11,6 +11,7 @@ enum {
   FONT_8x8_SLOT,
   FONT_16x16_SLOT,
   BKG_SLOT,
+  HUD_CONSOLE_SLOT,
   SLOT_MAX,
 };
 

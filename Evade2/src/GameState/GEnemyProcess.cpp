@@ -45,6 +45,8 @@ TBool GEnemyProcess::death() {
     gGameState->mKills++;
     mSprite->flags &= OFLAG_EXPLODE;
     mSprite->mState = 0;
+    gSoundPlayer.TriggerSfx(SFX_ENEMY_EXPLODE_WAV, 3);
+
     return ETrue;
   }
   return EFalse;

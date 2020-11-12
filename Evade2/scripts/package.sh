@@ -25,10 +25,10 @@ mkdir -p ${LNK_DESTINATION_DIR}
 
 
 # Copy binary and launcher image to the execution directory
-cp -r ${TARGET} ${LDK_FILES_DIR}/modite-adventure.png ${IPK_EXEC_DIR}
+cp -r ${TARGET} ${LDK_FILES_DIR}/evade2.png ${IPK_EXEC_DIR}
 #rm ${TARGET}
 
-cp ${LDK_FILES_DIR}/modite-adventure.lnk ${LNK_DESTINATION_DIR}
+cp ${LDK_FILES_DIR}/evade2.lnk ${LNK_DESTINATION_DIR}
 
 NOW=`date +%s`
 
@@ -40,5 +40,5 @@ tar --owner=0 --group=0 -czvf ${IPK_WORKING_DIR}/data.tar.gz -C ${IPK_WORKING_DI
 
 
 echo 2.0 > ${IPK_WORKING_DIR}/debian-binary
-ar r ${BUILD_DIR}/modite-adventure.ipk ${IPK_WORKING_DIR}/control.tar.gz ${IPK_WORKING_DIR}/data.tar.gz ${IPK_WORKING_DIR}/debian-binary
+ar r ${BUILD_DIR}/evade2.ipk ${IPK_WORKING_DIR}/control.tar.gz ${IPK_WORKING_DIR}/data.tar.gz ${IPK_WORKING_DIR}/debian-binary
 

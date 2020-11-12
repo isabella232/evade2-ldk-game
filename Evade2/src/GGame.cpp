@@ -33,6 +33,12 @@ GGame::GGame() {
   mState      = 0;
   mNextState = GAME_STATE_NONE;
   SetState(GAME_STATE_SPLASH);
+  gOptions = new TOptions();
+
+#ifdef ENABLE_AUDIO
+  gSoundPlayer.Init(6 /*channels*/);
+#endif
+  mStarfield = new GStarfield();
 //  SetState(GAME_STATE_GAME);
 }
 
@@ -42,6 +48,7 @@ GGame::~GGame() {
 #endif
   delete gGameEngine;
   delete gViewPort;
+  delete mStarfield;
 //  delete mGameMenu;
 }
 
@@ -91,9 +98,12 @@ void GGame::Run() {
 
   while (!done) {
     Random(); // randomize
-    mShmoo.Set(TUint8(mShmoo.r + 16), TUint8(mShmoo.g + 16), TUint8(mShmoo.b + 16));
+    mShmoo.Set(TUint8(mShmoo.r + 4), TUint8(mShmoo.g + 4), TUint8(mShmoo.b + 4));
     gDisplay.displayBitmap->SetColor(COLOR_SHMOO, mShmoo);
     gCamera->Move();
+
+    mStarfield->Animate();
+    mStarfield->Render();
 
     if (mNextState != mState) {
       mState = mNextState;
@@ -136,8 +146,8 @@ void GGame::Run() {
 
     gGameEngine->GameLoop();
     gDisplay.Update();
+//    printf(" gCamera vz %2f, z %2f \n", gCamera->vz, gCamera->z);
 
-    // TODO: @Jay there is no BUTTONQ on device... maybe we want to exit the game on device by some keys?
     if (gControls.WasPressed(BUTTONQ)) {
       done = ETrue;
     }

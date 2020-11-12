@@ -15,18 +15,19 @@ GPlayerBulletProcess::GPlayerBulletProcess(TFloat deltaX, TFloat deltaY, TBool a
     mSprite->x = gCamera->x + 28;
     mSprite->y = gCamera->y - 28;
     mSprite->z = gCamera->z;
-    mSprite->mState = 20;
+    mSprite->mState = 15;
   } else {
     mSprite->x = gCamera->x - 28;
     mSprite->y = gCamera->y - 28;
     mSprite->z = gCamera->z;
-    mSprite->mState = -20;
+    mSprite->mState = -10;
   }
   mSprite->vx = deltaX;
   mSprite->vy = deltaY;
   mSprite->vz = gCamera->vz + BULLET_VZ;
   mSprite->SetLines(bullet_img);
   gGameEngine->AddSprite(mSprite);
+  gSoundPlayer.TriggerSfx(SFX_PLAYER_SHOOT_WAV, 3);
 }
 
 GPlayerBulletProcess::~GPlayerBulletProcess() noexcept {

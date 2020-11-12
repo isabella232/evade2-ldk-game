@@ -14,11 +14,10 @@ TBool GVectorSprite::ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat
   TBool drawn = false;
 
   TInt8 numRows = *graphic++;
-
   TFloat rad = TFloat(theta) * PI / 180, sint = sin(rad), cost = cos(rad);
 
   for (TInt8 i = 0; i < numRows; i++) {
-    struct vec_segment_u8 seg;
+    struct vec_segment_u8 seg{};
     TFloat                x0, y0, x1, y1;
 
     memcpy(&seg, graphic, sizeof(seg));
@@ -37,10 +36,10 @@ TBool GVectorSprite::ExplodeVectorGraphic(const TInt8 *graphic, TFloat x, TFloat
     }
 
     if (step) {
-      x0 = x0 + (seg.x0 / 8) * step;
-      y0 = y0 + (seg.y0 / 8) * step;
-      x1 = x1 + (seg.x0 / 8) * step;
-      y1 = y1 + (seg.y0 / 8) * step;
+      x0 = x0 + ((TFloat)seg.x0 / 8.0f) * (TFloat)step;
+      y0 = y0 + ((TFloat)seg.y0 / 8.0f) * (TFloat)step;
+      x1 = x1 + ((TFloat)seg.x0 / 8.0f) * (TFloat)step;
+      y1 = y1 + ((TFloat)seg.y0 / 8.0f) * (TFloat)step;
     }
 
 
@@ -85,10 +84,10 @@ TBool GVectorSprite::Render(BViewPort *aViewPort) {
 
   TFloat zz    = (z - gCamera->z) * 2;
   TFloat ratio = 128 / (zz + 128);
-  TFloat sw    = TFloat(SCREEN_WIDTH),
-         sh    = TFloat(SCREEN_HEIGHT);
+  auto sw    = TFloat(SCREEN_WIDTH),
+       sh    = TFloat(SCREEN_HEIGHT);
 
-  bool   isEnemy = type == STYPE_ENEMY;
+  TBool   isEnemy = type == STYPE_ENEMY;
   // printf("is enemy = %i\n", isEnemy);
   TFloat cx      = (gCamera->x - x) * ratio + sw / 2;
   TFloat cy      = (gCamera->y - y) * ratio + sh / 2;
@@ -110,14 +109,12 @@ TBool GVectorSprite::Render(BViewPort *aViewPort) {
              cxx    = midx + cos(angle) * (midx - 10),
              cyy    = midy + sin(angle) * (midy - 10);
 
-//          printf("TODO: Fill Circle for enemy radar\n");
-
 //      printf("Angle: %f, x: %f, y: %f, cx,cy: %f,%f\n", angle, x, y, cx, cy);
       aViewPort->FillCircle(gDisplay.renderBitmap,
                             (TInt16) cxx,
                             (TInt16) cyy,
                             4,
-                            COLOR_SHMOO
+                            this->mColor
 //                            mColor
       );
 

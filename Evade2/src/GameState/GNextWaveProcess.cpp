@@ -9,8 +9,9 @@
 
 GNextWaveProcess::GNextWaveProcess() : BProcess() {
   mTimer      = 240;
-  gCamera->vz = 30;
+  gCamera->vz = CAMERA_VZ;
   gGameState->mState = STATE_NEXT_WAVE;
+  gSoundPlayer.PlayMusic(S11_GET_READY_XM);
 }
 
 GNextWaveProcess::~GNextWaveProcess() noexcept {
@@ -20,6 +21,24 @@ GNextWaveProcess::~GNextWaveProcess() noexcept {
   if (gGameState->mWave % 4 == 0) {
     gGame->mDifficulty++;
   }
+
+  if (gGameState->mWave % 5 == 0) {
+    gSoundPlayer.PlayMusic(S09_STAGE_5_XM);
+  }
+  else if (gGameState->mWave % 4 == 0) {
+    gSoundPlayer.PlayMusic(S07_STAGE_4_XM);;
+  }
+  else if (gGameState->mWave % 3 == 0) {
+    gSoundPlayer.PlayMusic(S05_STAGE_3_XM);
+  }
+  else if (gGameState->mWave % 2 == 0) {
+    gSoundPlayer.PlayMusic(S03_STAGE_2_XM);
+  }
+  else {
+    gSoundPlayer.PlayMusic(S01_STAGE_1_XM);
+  };
+
+
   gCamera->vz = CAMERA_VZ;
 }
 

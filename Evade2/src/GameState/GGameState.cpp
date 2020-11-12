@@ -17,13 +17,14 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mState      = STATE_PLAY;
   mWave       = 1;
   mKills      = 0;
-  mPlayfield  = new GStarfield();
+//  mPlayfield  = new GStarfield();
   // set colors
   AddProcess(new GEnemyProcess());
   AddProcess(new GEnemyProcess());
   AddProcess(new GEnemyProcess());
   mPlayerProcess = new GPlayerProcess();
   AddProcess(mPlayerProcess);
+  gSoundPlayer.PlayMusic(S01_STAGE_1_XM);
 }
 
 GGameState::~GGameState() {

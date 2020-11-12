@@ -37,7 +37,7 @@ GAttractProcess::GAttractProcess() : BProcess() {
   auto *ad = (TAttractData *) &mData;
   ad->screen = 0;
   InitScreen();
-//  Sound::play_sound(SFX_NEXT_ATTRACT_SCREEN);
+  gSoundPlayer.TriggerSfx(SFX_NEXT_ATTRACT_SCREEN_WAV, 3);
   mState = STATE_TYPEWRITER;
 }
 
@@ -64,6 +64,8 @@ TBool GAttractProcess::RunAfter() {
 
 void GAttractProcess::InitScreen(TInt16 x, TInt16 y) {
   auto *ad = &mData;
+  gSoundPlayer.TriggerSfx(SFX_NEXT_ATTRACT_SCREEN_WAV, 3);
+
   if (gGame->GetState() == GAME_STATE_ATTRACT_MODE) {
     switch (ad->screen) {
       case 0:
@@ -164,7 +166,7 @@ TBool GAttractProcess::TypewriterState() {
     }
     ad->timer = TYPEWRITER_SPEED;
     ad->offset++;
-//    Sound::play_sound(SFX_NEXT_ATTRACT_CHAR);
+    gSoundPlayer.TriggerSfx(SFX_NEXT_ATTRACT_CHAR_WAV, 4);
   }
 
   switch (ad->enemy) {

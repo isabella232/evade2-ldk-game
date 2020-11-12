@@ -18,7 +18,7 @@ GMainMenuProcess::~GMainMenuProcess() noexcept {}
 TBool GMainMenuProcess::RunAfter() {
   gVectorFont->scale = 4;
   gVectorFont->color = COLOR_SHMOO;
-  gVectorFont->print_string_rotatedx(70, 90, mTheta, "EVADE2");
+  gVectorFont->print_string_rotatedx(55, 90, mTheta, "EVADE 2");
   gVectorFont->color = COLOR_WHITE;
 
   mTimer--;
@@ -28,7 +28,7 @@ TBool GMainMenuProcess::RunAfter() {
     gVectorFont->printf(130, 155, "START");
   }
 
- mTheta += 5;
+ mTheta += 1;
   if (mTheta > 90 + 360 * 2) {
     mTheta = 90 + 360 * 2;
   }
@@ -37,11 +37,11 @@ TBool GMainMenuProcess::RunAfter() {
 }
 
 TBool GMainMenuProcess::RunBefore() {
-  if (gControls.WasPressed(BUTTON_START)) {
+  if (gControls.WasPressed(BUTTON_START|BUTTONA|BUTTONB|BUTTONX|BUTTONY) ) {
     gGame->SetState(GAME_STATE_GAME);
     return EFalse;
   }
-  if (mTimer < 0 || gControls.WasPressed(BUTTONA|BUTTONB)) {
+  if (mTimer < 0 ) {
     gGame->SetState(GAME_STATE_ATTRACT_MODE);
     return EFalse;
   }

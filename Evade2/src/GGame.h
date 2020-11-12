@@ -2,7 +2,7 @@
 #define BRICKOUT_GGAME_H
 
 #include <BApplication.h>
-
+#include "GStarfield.h"
 class BGameEngine;
 
 class BFont;
@@ -28,7 +28,7 @@ public:
   void Run();
 
 public:
-  void SetState(GAMESTATE aNewStae);
+  void SetState(GAMESTATE aNewState);
 
   TInt GetState() const;
 
@@ -41,6 +41,7 @@ protected:
   TInt mNextState;
   TInt mState;
   TRGB mShmoo;
+  GStarfield *mStarfield;
 };
 
 extern GGame       *gGame;

@@ -1,0 +1,5 @@
+title=Evade 2
+description=Modus Create
+icon=/home/retrofw/games/evade2/evade2.png
+exec=/home/retrofw/games/evade2/evade2.dge
+clock=600

@@ -91,6 +91,7 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels) {
 }
 
 TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
+//  return ETrue;
 //    aResourceId = EMPTYSONG_XM;
 //  printf("%s %i\n", __PRETTY_FUNCTION__, aResourceId);
 
@@ -129,6 +130,7 @@ BRaw *GSoundPlayer::FindRawSongFileById(TInt16 aResourceId) {
 
 
 TBool GSoundPlayer::LoadEffects() {
+
   for (TUint8 index = 0; index < mMaxEffects; index++) {
     soundEngine.LoadEffect(index, effectsList[index], SFX1_SLOT + index);
 //    return ETrue;
@@ -144,57 +146,6 @@ void  GSoundPlayer::MuteMusic(TBool aMuted) {
 
 
 void GSoundPlayer::TriggerSfx(TUint16 aSfxNumber, TInt8 aChannel) {
-  printf("GSoundPlayer::%s()\n", __FUNCTION__ );
-//  soundEngine.PlaySfx(FindSfxNumber(aSfxNumber), aChannel);
-}
-
-void GSoundPlayer::SfxOptionSelect() {
-  printf("GSoundPlayer::%s()\n", __FUNCTION__ );
-//  soundEngine.PlaySfx(FindSfxNumber(SFX_MENU_OPTION_SELECT_WAV), 1);
-}
-
-void GSoundPlayer::SfxMenuNavDown() {
-  printf("GSoundPlayer::%s()\n", __FUNCTION__ );
-//  soundEngine.PlaySfx(FindSfxNumber(SFX_MENU_NAV_DOWN_WAV), 1);
-}
-
-void GSoundPlayer::SfxMenuNavUp() {
-  printf("GSoundPlayer::%s()\n", __FUNCTION__ );
-//  soundEngine.PlaySfx(FindSfxNumber(SFX_MENU_NAV_UP_WAV), 1);
-}
-
-void GSoundPlayer::SfxMenuIn() {
-  printf("GSoundPlayer::%s()\n", __FUNCTION__ );
-//  soundEngine.PlaySfx(FindSfxNumber(SFX_MENU_IN_WAV), 1);
-}
-
-void GSoundPlayer::SfxMenuOut() {
-  printf("GSoundPlayer::%s()\n", __FUNCTION__ );
-//  soundEngine.PlaySfx(FindSfxNumber(SFX_MENU_OUT_WAV), 1);
-}
-
-
-void GSoundPlayer::SfxSaveGame() {
-  printf("GSoundPlayer::%s()\n", __FUNCTION__ );
-//  soundEngine.PlaySfx(FindSfxNumber(SFX_SAVE_GAME_WAV), 1);
-}
-
-void GSoundPlayer::SfxStartGame() {
-  SfxSaveGame();
-}
-
-// SFX Player //
-void GSoundPlayer::SfxPlayerSlash(){
-  printf("GSoundPlayer::%s()\n", __FUNCTION__ );
-//  soundEngine.PlaySfx(FindSfxNumber(SFX_PLAYER_SLASH_WAV), 1);
-}
-
-
-void GSoundPlayer::SfxItemHeart() {
-  printf("GSoundPlayer::%s()\n", __FUNCTION__ );
-//  soundEngine.PlaySfx(FindSfxNumber(SFX_ITEM_HEART_WAV), 2);
-}
-void GSoundPlayer::SfxItemPickupGeneric() {
-  printf("GSoundPlayer::%s()\n", __FUNCTION__ );
-//  soundEngine.PlaySfx(FindSfxNumber(SFX_ITEM_PICKUP_GENERIC_WAV), 3);
+//  printf("GSoundPlayer::TriggerSfx(sfx%i, chan%i)\n", aSfxNumber, aChannel);
+  soundEngine.PlaySfx(FindSfxNumber(aSfxNumber), aChannel);
 }
