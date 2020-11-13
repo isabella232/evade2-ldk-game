@@ -12,6 +12,7 @@ GSoundPlayer gSoundPlayer;
 static const TUint16 effectsList[] = {
 //  SFX_EMPTY_WAV,
   SFX_BOSS_EXPLODE_WAV,
+  SFX_BOSS_HIT_WAV,
   SFX_ENEMY_EXPLODE_WAV,
   SFX_ENEMY_FLYBY_WAV,
   SFX_ENEMY_SHOOT_WAV,
@@ -94,7 +95,7 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels) {
 }
 
 TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
-  return ETrue;
+//  return ETrue;
 //    aResourceId = EMPTYSONG_XM;
 //  printf("%s %i\n", __PRETTY_FUNCTION__, aResourceId);
 
@@ -149,7 +150,7 @@ void  GSoundPlayer::MuteMusic(TBool aMuted) {
 
 
 void GSoundPlayer::TriggerSfx(TUint16 aSfxNumber, TInt8 aChannel) {
-  return;
+//  return;
 //  printf("GSoundPlayer::TriggerSfx(sfx%i, chan%i)\n", aSfxNumber, aChannel);
   soundEngine.PlaySfx(FindSfxNumber(aSfxNumber), aChannel);
 }

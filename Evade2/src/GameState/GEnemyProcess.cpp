@@ -67,9 +67,6 @@ void GEnemyProcess::fire() {
 //    printf("Fire!!!\n");
     gGameEngine->AddProcess(new GEnemyBulletProcess(mSprite, Random(0, 5) ? EBULLET_BULLET : EBULLET_BOMB));
     mSprite->mTimer = FIRE_TIME;
-  } else {
-    // TODO: @jay why is this being decremented a second time?
-    mSprite->mTimer--;
   }
 }
 
