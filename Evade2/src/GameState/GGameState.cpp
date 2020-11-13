@@ -18,10 +18,10 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mWave       = 1;
   mKills      = 0;
 //  mPlayfield  = new GStarfield();
-  // set colors
+
   AddProcess(new GEnemyProcess());
-  AddProcess(new GEnemyProcess());
-  AddProcess(new GEnemyProcess());
+//  AddProcess(new GEnemyProcess());
+//  AddProcess(new GEnemyProcess());
   mPlayerProcess = new GPlayerProcess();
   AddProcess(mPlayerProcess);
   gSoundPlayer.PlayMusic(S01_STAGE_1_XM);
@@ -36,7 +36,8 @@ void GGameState::PostRender() {
     return;
   }
 //  if (mKills > (10 + mWave) * gGame->mDifficulty) {
-    if (mKills > 0) {
+
+  if (mKills > 0) {
     AddProcess(new GBossProcess());
   }
 }
