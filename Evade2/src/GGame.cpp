@@ -34,7 +34,7 @@ GGame::GGame() {
   SetColors();
   mNextState  = GAME_STATE_NONE;
   SetState(GAME_STATE_SPLASH);
-  gOptions = new TOptions();
+//  gOptions = new TOptions();
 
 #ifdef ENABLE_AUDIO
   gSoundPlayer.Init(6 /*channels*/);
@@ -45,7 +45,7 @@ GGame::GGame() {
 
 GGame::~GGame() {
 #ifdef ENABLE_OPTIONS
-  delete gOptions;
+//  delete gOptions;
 #endif
   delete gGameEngine;
   delete gViewPort;

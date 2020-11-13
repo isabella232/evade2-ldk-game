@@ -82,7 +82,7 @@ const TFloat COLLISION_RADIUS = 96;
 //#include "GInventory.h"
 
 extern BViewPort   *gViewPort;
-extern TOptions    *gOptions;
+//extern TOptions    *gOptions;
 
 
 /**

@@ -85,13 +85,16 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels) {
   PlayMusic(EMPTYSONG_XM);
 
 
-  soundEngine.SetMusicVolume(gOptions->music);
-  soundEngine.SetEffectsVolume(gOptions->sfx);
-  soundEngine.MuteMusic(gOptions->muted);
+//  soundEngine.SetMusicVolume(gOptions->music);
+//  soundEngine.SetEffectsVolume(gOptions->sfx);
+//  soundEngine.MuteMusic(gOptions->muted);
+  soundEngine.SetMusicVolume(0.5f);
+  soundEngine.SetEffectsVolume(0.5f);
+  soundEngine.MuteMusic(EFalse);
 }
 
 TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
-//  return ETrue;
+  return ETrue;
 //    aResourceId = EMPTYSONG_XM;
 //  printf("%s %i\n", __PRETTY_FUNCTION__, aResourceId);
 
@@ -101,9 +104,9 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
 //   BSoundEngine::PlayMusic un-mutes the music
 // We have to re-mute it in case of mute == true
 
-  soundEngine.SetMusicVolume(gOptions->music);
-  soundEngine.SetEffectsVolume(gOptions->sfx);
-  soundEngine.MuteMusic(gOptions->muted);
+  soundEngine.SetMusicVolume(0.5f);
+  soundEngine.SetEffectsVolume(0.5f);
+  soundEngine.MuteMusic(EFalse);
 
   return music;
 }
@@ -146,6 +149,7 @@ void  GSoundPlayer::MuteMusic(TBool aMuted) {
 
 
 void GSoundPlayer::TriggerSfx(TUint16 aSfxNumber, TInt8 aChannel) {
+  return;
 //  printf("GSoundPlayer::TriggerSfx(sfx%i, chan%i)\n", aSfxNumber, aChannel);
   soundEngine.PlaySfx(FindSfxNumber(aSfxNumber), aChannel);
 }

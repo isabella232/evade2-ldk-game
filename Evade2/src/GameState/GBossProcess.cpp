@@ -229,7 +229,7 @@ void GBossProcess::EngagePlayerFlee() {
     if (mSprite->mState > 90) {
       mSprite->mState = 90;
       RandomizeFlee();
-      mSprite->SetFlags( | ORBIT_LEFT);
+      mSprite->SetFlags(ORBIT_LEFT);
     }
   }
 
