@@ -16,7 +16,7 @@ GPlayerBulletProcess::GPlayerBulletProcess(TFloat deltaX, TFloat deltaY, TBool a
     mSprite->x      = gCamera->x + 28;
     mSprite->y      = gCamera->y - 28;
     mSprite->z      = gCamera->z;
-    mSprite->mState = 15;
+    mSprite->mState = 10;
   } else {
     mSprite->x      = gCamera->x - 28;
     mSprite->y      = gCamera->y - 28;
@@ -28,7 +28,7 @@ GPlayerBulletProcess::GPlayerBulletProcess(TFloat deltaX, TFloat deltaY, TBool a
   mSprite->vz = gCamera->vz + BULLET_VZ;
   mSprite->SetLines(bullet_img);
   gGameEngine->AddSprite(mSprite);
-  gSoundPlayer.TriggerSfx(SFX_PLAYER_SHOOT_WAV, 3);
+  gSoundPlayer.TriggerSfx(SFX_PLAYER_SHOOT_WAV, 2);
 }
 
 GPlayerBulletProcess::~GPlayerBulletProcess() noexcept {
@@ -39,12 +39,22 @@ GPlayerBulletProcess::~GPlayerBulletProcess() noexcept {
 }
 
 TBool GPlayerBulletProcess::RunBefore() {
-  mSprite->mTheta += mSprite->mState;
+  if (! mDying) {
+    mSprite->mTheta += mSprite->mState;
+  }
   return ETrue;
 }
 
 TBool GPlayerBulletProcess::RunAfter() {
-  if (mSprite->z - gCamera->z > 1024) {
+
+  if (mDying) {
+    mSprite->mState++;
+    if (mSprite->mState > 20) {
+      return EFalse;
+    }
+  }
+
+  if (mSprite->z - gCamera->z > 600) {
     return EFalse;
   }
 
@@ -61,7 +71,7 @@ TBool GPlayerBulletProcess::RunAfter() {
         if (d < COLLISION_RADIUS) {
           s->flags |= OFLAG_COLLISION;
           mSprite->flags |= OFLAG_COLLISION;
-          mSprite->vx = mSprite->vy =  mSprite->vz = 0;
+          mSprite->vx = mSprite->vy = 0;
           mDying = ETrue;
           break;
         }

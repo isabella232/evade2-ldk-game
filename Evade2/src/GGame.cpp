@@ -71,6 +71,17 @@ void GGame::SetColors() {
     gDisplay.SetColor(i, 255, 255, 255);
   }
 
+
+
+  gDisplay.SetColor(COLOR_BLACK, 0, 0, 0);
+  gDisplay.SetColor(COLOR_BLUE, 255, 0, 0);
+  gDisplay.SetColor(COLOR_GREEN, 0, 0, 255);
+  gDisplay.SetColor(COLOR_CYAN, 0, 255, 255);
+  gDisplay.SetColor(COLOR_RED, 0,  255, 0);
+  gDisplay.SetColor(COLOR_MAGENTA, 255, 255, 0);
+  gDisplay.SetColor(COLOR_BROWN, 0, 75, 150);
+
+
   gDisplay.SetColor(COLOR_BLACK, 0, 0, 0);
   gDisplay.SetColor(COLOR_WHITE, 255, 255, 255);
 

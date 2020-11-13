@@ -97,6 +97,10 @@ TBool GPlayerProcess::RunBefore() {
     }
   }
 
+  if (gControls.WasPressed(CONTROL_BURST)) {
+    gSoundPlayer.TriggerSfx(SFX_SPEED_BOOST_WAV, 2);
+  }
+
   if (gControls.IsPressed(CONTROL_BURST)) {
     if (mBoostPower > 0) {
       gCamera->vz = CAMERA_WARP_VZ;

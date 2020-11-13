@@ -17,13 +17,12 @@ static const TFloat DELTA_X = (DELTACONTROL / 2);
 const TInt TIMER = 240;
 
 enum {
-  WARP_STATE,
-  EXPLODE_STATE,
-  ACTION_STATE,
+  BOSS_WARP_STATE,
+  BOSS_EXPLODE_STATE,
+  BOSS_ACTION_STATE,
 };
 
 GBossProcess::GBossProcess() : BProcess() {
-  gGameState->mState = STATE_WARP;
   mBlink      = -0;
   mColor      = 128;
   mDeltaColor = 1;
@@ -51,18 +50,18 @@ GBossProcess::GBossProcess() : BProcess() {
     mSprite->vx     = DELTA_X;
     mSprite->vy     = Random(-3, 3);
     mSprite->mColor = BOSS_COLOR;
-    gDisplay.SetColor(BOSS_COLOR, 255, 0, 0);
+    gDisplay.SetColor(BOSS_COLOR, 255, 10, 10);
   } else if (gGameState->mWave % 2 == 0) {
     mType  = 2;
     mLines = boss_2_img;
     mSprite->mColor = BOSS_COLOR;
-    gDisplay.SetColor(BOSS_COLOR, 255, 0, 0);
+    gDisplay.SetColor(BOSS_COLOR, 255, 10, 10);
     InitOrbit();
   } else {
     mType  = 1;
     mLines = boss_1_img;
     mSprite->mColor = BOSS_COLOR;
-    gDisplay.SetColor(BOSS_COLOR, 255, 0, 0);
+    gDisplay.SetColor(BOSS_COLOR, 255, 10, 10);
     mSprite->x  = gCamera->x + 512;
     mSprite->vx = -DELTA_X;
     mSprite->y  = gCamera->y;
@@ -72,7 +71,9 @@ GBossProcess::GBossProcess() : BProcess() {
 
   mTimer = TIMER;
   gGameState->mState = STATE_WARP;
-  SetState(WARP_STATE);
+  SetState(BOSS_WARP_STATE);
+  gSoundPlayer.PlayMusic(S11_GET_READY_XM);
+
 }
 
 GBossProcess::~GBossProcess() {
@@ -82,6 +83,17 @@ GBossProcess::~GBossProcess() {
 
 void GBossProcess::SetState(TInt aNewState) {
   mState = aNewState;
+
+  switch (mState) {
+    case BOSS_WARP_STATE:
+      printf("GBossProcess::mState = BOSS_WARP_STATE\n");
+    case BOSS_ACTION_STATE:
+      printf("GBossProcess::mState = BOSS_ACTION_STATE\n");
+    case BOSS_EXPLODE_STATE:
+      printf("GBossProcess::mState = BOSS_EXPLODE_STATE\n");
+    default:
+      break;
+  }
 }
 
 TBool GBossProcess::RunBefore() {
@@ -109,6 +121,7 @@ TBool GBossProcess::Hit() {
     printf("    hit! %d\n", mHitPoints);
     mHitPoints--;
     mBlink = 15; // off for 4 frames
+    gSoundPlayer.TriggerSfx(SFX_BOSS_HIT_WAV, 4);
     return ETrue;
   }
   return EFalse;
@@ -133,7 +146,19 @@ TBool GBossProcess::WarpState() {
     // done with warp
     gCamera->vz        = mSprite->vz = CAMERA_VZ;
     gGameState->mState = STATE_BOSS;
-    SetState(ACTION_STATE);
+    SetState(BOSS_ACTION_STATE);
+
+    gSoundPlayer.PlayMusic(S11_GET_READY_XM);
+    if (gGameState->mWave % 4 == 0) {
+      gSoundPlayer.PlayMusic(S08_BOSS_4_XM);
+    }
+    else if (gGameState->mWave % 3 == 0) {
+      gSoundPlayer.PlayMusic(S06_BOSS_3_XM);
+    } else if (gGameState->mWave % 2 == 0) {
+      gSoundPlayer.PlayMusic(S04_BOSS_2_XM);
+    } else {
+      gSoundPlayer.PlayMusic(S02_BOSS_1_XM);
+    }
     return ETrue;
   }
 
@@ -150,7 +175,7 @@ TBool GBossProcess::ExplodeState() {
   mSprite->SetFlags(OFLAG_EXPLODE);
   mSprite->mState++;
 
-  gGameState->mState = WARP_STATE;
+  gGameState->mState = STATE_WARP;
   if (mSprite->mState > NUM_FRAMES) {
     gCamera->vz = CAMERA_VZ;
 
@@ -246,7 +271,7 @@ void GBossProcess::EngagePlayerFlee() {
 }
 
 void GBossProcess::EngagePlayerOrbit() {
-  printf("EngagePlayerOrbit\n");
+//  printf("EngagePlayerOrbit\n");
   if (mSprite->TestFlags(ORBIT_LEFT)) {
     mSprite->mState -= gGame->mDifficulty;
     if (mSprite->mState < 0) {
@@ -285,8 +310,8 @@ TBool GBossProcess::ActionState() {
       mSprite->SetFlags(OFLAG_EXPLODE);
       mSprite->mState = 0;
       mSprite->vz     = gCamera->vz - 3;
-      SetState(EXPLODE_STATE);
-//      Sound::play_sound(SFX_BOSS_EXPLODE);
+      SetState(BOSS_EXPLODE_STATE);
+      gSoundPlayer.TriggerSfx(SFX_BOSS_EXPLODE_WAV, 4);
       return ETrue;
     }
 
@@ -315,11 +340,11 @@ TBool GBossProcess::ActionState() {
 
 TBool GBossProcess::RunAfter() {
   switch (mState) {
-    case WARP_STATE:
+    case BOSS_WARP_STATE:
       return WarpState();
-    case ACTION_STATE:
+    case BOSS_ACTION_STATE:
       return ActionState();
-    case EXPLODE_STATE:
+    case BOSS_EXPLODE_STATE:
       return ExplodeState();
   }
   return ETrue;

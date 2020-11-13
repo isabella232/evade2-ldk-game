@@ -34,6 +34,7 @@ RAW S12_Logo_Reveal.xm
 ########### SOUND :: SFX ###########
 PATH resources/sound_effects/
 RAW SFX_boss_explode.wav
+RAW SFX_boss_hit.wav
 RAW SFX_enemy_explode.wav
 RAW SFX_enemy_flyby.wav
 RAW SFX_enemy_shoot.wav
