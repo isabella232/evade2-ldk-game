@@ -21,22 +21,38 @@ public:
 
 protected:
   void InitOrbit();
+
   TBool Hit();
+
   void EngagePlayerRandomXY();
+
   void EngagePlayerOrbit();
+
   void RandomizeFlee();
+
   void EngagePlayerFlee();
+
 protected:
   TBool WarpState();
+
   TBool ExplodeState();
+
+//  TBool StartActionState();
   TBool ActionState();
 
 protected:
   GVectorSprite *mSprite;
-  const TInt8 *mLines;
-  TInt mTimer;
+  const TInt8   *mLines;
+  TInt          mType;
+  TInt         mBlink;
+  TInt          mTimer;
+  TInt          mColor, mDeltaColor;
+
+protected:
+  void SetState(TInt aNewState);
+
   TInt mState;
-  TInt mType;
+protected:
   TInt mHitPoints;
 };
 

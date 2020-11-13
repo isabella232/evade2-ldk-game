@@ -35,7 +35,8 @@ void GGameState::PostRender() {
   if (mState != STATE_PLAY) {
     return;
   }
-  if (mKills > (10 + mWave) * gGame->mDifficulty) {
+//  if (mKills > (10 + mWave) * gGame->mDifficulty) {
+    if (mKills > 0) {
     AddProcess(new GBossProcess());
   }
 }

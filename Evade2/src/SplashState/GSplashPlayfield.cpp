@@ -113,7 +113,7 @@ void GSplashPlayfield::Animate() {
       newC.b = (TUint8)((blue > 0xFF) ? 0xFF : blue);
 
       gDisplay.SetColor(color, newC);
-      gDisplay.SetColor(COLOR_TEXT_BG, 0,0,0);
+//      gDisplay.SetColor(COLOR_TEXT_BG, 0,0,0);
     }
   }
 

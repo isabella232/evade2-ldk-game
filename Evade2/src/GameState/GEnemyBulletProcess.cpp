@@ -32,7 +32,7 @@ GEnemyBulletProcess::~GEnemyBulletProcess() noexcept {
 }
 
 TBool GEnemyBulletProcess::RunBefore() {
-  if (gGameState->mState != STATE_PLAY) {
+  if (gGameState->mState != STATE_PLAY && gGameState->mState != STATE_BOSS) {
     return EFalse;
   }
   mSprite->mTheta += (mSprite->GetLines() == ebomb_img) ? mSprite->x : 5;

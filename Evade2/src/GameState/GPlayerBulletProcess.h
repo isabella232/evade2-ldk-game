@@ -17,6 +17,7 @@ public:
   TBool RunAfter() OVERRIDE;
 protected:
   GVectorSprite *mSprite;
+  TBool mDying;
 };
 
 

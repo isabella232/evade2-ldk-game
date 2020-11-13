@@ -79,11 +79,10 @@ void GGame::SetColors() {
   gDisplay.SetColor(ASSAULT_COLOR, 255, 50, 50);
   gDisplay.SetColor(BOMBER_COLOR, 50, 255, 50);
   gDisplay.SetColor(SCOUT_COLOR, 255, 50, 255);
+  gDisplay.SetColor(BOSS_COLOR, 102, 102, 255);
 
   gDisplay.SetColor(EBULLET_COLOR, 50, 50, 255);
   gDisplay.SetColor(BOMB_COLOR, 255, 255, 50);
-
-
 }
 
 void GGame::SetState(GAMESTATE aNewState) {

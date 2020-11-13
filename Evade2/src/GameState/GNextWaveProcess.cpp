@@ -1,15 +1,13 @@
-//
-// Created by Michael Schwartz on 11/6/20.
-//
-
 #include "GNextWaveProcess.h"
 #include "GPlayerProcess.h"
+#include "GEnemyProcess.h"
+#include "GAsteroidProcess.h"
 #include "GGameState.h"
 #include "GCamera.h"
 
 GNextWaveProcess::GNextWaveProcess() : BProcess() {
   mTimer      = 240;
-  gCamera->vz = CAMERA_VZ;
+  gCamera->vz = CAMERA_WARP_VZ;
   gGameState->mState = STATE_NEXT_WAVE;
   gSoundPlayer.PlayMusic(S11_GET_READY_XM);
 }
@@ -38,6 +36,16 @@ GNextWaveProcess::~GNextWaveProcess() noexcept {
     gSoundPlayer.PlayMusic(S01_STAGE_1_XM);
   };
 
+  gGameState->AddProcess(new GEnemyProcess());
+  gGameState->AddProcess(new GEnemyProcess());
+  gGameState->AddProcess(new GEnemyProcess());
+
+  if (gGameState->mWave > 3) {
+    const TUint num_asteroids = MIN(MAX(gGameState->mWave, 3), 1) + 1;
+    for (TInt i = 0; i < num_asteroids; i++) {
+      gGameState->AddProcess(new GAsteroidProcess());
+    }
+  }
 
   gCamera->vz = CAMERA_VZ;
 }
