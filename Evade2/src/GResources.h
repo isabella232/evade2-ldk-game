@@ -93,28 +93,35 @@ const TUint16 IMG_DAMAGE_UP = 40;
 
 //// RESERVED COLORS
 
+const TUint8 COLOR_SPACE = 0;
 const TUint8 COLOR_BLACK = 0;
-const TUint8 COLOR_WHITE = 1;
-const TUint8 COLOR_TEXT = 2;
-const TUint8 COLOR_TEXT_BG = 3;
-const TUint8 COLOR_STAR = 4;
-const TUint8 COLOR_HUD = 5;
 
-const TUint8 COLOR_BLUE = 201;
-const TUint8 COLOR_GREEN = 202;
+const TUint8 EBULLET_COLOR = 222;
+const TUint8 BOMB_COLOR = 223;
+const TUint8 BOSS_COLOR = 224;
+const TUint8 ASSAULT_COLOR = 225;
+const TUint8 BOMBER_COLOR = 226;
+const TUint8 SCOUT_COLOR = 227;
+const TUint8 STAR_COLOR = 228;
+//const TUint8 COLOR_BLUE = 201;
+//const TUint8 COLOR_GREEN = 202;
 const TUint8 COLOR_CYAN = 203;
-const TUint8 COLOR_RED = 204;
-const TUint8 COLOR_MAGENTA = 205;
-const TUint8 COLOR_BROWN = 206;
-const TUint8 COLOR_GRAY = 207;
-const TUint8 COLOR_DARK_GRAY = 208;
-const TUint8 COLOR_BRIGHT_BLUE = 209;
-const TUint8 COLOR_BRIGHT_GREEN = 210;
-const TUint8 COLOR_BRIGHT_CYAN = 211;
-const TUint8 COLOR_BRIGHT_RED = 212;
-const TUint8 COLOR_BRIGHT_MAGENTA = 213;
-const TUint8 COLOR_YELLOW = 214;
-const TUint8 COLOR_SPACE = 215;
+//const TUint8 COLOR_RED = 204;
+//const TUint8 COLOR_MAGENTA = 205;
+//const TUint8 COLOR_BROWN = 206;
+//const TUint8 COLOR_GRAY = 207;
+//const TUint8 COLOR_DARK_GRAY = 208;
+//const TUint8 COLOR_BRIGHT_BLUE = 209;
+//const TUint8 COLOR_BRIGHT_GREEN = 210;
+//const TUint8 COLOR_BRIGHT_CYAN = 211;
+//const TUint8 COLOR_BRIGHT_RED = 212;
+//const TUint8 COLOR_BRIGHT_MAGENTA = 213;
+//const TUint8 COLOR_YELLOW = 214;
+const TUint8 COLOR_WHITE = 217;
+const TUint8 COLOR_TEXT = 218;
+const TUint8 COLOR_TEXT_BG = 219;
+const TUint8 COLOR_STAR = 220;
+const TUint8 COLOR_HUD = 221;
 const TUint8 COLOR_SHMOO = 255;
 
 
@@ -122,15 +129,6 @@ const TUint8 COLOR_SHMOO = 255;
 
 
 
-const TUint8 SHMOO_COLOR = 216;
-const TUint8 BULLET_COLOR = 217;
-const TUint8 EBULLET_COLOR = 218;
-const TUint8 BOMB_COLOR = 219;
-const TUint8 BOSS_COLOR = 220;
-const TUint8 ASSAULT_COLOR = 221;
-const TUint8 BOMBER_COLOR = 222;
-const TUint8 SCOUT_COLOR = 223;
-const TUint8 STAR_COLOR = 224;
 
 #define MAX_BBITMAP 5
 

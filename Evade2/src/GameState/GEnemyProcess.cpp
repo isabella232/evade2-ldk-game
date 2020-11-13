@@ -42,8 +42,9 @@ GEnemyProcess::~GEnemyProcess() noexcept {
 
 TBool GEnemyProcess::death() {
   if (mSprite->flags & OFLAG_COLLISION) {
+    printf("death(%d)\n", gGameState->mKills);
     gGameState->mKills++;
-    mSprite->flags &= OFLAG_EXPLODE;
+    mSprite->flags &= ~OFLAG_EXPLODE;
     mSprite->mState = 0;
     gSoundPlayer.TriggerSfx(SFX_ENEMY_EXPLODE_WAV, 3);
 

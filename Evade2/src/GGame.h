@@ -27,6 +27,9 @@ public:
 public:
   void Run();
 
+protected:
+  static void SetColors();
+
 public:
   void SetState(GAMESTATE aNewState);
 

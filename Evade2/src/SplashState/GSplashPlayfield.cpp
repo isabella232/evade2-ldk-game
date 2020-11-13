@@ -4,7 +4,6 @@
 GSplashPlayfield::GSplashPlayfield() {
   gResourceManager.LoadBitmap(SPLASH_BMP, BKG_SLOT, IMAGE_ENTIRE);
   mBackground = gResourceManager.GetBitmap(BKG_SLOT);
-  gDisplay.SetPalette(mBackground);
   mFrame = 0;
   mYStep = 2;
   mYPosition = 0;
@@ -16,7 +15,9 @@ GSplashPlayfield::GSplashPlayfield() {
   mBackgroundX = (SCREEN_WIDTH * .5) - (width * .5);
   mBackgroundY = (SCREEN_HEIGHT * .5) - (height * .5);
 
+  gDisplay.SetPalette(mBackground);
   // Cache colors
+//  gDisplay.SetColor(0, 200,200,200);
   TRGB *source = mBackground->GetPalette();
   for (TInt color = 0; color < 26; color++) {
     TRGB c = source[color];
@@ -112,6 +113,7 @@ void GSplashPlayfield::Animate() {
       newC.b = (TUint8)((blue > 0xFF) ? 0xFF : blue);
 
       gDisplay.SetColor(color, newC);
+//      gDisplay.SetColor(COLOR_TEXT_BG, 0,0,0);
     }
   }
 

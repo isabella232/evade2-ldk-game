@@ -10,16 +10,17 @@
 #include "img/bullet_img.h"
 
 GPlayerBulletProcess::GPlayerBulletProcess(TFloat deltaX, TFloat deltaY, TBool alt) {
-  mSprite = new GVectorSprite(STYPE_PBULLET);
+  mDying      = EFalse;
+  mSprite     = new GVectorSprite(STYPE_PBULLET);
   if (alt) {
-    mSprite->x = gCamera->x + 28;
-    mSprite->y = gCamera->y - 28;
-    mSprite->z = gCamera->z;
+    mSprite->x      = gCamera->x + 28;
+    mSprite->y      = gCamera->y - 28;
+    mSprite->z      = gCamera->z;
     mSprite->mState = 15;
   } else {
-    mSprite->x = gCamera->x - 28;
-    mSprite->y = gCamera->y - 28;
-    mSprite->z = gCamera->z;
+    mSprite->x      = gCamera->x - 28;
+    mSprite->y      = gCamera->y - 28;
+    mSprite->z      = gCamera->z;
     mSprite->mState = -10;
   }
   mSprite->vx = deltaX;
@@ -43,16 +44,27 @@ TBool GPlayerBulletProcess::RunBefore() {
 }
 
 TBool GPlayerBulletProcess::RunAfter() {
-  if (mSprite->z - gCamera->z > 512) {
+  if (mSprite->z - gCamera->z > 1024) {
     return EFalse;
   }
-  BSpriteList        &l = gGameState->mSpriteList;
-  for (auto *s = (GVectorSprite *)l.First(); !l.End(s); s = (GVectorSprite *) l.Next(s)) {
-    if (s->type & (STYPE_EBULLET | STYPE_ENEMY)) {
-      TFloat d = mSprite->DistanceTo(s);
-      if (d < COLLISION_RADIUS) {
-        s->flags |= OFLAG_COLLISION;
-        mSprite->flags |= OFLAG_COLLISION;
+
+  if (mSprite->flags & OFLAG_COLLISION) {
+    mSprite->flags &= ~OFLAG_COLLISION;
+    mSprite->flags |= OFLAG_EXPLODE;
+    mSprite->mState = 0;
+  }
+  if (!mDying) {
+    BSpriteList &l = gGameState->mSpriteList;
+    for (auto   *s = (GVectorSprite *) l.First(); !l.End(s); s = (GVectorSprite *) l.Next(s)) {
+      if (s->type & (STYPE_EBULLET | STYPE_ENEMY)) {
+        TFloat d = mSprite->DistanceTo(s);
+        if (d < COLLISION_RADIUS) {
+          s->flags |= OFLAG_COLLISION;
+          mSprite->flags |= OFLAG_COLLISION;
+          mSprite->vx = mSprite->vy =  mSprite->vz = 0;
+          mDying = ETrue;
+          break;
+        }
       }
     }
   }

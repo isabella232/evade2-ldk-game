@@ -26,14 +26,15 @@ TBool GGame::mDebug = EFalse;
 GGame::GGame() {
   gGame = this;
   printf("Construct GGame\n");
-  gCamera = new GCamera();
+  gCamera     = new GCamera();
   gVectorFont = new GVectorFont();
   mDifficulty = 1;
   gGameEngine = ENull;
   mState      = 0;
-  mNextState = GAME_STATE_NONE;
+  SetColors();
+  mNextState  = GAME_STATE_NONE;
   SetState(GAME_STATE_SPLASH);
-  gOptions = new TOptions();
+//  gOptions = new TOptions();
 
 #ifdef ENABLE_AUDIO
   gSoundPlayer.Init(6 /*channels*/);
@@ -44,7 +45,7 @@ GGame::GGame() {
 
 GGame::~GGame() {
 #ifdef ENABLE_OPTIONS
-  delete gOptions;
+//  delete gOptions;
 #endif
   delete gGameEngine;
   delete gViewPort;
@@ -65,7 +66,7 @@ TInt GGame::GetState() const {
   return mState;
 }
 
-void GGame::SetState(GAMESTATE aNewState) {
+void GGame::SetColors() {
   for (TInt i = 0; i < 256; i++) {
     gDisplay.SetColor(i, 255, 255, 255);
   }
@@ -73,15 +74,18 @@ void GGame::SetState(GAMESTATE aNewState) {
   gDisplay.SetColor(COLOR_BLACK, 0, 0, 0);
   gDisplay.SetColor(COLOR_WHITE, 255, 255, 255);
 
-  gDisplay.SetColor(COLOR_STAR, 255,255,255);
+  gDisplay.SetColor(COLOR_STAR, 255, 255, 255);
 
   gDisplay.SetColor(ASSAULT_COLOR, 255, 50, 50);
   gDisplay.SetColor(BOMBER_COLOR, 50, 255, 50);
   gDisplay.SetColor(SCOUT_COLOR, 255, 50, 255);
+  gDisplay.SetColor(BOSS_COLOR, 102, 102, 255);
 
   gDisplay.SetColor(EBULLET_COLOR, 50, 50, 255);
   gDisplay.SetColor(BOMB_COLOR, 255, 255, 50);
+}
 
+void GGame::SetState(GAMESTATE aNewState) {
   mNextState = aNewState;
 };
 
@@ -109,32 +113,31 @@ void GGame::Run() {
       mState = mNextState;
       switch (mNextState) {
         case GAME_STATE_SPLASH:
-          printf("new State SPLASH\n");
           delete gGameEngine;
           gGameEngine = new GSplashState();
           break;
         case GAME_STATE_ATTRACT_MODE:
-          printf("new State ATTRACT\n");
+          SetColors();
           delete gGameEngine;
           gGameEngine = new GAttractState();
           break;
         case GAME_STATE_GAME:
-          printf("new State GAME\n");
+          SetColors();
           delete gGameEngine;
           gGameEngine = new GGameState();
           break;
         case GAME_STATE_MAIN_MENU:
-          printf("new State MAIN MENU\n");
+          SetColors();
           delete gGameEngine;
           gGameEngine = new GMainMenuState();
           break;
         case GAME_STATE_VICTORY:
-          printf("new State VICTORY\n");
+          SetColors();
           delete gGameEngine;
           gGameEngine = new GGameState();
           break;
         case GAME_STATE_CREDITS:
-          printf("new State CREDITS\n");
+          SetColors();
           delete gGameEngine;
           gGameEngine = new GAttractState();
           break;

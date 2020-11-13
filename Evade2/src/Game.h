@@ -17,7 +17,7 @@ const TFloat BULLET_VZ = 10; // 15;
 const TFloat ALERT_TOP = 30;
 
 // COLLISION_RADIUS = distance from player bullet to enemy required for a hit
-const TFloat COLLISION_RADIUS = 64;
+const TFloat COLLISION_RADIUS = 96;
 #define BANK_LEFT TUint32(1<<OFLAG_USER_BIT)
 #define ORBIT_LEFT TUint32(1<<(OFLAG_USER_BIT+1))
 
@@ -66,7 +66,6 @@ const TFloat COLLISION_RADIUS = 64;
 #include "GGame.h"
 //#include "common/GDialogWidget.h"
 //#include "common/GButtonWidget.h"
-#include "TOptions.h"
 #include "GSoundPlayer.h"
 
 // GGameEngine states
@@ -83,7 +82,7 @@ const TFloat COLLISION_RADIUS = 64;
 //#include "GInventory.h"
 
 extern BViewPort   *gViewPort;
-extern TOptions    *gOptions;
+//extern TOptions    *gOptions;
 
 
 /**
