@@ -37,7 +37,7 @@ GBossProcess::GBossProcess() : BProcess() {
   // position the boss sprite far out in the distance so we see it grow as we appraoch during warp in
   gCamera->vx = gCamera->vy = 0;
   gCamera->vz = CAMERA_WARP_VZ;
-  mSprite->z  = gCamera->z + TIMER * CAMERA_WARP_VZ + z_dist - 150;
+  mSprite->z  = gCamera->z + z_dist;
   mSprite->vz = gCamera->vz;
 //  printf("Camera z: %.2f sprite z: %.2f dist: %.2f\n", gCamera->z, mSprite->z, TIMER * CAMERA_WARP_VZ);
 
@@ -62,7 +62,7 @@ GBossProcess::GBossProcess() : BProcess() {
     mLines = boss_1_img;
     mSprite->mColor = BOSS_COLOR;
     gDisplay.SetColor(BOSS_COLOR, 255, 10, 10);
-    mSprite->x  = gCamera->x + 512;
+    mSprite->x  = gCamera->x + 1024;
     mSprite->vx = -DELTA_X;
     mSprite->y  = gCamera->y;
   }
@@ -188,7 +188,7 @@ TBool GBossProcess::ExplodeState() {
 
 void GBossProcess::EngagePlayerRandomXY() {
   mSprite->vz = 0;
-  mSprite->z  = gCamera->z + z_dist - 150;
+  mSprite->z  = gCamera->z + z_dist;
 
   // Debugging stuff
   // Font::scale = .7 * 256;
