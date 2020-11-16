@@ -80,6 +80,16 @@ TBool GPlayerProcess::RunBefore() {
     return ETrue;
   }
 
+  if (gGameState->mState == STATE_WARP) {
+    printf("WARP STATE!\n");
+    gGame->mStarfield->mBoostSpeed = ETrue;
+    return ETrue;
+  }
+  else {
+    gGame->mStarfield->mBoostSpeed = EFalse;
+  }
+
+
 
   TBool jsRight = gControls.IsPressed(JOYRIGHT),
         jsLeft = gControls.IsPressed(JOYLEFT),
@@ -116,7 +126,7 @@ TBool GPlayerProcess::RunBefore() {
   }
 
   if (gControls.IsPressed(CONTROL_BURST)) {
-    gGame->mStarfield->mWarp = ETrue;
+    gGame->mStarfield->mBoostSpeed = ETrue;
     if (mBoostPower > 0) {
       gCamera->vz = CAMERA_WARP_VZ;
       mBoostPower -= .65;
@@ -127,7 +137,7 @@ TBool GPlayerProcess::RunBefore() {
       gCamera->vz = CAMERA_VZ;
     }
   } else {
-    gGame->mStarfield->mWarp = EFalse;
+    gGame->mStarfield->mBoostSpeed = EFalse;
     gCamera->vz = CAMERA_VZ;
     mBoostPower += .5;
     if (mBoostPower > MAX_POWER) {

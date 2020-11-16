@@ -76,21 +76,21 @@ void GStarfield::Render() {
       travelZ = 0;
 
   //Todo: ROTATE via L or R Buttons in Z dimension
-    if (jsUp) {
-      travelY = .015;
-    }
+  if (jsUp) {
+    travelY = .015;
+  }
 
-    if (jsDown) {
-      travelY = -.015;
-    }
+  if (jsDown) {
+    travelY = -.015;
+  }
 
-    if (jsLeft) {
-      travelX = -.015;
-    }
+  if (jsLeft) {
+    travelX = -.015;
+  }
 
-    if (jsRight) {
-      travelX = .015;
-    }
+  if (jsRight) {
+    travelX = .015;
+  }
 
 //    if (jsLButton) {
 //      printf("TODO: Rotate stars & play field on L button\n");
@@ -102,12 +102,12 @@ void GStarfield::Render() {
 //    }
 
 //  }
-  if (gCamera->vz == CAMERA_WARP_VZ) {
-    mBoostSpeed = ETrue;
-  }
-  else {
-    mBoostSpeed = EFalse;
-  }
+//  if (gCamera->vz == CAMERA_WARP_VZ) {
+//    mBoostSpeed = ETrue;
+//  }
+//  else {
+//    mBoostSpeed = EFalse;
+//  }
 
   // Loop through each star.
   for (TInt16 i = 0; i < NUM_STARS; i++) {
