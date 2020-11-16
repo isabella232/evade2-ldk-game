@@ -66,7 +66,9 @@ TBool GPlayerBulletProcess::RunAfter() {
   if (!mDying) {
     BSpriteList &l = gGameState->mSpriteList;
     for (auto   *s = (GVectorSprite *) l.First(); !l.End(s); s = (GVectorSprite *) l.Next(s)) {
-      if (s->type & (STYPE_EBULLET | STYPE_ENEMY)) {
+
+      //STYPE_EBULLET
+      if (s->type & (STYPE_ENEMY)) {
         TFloat d = mSprite->DistanceTo(s);
         if (d < COLLISION_RADIUS) {
           s->flags |= OFLAG_COLLISION;
