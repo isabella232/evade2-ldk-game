@@ -39,12 +39,12 @@ public:
 
   TUint8       mDifficulty;
   static TBool mDebug;
+  GStarfield *mStarfield;
 
 protected:
   TInt mNextState;
   TInt mState;
   TRGB mShmoo;
-  GStarfield *mStarfield;
 };
 
 extern GGame       *gGame;

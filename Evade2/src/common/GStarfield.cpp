@@ -75,33 +75,22 @@ void GStarfield::Render() {
       travelY = 0,
       travelZ = 0;
 
-  // Todo: this needs to be in Player.cpp or GGame.cpp
-  TBool jsRight = gControls.IsPressed(JOYRIGHT),
-      jsLeft = gControls.IsPressed(JOYLEFT),
-      jsUp = gControls.IsPressed(JOYUP),
-      jsDown = gControls.IsPressed(JOYDOWN),
-      jsRButton = gControls.IsPressed(BUTTONR),
-      jsLButton = gControls.IsPressed(BUTTONL);
-
-
   //Todo: ROTATE via L or R Buttons in Z dimension
-  if (gGame->GetState() == GAME_STATE_GAME) {
-    // rotate
-    if (jsUp) {
-      travelY = .015;
-    }
+  if (jsUp) {
+    travelY = .015;
+  }
 
-    if (jsDown) {
-      travelY = -.015;
-    }
+  if (jsDown) {
+    travelY = -.015;
+  }
 
-    if (jsLeft) {
-      travelZ = -.015;
-    }
+  if (jsLeft) {
+    travelX = -.015;
+  }
 
-    if (jsRight) {
-      travelZ = .015;
-    }
+  if (jsRight) {
+    travelX = .015;
+  }
 
 //    if (jsLButton) {
 //      printf("TODO: Rotate stars & play field on L button\n");
@@ -112,13 +101,13 @@ void GStarfield::Render() {
 //      travelX = -.02;
 //    }
 
-  }
-  if (gCamera->vz == CAMERA_WARP_VZ) {
-    mBoostSpeed = ETrue;
-  }
-  else {
-    mBoostSpeed = EFalse;
-  }
+//  }
+//  if (gCamera->vz == CAMERA_WARP_VZ) {
+//    mBoostSpeed = ETrue;
+//  }
+//  else {
+//    mBoostSpeed = EFalse;
+//  }
 
   // Loop through each star.
   for (TInt16 i = 0; i < NUM_STARS; i++) {
@@ -131,18 +120,18 @@ void GStarfield::Render() {
       stars[i].mZ = temp_z * cos(travelY) + temp_y * sin(travelY);
     }
 
-    if (travelX != 0) {
-      TFloat temp_x = stars[i].mX;
-      TFloat temp_y = stars[i].mY;
-      stars[i].mX = temp_x * cos(travelX) - temp_y * sin(travelX);
-      stars[i].mY = temp_y * cos(travelX) + temp_x * sin(travelX);
-    }
-
     if (travelZ != 0) {
       TFloat temp_x = stars[i].mX;
+      TFloat temp_y = stars[i].mY;
+      stars[i].mX = temp_x * cos(travelX) - temp_y * sin(travelZ);
+      stars[i].mY = temp_y * cos(travelX) + temp_x * sin(travelZ);
+    }
+
+    if (travelX != 0) {
+      TFloat temp_x = stars[i].mX;
       TFloat temp_z = stars[i].mZ;
-      stars[i].mX = temp_x * cos(travelZ) - temp_z * sin(travelZ);
-      stars[i].mZ = temp_z * cos(travelZ) + temp_x * sin(travelZ);
+      stars[i].mX = temp_x * cos(travelZ) - temp_z * sin(travelX);
+      stars[i].mZ = temp_z * cos(travelZ) + temp_x * sin(travelX);
     }
 
 //    if (travelX != 0) {

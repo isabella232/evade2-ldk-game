@@ -32,6 +32,8 @@ GGameState::~GGameState() {
 }
 
 void GGameState::PostRender() {
+  gGame->mStarfield->mWarp = (mState == STATE_WARP);
+
   if (mState != STATE_PLAY) {
     return;
   }

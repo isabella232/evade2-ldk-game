@@ -70,13 +70,13 @@ static TUint8 colors[NUM_STARS];
 
 class GStarfield : public BPlayfield {
 public:
-    GStarfield();
+  GStarfield();
 
-    ~GStarfield() = default;
+  ~GStarfield() = default;
 
-    void Render();
+  void Render();
 
-    void Animate() {
+  void Animate() {
 //    for (TInt i = 0; i < NUM_STARS; i++) {
 //      if (mStarX[i] < -10) {
 //        InitStar(i);
@@ -85,23 +85,24 @@ public:
 //        mStarX[i] -= mStarSpeed[i];
 //      }
 //    }
-    }
-    TBool mWarp;
-    TBool mBoostSpeed;
+  }
+  TBool mWarp;
+  TBool mBoostSpeed;
+  TBool jsUp, jsDown, jsLeft, jsRight;
 
 protected:
 
-    void InitStar(TInt aIndex, TInt32 aXStartIndex = 319) {
-      stars[aIndex].Randomize(
-          -500,
-          1000,
-          -500,
-          1000,
-          0,
-          1,
-          STAR_SPEED_MIN,
-          STAR_SPEED_MAX
-      );
+  void InitStar(TInt aIndex, TInt32 aXStartIndex = 319) {
+    stars[aIndex].Randomize(
+        -500,
+        1000,
+        -500,
+        1000,
+        0,
+        1,
+        STAR_SPEED_MIN,
+        STAR_SPEED_MAX
+    );
 
     //  mStarX[aIndex] = TFloat(256) - Random(0, 512) + gCamera->x;
     //  mStarY[aIndex] = TFloat(256) - Random(0, 512) + gCamera->y;
