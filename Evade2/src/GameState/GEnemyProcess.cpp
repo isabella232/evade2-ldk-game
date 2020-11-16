@@ -31,7 +31,7 @@ GEnemyProcess::GEnemyProcess() {
   mSprite = new GVectorSprite(STYPE_ENEMY);
   gGameEngine->AddSprite(mSprite);
   mState = ESTATE_WAITINIT;
-  respawn();
+  Respawn();
 }
 
 GEnemyProcess::~GEnemyProcess() noexcept {
@@ -40,7 +40,7 @@ GEnemyProcess::~GEnemyProcess() noexcept {
   mSprite = ENull;
 }
 
-TBool GEnemyProcess::death() {
+TBool GEnemyProcess::Death() {
   if (mSprite->flags & OFLAG_COLLISION) {
     printf("death(%d)\n", gGameState->mKills);
     gGameState->mKills++;
@@ -53,7 +53,8 @@ TBool GEnemyProcess::death() {
   return EFalse;
 }
 
-void GEnemyProcess::fire() {
+void GEnemyProcess::Fire() {
+  return;
   if (gGameState->mState != STATE_PLAY) {
     return;
   }
@@ -71,9 +72,9 @@ void GEnemyProcess::fire() {
 }
 
 //#define DELTA_THETA 8
-#define DELTA_THETA 4
+#define DELTA_THETA 2
 
-void GEnemyProcess::bank(TInt16 delta) {
+void GEnemyProcess::Bank(TInt16 delta) {
   if (mSprite->flags & BANK_LEFT) {
     mSprite->mTheta -= DELTA_THETA;
     if (mSprite->mTheta < -delta) {
@@ -87,14 +88,14 @@ void GEnemyProcess::bank(TInt16 delta) {
   }
 }
 
-void GEnemyProcess::respawn() {
+void GEnemyProcess::Respawn() {
   mSprite->mTimer = Random(gGameState->mWave > 6 ? 30 : 30, 60) + 30;
-//  printf("RESPAWN %d\n", mSprite->mTimer);
-
+  printf("RESPAWN %d\n", mSprite->mTimer);
+  
   mState = ESTATE_WAITINIT;
 }
 
-void GEnemyProcess::init_assault(TBool left) {
+void GEnemyProcess::InitAssault(TBool left) {
   TFloat angle = left ? 0 : (2 * PI);
   mSprite->x      = cos(angle) * 256;
   mSprite->z      = gCamera->z + sin(angle) * 256;
@@ -107,7 +108,7 @@ void GEnemyProcess::init_assault(TBool left) {
 /**
  * Initialize object for scout enemy
  */
-void GEnemyProcess::init_scout() {
+void GEnemyProcess::InitScout() {
   mSprite->x      = gCamera->x + Random(-256, 256);
   mSprite->y      = gCamera->y + Random(-256, 256);
   mSprite->z      = gCamera->z + 1024;
@@ -120,7 +121,7 @@ void GEnemyProcess::init_scout() {
 /**
  * Initialize object for bomber enemy
  */
-void GEnemyProcess::init_bomber() {
+void GEnemyProcess::InitBomber() {
   mSprite->x      = gCamera->x + 128 - Random(0, 127);
   mSprite->y      = gCamera->y + 128 - Random(0, 127);
   mSprite->z      = gCamera->z - 30;
@@ -129,7 +130,7 @@ void GEnemyProcess::init_bomber() {
   mSprite->mColor = BOMBER_COLOR;
 }
 
-void GEnemyProcess::init() {
+void GEnemyProcess::Init() {
   mSprite->flags &= ~OFLAG_EXPLODE;
   mSprite->flags &= ~OFLAG_COLLISION;
   mSprite->mTimer = FIRE_TIME;
@@ -139,17 +140,17 @@ void GEnemyProcess::init() {
   switch (Random(0, (gGameState->mWave > 3) ? 3 : gGameState->mWave)) {
     case 0:
       mSprite->SetLines((const TInt8 *) &enemy_scout_1_img);
-      init_scout();
+      InitScout();
       mState = ESTATE_SEEK;
       break;
     case 1:
       mSprite->SetLines((const TInt8 *) &enemy_heavy_bomber_1_img);
-      init_bomber();
+      InitBomber();
       mState = ESTATE_EVADE;
       break;
     case 2:
       mSprite->SetLines((const TInt8 *) &enemy_assault_1_img);
-      init_assault(Random() & 1);
+      InitAssault(Random() & 1);
       mState = ESTATE_ORBIT;
       break;
   }
@@ -158,15 +159,16 @@ void GEnemyProcess::init() {
 TBool GEnemyProcess::StateSeek() {
   GVectorSprite *o = mSprite;
   if (o->BehindCamera()) {
-    respawn();
+    gSoundPlayer.TriggerSfx(SFX_ENEMY_FLYBY_WAV, 1);
+    Respawn();
     return ETrue;
   }
-  if (death()) {
+  if (Death()) {
     mState = ESTATE_EXPLODE;
     return ETrue;
   }
-  // bank(o);
-  fire();
+  // Bank(o);
+  Fire();
   o->mTheta += 8;
   if (o->z - gCamera->z < Random(256, 512)) {
     o->mState = -1;
@@ -184,22 +186,22 @@ TBool GEnemyProcess::StateEvade() {
     mState = ESTATE_RUNAWAY;
     return ETrue;
   }
-  if (death()) {
+  if (Death()) {
     mState = ESTATE_EXPLODE;
     return ETrue;
   }
-  bank(15);
-  fire();
+  Bank(15);
+  Fire();
   return ETrue;
 }
 
 TBool GEnemyProcess::StateOrbit() {
   GVectorSprite *o = mSprite;
-  if (death()) {
+  if (Death()) {
     mState = ESTATE_EXPLODE;
     return ETrue;
   }
-  fire();
+  Fire();
 
   if (o->flags & ORBIT_LEFT) {
     o->mState -= gGame->mDifficulty;
@@ -233,7 +235,7 @@ TBool GEnemyProcess::StateOrbit() {
 TBool GEnemyProcess::StateWaitInit() {
   GVectorSprite *o = mSprite;
   if (o->mTimer <= 0 && gGame->GetState() == GAME_STATE_GAME) {
-    init();
+    Init();
     return ETrue;
   } else {
     o->mTimer = 1;
@@ -251,16 +253,24 @@ TBool GEnemyProcess::StateRunAway() {
   }
   o->vx += o->vx > 0 ? .1 : -.1;
   o->vy += o->vy > 0 ? .1 : -.1;
-  if (o->BehindCamera() || (o->z - gCamera->z) > 1024) {
-    respawn();
+
+  TBool  behindCamera = o->BehindCamera();
+  if (behindCamera || (o->z - gCamera->z) > 1024) {
+    if (behindCamera) {
+      gSoundPlayer.TriggerSfx(SFX_ENEMY_FLYBY_WAV, 1);
+    }
+    else {
+      gSoundPlayer.TriggerSfx(SFX_ENEMY_WARP_AWAY_WAV, 1);
+    }
+    Respawn();
     return ETrue;
   }
-  if (death()) {
+  if (Death()) {
     mState = ESTATE_EXPLODE;
     return ETrue;
   }
-  bank();
-  fire();
+  Bank();
+  Fire();
   return ETrue;
 }
 
@@ -271,7 +281,7 @@ TBool GEnemyProcess::StateExplode() {
     if (gGameState->mState != STATE_PLAY) {
       return EFalse;
     }
-    respawn();
+    Respawn();
   }
   return ETrue;
 }
@@ -294,7 +304,7 @@ TBool GEnemyProcess::RunBefore() {
     case ESTATE_EXPLODE:
       return StateExplode();
     default:
-      Panic("Bad Genemy State %d", mState);
+      Panic("Bad GEnemy State %d", mState);
   }
   return ETrue;
 }

@@ -11,7 +11,7 @@
 
 const TFloat CAMERA_VZ = 4; // 4;
 const TFloat CAMERA_WARP_VZ = 8;
-const TFloat DELTACONTROL = 11; // 11;
+const TFloat DELTACONTROL = 8; // 11;
 const TInt8 MAX_BULLETS = 6;
 const TFloat BULLET_VZ = 10; // 15;
 const TFloat ALERT_TOP = 30;

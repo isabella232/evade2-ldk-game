@@ -69,7 +69,7 @@ GStarfield::GStarfield() : BPlayfield(){
 
 void GStarfield::Render() {
   gDisplay.renderBitmap->Clear(0);
-
+//  return;
 
   TFloat travelX = 0,
       travelY = 0,

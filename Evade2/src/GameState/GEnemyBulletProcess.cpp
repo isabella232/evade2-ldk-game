@@ -10,7 +10,7 @@
 #include "img/ebullet_img.h"
 
 GEnemyBulletProcess::GEnemyBulletProcess(GVectorSprite *enemy, TInt8 type) {
-  const TFloat FRAMES = 120.0f / (TFloat)gGame->mDifficulty;
+  TFloat FRAMES = 120.0f / (TFloat)gGame->mDifficulty;
   mSprite = new GVectorSprite(STYPE_EBULLET);
   mSprite->SetLines((type == EBULLET_BOMB) ? ebomb_img : ebullet_img);
   mSprite->mColor = (type == EBULLET_BOMB) ? BOMB_COLOR : EBULLET_COLOR;
@@ -35,7 +35,7 @@ TBool GEnemyBulletProcess::RunBefore() {
   if (gGameState->mState != STATE_PLAY && gGameState->mState != STATE_BOSS) {
     return EFalse;
   }
-  mSprite->mTheta += (mSprite->GetLines() == ebomb_img) ? mSprite->x : 5;
+  mSprite->mTheta += (mSprite->GetLines() == ebomb_img) ? mSprite->x : 2;
   return ETrue;
 }
 
@@ -52,6 +52,11 @@ TBool GEnemyBulletProcess::RunAfter() {
   }
   if (--mSprite->mTimer <= 0) {
     return EFalse;
+  }
+
+  if ( mSprite->vz > gCamera->vz ) {
+    TFloat FRAMES = 120.0f / (TFloat)gGame->mDifficulty;
+    gCamera->vz - (mSprite->z - gCamera->z) / FRAMES;
   }
   return ETrue;
 }

@@ -36,21 +36,21 @@ public:
   TBool RunAfter() OVERRIDE;
 
 private:
-  void init_assault(TBool left);
+  void InitAssault(TBool left);
 
-  void init_scout();
+  void InitScout();
 
-  void init_bomber();
+  void InitBomber();
 
-  void init();
+  void Init();
 
-  void respawn();
+  void Respawn();
 
-  TBool death();
+  TBool Death();
 
-  void fire();
+  void Fire();
 
-  void bank(TInt16 delta = 45);
+  void Bank(TInt16 delta = 45);
 
 protected:
   GVectorSprite *mSprite;

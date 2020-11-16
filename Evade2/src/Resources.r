@@ -38,6 +38,7 @@ RAW SFX_boss_hit.wav
 RAW SFX_enemy_explode.wav
 RAW SFX_enemy_flyby.wav
 RAW SFX_enemy_shoot.wav
+RAW SFX_enemy_warp_away.wav
 RAW SFX_next_attract_char.wav
 RAW SFX_next_attract_screen.wav
 RAW SFX_player_hit.wav
