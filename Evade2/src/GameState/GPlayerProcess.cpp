@@ -81,8 +81,11 @@ TBool GPlayerProcess::RunBefore() {
   }
 
   if (gGameState->mState == STATE_WARP) {
-    printf("WARP STATE!\n");
     gGame->mStarfield->mBoostSpeed = ETrue;
+    gGame->mStarfield->jsUp = EFalse;
+    gGame->mStarfield->jsDown = EFalse;
+    gGame->mStarfield->jsLeft = EFalse;
+    gGame->mStarfield->jsRight = EFalse;
     return ETrue;
   }
   else {
@@ -221,6 +224,8 @@ TBool GPlayerProcess::RunAfter() {
     gDisplay.SetColor(0, 255, 255, 255);
     return EFalse;
   }
+
+
   if (mHit) {
     gSoundPlayer.TriggerSfx(SFX_PLAYER_HIT_WAV, 4);
     gDisplay.SetColor(0, 255, 255, 255);
@@ -233,7 +238,8 @@ TBool GPlayerProcess::RunAfter() {
          deltaXCrossHairs = 0, deltaYCrossHairs = 0;
 
 
-  if (gGame->IsGameState()) {
+
+  if (gGame->IsGameState() && gGameState->mState != STATE_WARP) {
 
     if (gControls.IsPressed(CONTROL_JOYRIGHT)) {
       consoleX         = -4;
