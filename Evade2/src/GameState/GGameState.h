@@ -20,9 +20,10 @@ class GPlayerProcess;
 class GGameState : public BGameEngine {
 public:
   GGameState();
-
   ~GGameState() OVERRIDE;
-
+  TInt16 GetState() {
+    return mState;
+  }
 public:
   void PostRender() OVERRIDE;
 

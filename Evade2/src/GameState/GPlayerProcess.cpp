@@ -80,16 +80,30 @@ TBool GPlayerProcess::RunBefore() {
     return ETrue;
   }
 
+
+  TBool jsRight = gControls.IsPressed(JOYRIGHT),
+        jsLeft = gControls.IsPressed(JOYLEFT),
+        jsUp = gControls.IsPressed(JOYUP),
+        jsDown = gControls.IsPressed(JOYDOWN),
+        jsRButton = gControls.IsPressed(BUTTONR),
+        jsLButton = gControls.IsPressed(BUTTONL);
+
+  // Starfield control
+  gGame->mStarfield->jsUp = jsUp;
+  gGame->mStarfield->jsDown = jsDown;
+  gGame->mStarfield->jsLeft = jsLeft;
+  gGame->mStarfield->jsRight = jsRight;
+
   if (gControls.WasPressed(CONTROL_FIRE)) {
     if (mNumBullets < MAX_BULLETS) {
       TInt8 deltaX = 0,
             deltaY = 0;
 
-      deltaX = gControls.IsPressed(CONTROL_JOYRIGHT) ? -12 : deltaX;
-      deltaX = gControls.IsPressed(CONTROL_JOYLEFT) ? 12 : deltaX;
+      deltaX = jsRight ? -12 : deltaX;
+      deltaX = jsLeft ? 12 : deltaX;
 
-      deltaY = gControls.IsPressed(CONTROL_JOYUP) ? -11 : deltaY;
-      deltaY = gControls.IsPressed(CONTROL_JOYDOWN) ? 13 : deltaY;
+      deltaY = jsUp ? -11 : deltaY;
+      deltaY = jsDown ? 13 : deltaY;
 
       gGameEngine->AddProcess(new GPlayerBulletProcess(deltaX, deltaY, mAlt));
 
@@ -102,6 +116,7 @@ TBool GPlayerProcess::RunBefore() {
   }
 
   if (gControls.IsPressed(CONTROL_BURST)) {
+    gGame->mStarfield->mWarp = ETrue;
     if (mBoostPower > 0) {
       gCamera->vz = CAMERA_WARP_VZ;
       mBoostPower -= .65;
@@ -112,6 +127,7 @@ TBool GPlayerProcess::RunBefore() {
       gCamera->vz = CAMERA_VZ;
     }
   } else {
+    gGame->mStarfield->mWarp = EFalse;
     gCamera->vz = CAMERA_VZ;
     mBoostPower += .5;
     if (mBoostPower > MAX_POWER) {
@@ -119,17 +135,19 @@ TBool GPlayerProcess::RunBefore() {
     }
   }
 
-  if (gControls.IsPressed(CONTROL_JOYRIGHT)) {
+
+  //
+  if (jsRight) {
     gCamera->vx = -DELTACONTROL;
-  } else if (gControls.IsPressed(CONTROL_JOYLEFT)) {
+  } else if (jsLeft) {
     gCamera->vx = DELTACONTROL;
   } else {
     gCamera->vx = 0;
   }
 
-  if (gControls.IsPressed(CONTROL_JOYDOWN)) {
+  if (jsDown) {
     gCamera->vy = DELTACONTROL;
-  } else if (gControls.IsPressed(CONTROL_JOYUP)) {
+  } else if (jsUp) {
     gCamera->vy = -DELTACONTROL;
   } else {
     gCamera->vy = 0;

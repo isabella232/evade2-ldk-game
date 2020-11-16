@@ -36,7 +36,7 @@ GBossProcess::GBossProcess() : BProcess() {
 
   // position the boss sprite far out in the distance so we see it grow as we appraoch during warp in
   gCamera->vx = gCamera->vy = 0;
-  gCamera->vz = CAMERA_WARP_VZ;
+//  gCamera->vz = CAMERA_WARP_VZ;
   mSprite->z  = gCamera->z + z_dist;
   mSprite->vz = gCamera->vz;
 //  printf("Camera z: %.2f sprite z: %.2f dist: %.2f\n", gCamera->z, mSprite->z, TIMER * CAMERA_WARP_VZ);
@@ -188,7 +188,7 @@ TBool GBossProcess::ExplodeState() {
 
 void GBossProcess::EngagePlayerRandomXY() {
   mSprite->vz = 0;
-  mSprite->z  = gCamera->z + z_dist;
+  mSprite->z  = gCamera->z + z_dist - 150;
 
   // Debugging stuff
   // Font::scale = .7 * 256;
