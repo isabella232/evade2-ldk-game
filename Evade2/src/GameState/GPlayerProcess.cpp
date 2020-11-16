@@ -80,12 +80,21 @@ TBool GPlayerProcess::RunBefore() {
     return ETrue;
   }
 
-  if (gGameState->mState == STATE_WARP) {
+  if (gGameState->mState == STATE_WARP || gGameState->mState == STATE_NEXT_WAVE) {
     gGame->mStarfield->mBoostSpeed = ETrue;
-    gGame->mStarfield->jsUp = EFalse;
-    gGame->mStarfield->jsDown = EFalse;
-    gGame->mStarfield->jsLeft = EFalse;
-    gGame->mStarfield->jsRight = EFalse;
+    gGame->mStarfield->mJSUp = EFalse;
+    gGame->mStarfield->mJSDown = EFalse;
+    gGame->mStarfield->mJSLeft = EFalse;
+    gGame->mStarfield->mJSRight = EFalse;
+    printf("NO CONTROL\n");
+    return ETrue;
+  }
+  if (gGameState->mState == STATE_NEXT_WAVE){
+    gGame->mStarfield->mJSUp = EFalse;
+    gGame->mStarfield->mJSDown = EFalse;
+    gGame->mStarfield->mJSLeft = EFalse;
+    gGame->mStarfield->mJSRight = EFalse;
+    printf("NO CONTROL STATE_NEXT_WAVE\n");
     return ETrue;
   }
   else {
@@ -102,10 +111,10 @@ TBool GPlayerProcess::RunBefore() {
         jsLButton = gControls.IsPressed(BUTTONL);
 
   // Starfield control
-  gGame->mStarfield->jsUp = jsUp;
-  gGame->mStarfield->jsDown = jsDown;
-  gGame->mStarfield->jsLeft = jsLeft;
-  gGame->mStarfield->jsRight = jsRight;
+  gGame->mStarfield->mJSUp = jsUp;
+  gGame->mStarfield->mJSDown = jsDown;
+  gGame->mStarfield->mJSLeft = jsLeft;
+  gGame->mStarfield->mJSRight = jsRight;
 
   if (gControls.WasPressed(CONTROL_FIRE)) {
     if (mNumBullets < MAX_BULLETS) {
@@ -239,7 +248,7 @@ TBool GPlayerProcess::RunAfter() {
 
 
 
-  if (gGame->IsGameState() && gGameState->mState != STATE_WARP) {
+  if (gGame->IsGameState() && gGameState->mState != STATE_WARP && gGameState->mState != STATE_NEXT_WAVE) {
 
     if (gControls.IsPressed(CONTROL_JOYRIGHT)) {
       consoleX         = -4;
@@ -261,6 +270,7 @@ TBool GPlayerProcess::RunAfter() {
       deltaYCrossHairs = -4;
     }
   }
+
 
   const TFloat screenMidX = TFloat(SCREEN_WIDTH) / 2, screenMidY = TFloat(SCREEN_HEIGHT) / 2;
 

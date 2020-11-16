@@ -65,6 +65,7 @@ GBossProcess::GBossProcess() : BProcess() {
     mSprite->x  = gCamera->x + 1024;
     mSprite->vx = -DELTA_X;
     mSprite->y  = gCamera->y;
+    mSprite->z  = gCamera->z + z_dist - 150;
   }
   mHitPoints = 20 + (gGame->mDifficulty * mType);
   mSprite->SetLines(mLines);
@@ -231,7 +232,7 @@ void GBossProcess::EngagePlayerRandomXY() {
 }
 
 void GBossProcess::RandomizeFlee() {
-  printf("RandomizeFlee\n");
+//  printf("RandomizeFlee\n");
   mSprite->y      = gCamera->y + Random(-150, 150);
   mSprite->vy     = Random(-7, 7);
   mSprite->vx     = Random(-7, 7);
@@ -241,7 +242,7 @@ void GBossProcess::RandomizeFlee() {
 }
 
 void GBossProcess::EngagePlayerFlee() {
-  printf("EngagePlayerFlee\n");
+//  printf("EngagePlayerFlee\n");
   if (mSprite->TestFlags(ORBIT_LEFT)) {
     mSprite->mState -= gGame->mDifficulty;
     if (mSprite->mState < 0) {
@@ -271,7 +272,7 @@ void GBossProcess::EngagePlayerFlee() {
 }
 
 void GBossProcess::EngagePlayerOrbit() {
-//  printf("EngagePlayerOrbit\n");
+  printf("EngagePlayerOrbit\n");
   if (mSprite->TestFlags(ORBIT_LEFT)) {
     mSprite->mState -= gGame->mDifficulty;
     if (mSprite->mState < 0) {
@@ -281,7 +282,7 @@ void GBossProcess::EngagePlayerOrbit() {
       mSprite->mState = 0;
       mSprite->ClearFlags(ORBIT_LEFT);
     } else {
-      mSprite->mTheta -= 12;
+      mSprite->mTheta -= 6 + gGameState->mWave;
     }
   } else {
     mSprite->mState += gGame->mDifficulty;
@@ -290,7 +291,7 @@ void GBossProcess::EngagePlayerOrbit() {
       mSprite->mState = 180;
       mSprite->SetFlags(ORBIT_LEFT);
     } else {
-      mSprite->mTheta += 12;
+      mSprite->mTheta += 6 + gGameState->mWave;
     }
   }
 

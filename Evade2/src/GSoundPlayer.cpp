@@ -31,7 +31,7 @@ static TUint16 FindSfxNumber(TUint16 aSfxFile) {
       return (TUint16) i; // Should not go above UINT16_MAX
     }
   }
-  printf("WARNING :: Could not find SFX for ID %i\n", aSfxFile);
+//  printf("WARNING :: Could not find SFX for ID %i\n", aSfxFile);
 
 
   return UINT16_MAX;
@@ -91,8 +91,8 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels) {
 //  soundEngine.SetMusicVolume(gOptions->music);
 //  soundEngine.SetEffectsVolume(gOptions->sfx);
 //  soundEngine.MuteMusic(gOptions->muted);
-  soundEngine.SetMusicVolume(0.5f);
-  soundEngine.SetEffectsVolume(0.5f);
+  soundEngine.SetMusicVolume(0.45f);
+  soundEngine.SetEffectsVolume(0.45f);
   soundEngine.MuteMusic(EFalse);
 }
 
@@ -107,9 +107,9 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
 //   BSoundEngine::PlayMusic un-mutes the music
 // We have to re-mute it in case of mute == true
 
-  soundEngine.SetMusicVolume(0.5f);
-  soundEngine.SetMusicVolume(0.0f);
-  soundEngine.SetEffectsVolume(0.5f);
+  soundEngine.SetMusicVolume(0.45f);
+//  soundEngine.SetMusicVolume(0.0f);
+  soundEngine.SetEffectsVolume(0.45f);
   soundEngine.MuteMusic(EFalse);
 
   return music;

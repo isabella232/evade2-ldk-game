@@ -88,7 +88,8 @@ public:
   }
   TBool mWarp;
   TBool mBoostSpeed;
-  TBool jsUp, jsDown, jsLeft, jsRight;
+  TBool mJSUp, mJSDown, mJSLeft, mJSRight;
+  TBool mRotateLeft, mRotateRight;
 
 protected:
 

@@ -61,6 +61,7 @@ GStarfield::GStarfield() : BPlayfield(){
   mMinSpeed = 1;
   mBoostSpeed = EFalse;
   mWarp = EFalse;
+  mRotateLeft = mRotateRight = EFalse;
 
   for (TInt i = 0; i < NUM_STARS; i++) {
     InitStar(i, 0);
@@ -76,30 +77,30 @@ void GStarfield::Render() {
       travelZ = 0;
 
   //Todo: ROTATE via L or R Buttons in Z dimension
-  if (jsUp) {
+  if (mJSUp) {
     travelY = .015;
   }
 
-  if (jsDown) {
+  if (mJSDown) {
     travelY = -.015;
   }
 
-  if (jsLeft) {
+  if (mJSLeft) {
     travelX = -.015;
   }
 
-  if (jsRight) {
+  if (mJSRight) {
     travelX = .015;
   }
 
-//    if (jsLButton) {
+  if (mRotateRight) {
 //      printf("TODO: Rotate stars & play field on L button\n");
-//      travelX = .02;
-//    }
-//    if (jsRButton) {
-//      printf("TODO: Rotate stars & play field on R button\n");
-//      travelX = -.02;
-//    }
+    travelZ = .02;
+  }
+  if (mRotateLeft) {
+//    printf("TODO: Rotate stars & play field on R button\n");
+    travelZ = -.02;
+  }
 
 //  }
 //  if (gCamera->vz == CAMERA_WARP_VZ) {
@@ -179,7 +180,7 @@ void GStarfield::Render() {
           yMin = -500,
           yMax = 500;
 
-      if ((gGame->GetState() == GAME_STATE_GAME) && (jsLeft || jsRight)) {
+      if ((gGame->GetState() == GAME_STATE_GAME) && (mJSLeft || mJSRight)) {
         xMin = -1000;
         xMax = 1000;
       }

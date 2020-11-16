@@ -10,6 +10,7 @@ GNextWaveProcess::GNextWaveProcess() : BProcess() {
   gCamera->vz = CAMERA_WARP_VZ;
   gGameState->mState = STATE_NEXT_WAVE;
   gSoundPlayer.PlayMusic(S11_GET_READY_XM);
+  gGame->mStarfield->mRotateLeft = ETrue;
 }
 
 GNextWaveProcess::~GNextWaveProcess() noexcept {
@@ -48,6 +49,9 @@ GNextWaveProcess::~GNextWaveProcess() noexcept {
   }
 
   gCamera->vz = CAMERA_VZ;
+  gGame->mStarfield->mRotateRight = EFalse;
+  gGame->mStarfield->mRotateLeft = EFalse;
+
 }
 
 TBool GNextWaveProcess::RunBefore() {
