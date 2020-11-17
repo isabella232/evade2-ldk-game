@@ -93,7 +93,7 @@ void GEnemyProcess::Bank(TInt16 delta) {
 }
 
 void GEnemyProcess::Respawn() {
-  mSprite->mTimer = Random(gGameState->mWave > 6 ? 30 : 30, 60) + 30;
+  mSprite->mTimer = Random(gGameState->mWave > 6 ? 0 : 30, 60) + 30;
   printf("RESPAWN %d\n", mSprite->mTimer);
   fired = EFalse;
   mState = ESTATE_WAIT_INIT;

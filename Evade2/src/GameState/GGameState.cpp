@@ -22,7 +22,6 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 
 //  AddProcess(new GEnemyProcess());
   AddProcess(new GEnemyProcess());
-//  AddProcess(new GAsteroidProcess());
   AddProcess(new GEnemyProcess());
   mPlayerProcess = new GPlayerProcess();
   AddProcess(mPlayerProcess);
@@ -39,9 +38,8 @@ void GGameState::PostRender() {
   if (mState != STATE_PLAY) {
     return;
   }
-//  if (mKills > (10 + mWave) * gGame->mDifficulty) {
+  if (mKills > (10 + mWave) * gGame->mDifficulty) {
 
-  if (mKills > 0) {
     AddProcess(new GBossProcess());
     gSoundPlayer.TriggerSfx(SFX_ALERT_WAV, 2);
   }
