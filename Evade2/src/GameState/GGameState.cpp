@@ -8,6 +8,7 @@
 #include "GEnemyProcess.h"
 #include "GNextWaveProcess.h"
 #include "GBossProcess.h"
+#include "GAsteroidProcess.h"
 
 GGameState *gGameState;
 
@@ -20,8 +21,9 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 //  mPlayfield  = new GStarfield();
 
 //  AddProcess(new GEnemyProcess());
-  AddProcess(new GEnemyProcess());
 //  AddProcess(new GEnemyProcess());
+//  AddProcess(new GAsteroidProcess());
+  AddProcess(new GEnemyProcess());
   mPlayerProcess = new GPlayerProcess();
   AddProcess(mPlayerProcess);
   gSoundPlayer.PlayMusic(S01_STAGE_1_XM);
@@ -41,6 +43,7 @@ void GGameState::PostRender() {
 
   if (mKills > 0) {
     AddProcess(new GBossProcess());
+    gSoundPlayer.TriggerSfx(SFX_ALERT_WAV, 2);
   }
 }
 

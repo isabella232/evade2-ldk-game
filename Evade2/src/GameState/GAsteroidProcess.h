@@ -22,6 +22,7 @@ protected:
 
 protected:
   GVectorSprite *mSprite;
+  TInt mRotationSpeed;
   TInt mState;
   TBool mAlt;
 };

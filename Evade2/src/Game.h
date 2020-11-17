@@ -11,15 +11,25 @@
 
 const TFloat CAMERA_VZ = 4; // 4;
 const TFloat CAMERA_WARP_VZ = 8;
-const TFloat DELTACONTROL = 8; // 11;
+const TFloat DELTA_CONTROL = 8; // 11;
 const TInt8 MAX_BULLETS = 6;
 const TFloat BULLET_VZ = 10; // 15;
 const TFloat ALERT_TOP = 30;
 
+
+// FLAGS
+// if set, the lines will explode
+const TUint16 OFLAG_EXPLODE = (1 << 4);
+// set when the object has collided (ENEMY vs PLAYER BULLET, etc.)
+const TUint16 OFLAG_COLLISION = (1 << 5);
+// Process can use the remaining bits, starting with (1<<USER_BIT)
+const TUint16 OFLAG_USER_BIT = (6);
+
+
 // COLLISION_RADIUS = distance from player bullet to enemy required for a hit
 const TFloat COLLISION_RADIUS = 96;
-#define BANK_LEFT TUint32(1<<OFLAG_USER_BIT)
-#define ORBIT_LEFT TUint32(1<<(OFLAG_USER_BIT+1))
+const TUint32 BANK_LEFT = TUint32((TUint32)1<<OFLAG_USER_BIT);
+const TUint32 ORBIT_LEFT = TUint32((TUint32)1<<(OFLAG_USER_BIT+1));
 
 #define FRAME_RATE_INFO 0
 #undef FRAME_RATE_INFO
@@ -125,13 +135,5 @@ struct EnemyConfig {
 //// MOON means lines is ignored and a circle is rendered, as in a moon or planet
 //// theta becomes radius
 //const TUint16 OTYPE_MOON = 5;
-
-// FLAGS
-// if set, the lines will explode
-const TUint16 OFLAG_EXPLODE = (1 << 4);
-// set when the object has collided (ENEMY vs PLAYER BULLET, etc.)
-const TUint16 OFLAG_COLLISION = (1 << 5);
-// Process can use the remaining bits, starting with (1<<USER_BIT)
-const TUint16 OFLAG_USER_BIT = (6);
 
 #endif //MODITE_GAME_H

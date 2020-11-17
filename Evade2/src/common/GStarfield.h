@@ -13,7 +13,7 @@ static TUint32 actualTime = 0;
 static TInt32 speedMills;
 
 static const TInt16 STAR_SPEED_MIN = 1; // Minimum movement in pixels per update. (value is inclusive)
-static const TInt16 STAR_SPEED_MAX = 15; // Maximum movement in pixels per update. (value is inclusive)
+static const TInt16 STAR_SPEED_MAX = 12; // Maximum movement in pixels per update. (value is inclusive)
 
 static const TUint16 RANDOM_Z_MIN = 400;
 static const TUint16 RANDOM_Z_MAX = 600;
@@ -61,7 +61,7 @@ public:
     mSpeed = Random(speedMin, speedMax + 1);
   }
   TFloat mX, mY, mZ, mSpeed;
-  TInt16 mScreenX, mScreenY, mOldScreenX, mOldScreenY;
+  TFloat mScreenX, mScreenY, mOldScreenX, mOldScreenY;
 };
 
 
@@ -72,7 +72,7 @@ class GStarfield : public BPlayfield {
 public:
   GStarfield();
 
-  ~GStarfield() = default;
+//  ~GStarfield() = default;
 
   void Render();
 
@@ -93,14 +93,14 @@ public:
 
 protected:
 
-  void InitStar(TInt aIndex, TInt32 aXStartIndex = 319) {
+  void InitStar(TInt aIndex) {
     stars[aIndex].Randomize(
         -500,
-        1000,
+        500,
         -500,
-        1000,
-        0,
-        1,
+        500,
+        RANDOM_Z_MIN,
+        RANDOM_Z_MAX,
         STAR_SPEED_MIN,
         STAR_SPEED_MAX
     );
@@ -117,8 +117,8 @@ protected:
 //  TFloat mStarZ[NUM_STARS]{};
 //  TFloat mStarWidth[NUM_STARS]{};
 //  TFloat mStarSpeed[NUM_STARS]{};
-    TInt mCurrSpeed;
-    TInt mMinSpeed;
+    TFloat mCurrSpeed;
+    TFloat mMinSpeed;
 
 };
 

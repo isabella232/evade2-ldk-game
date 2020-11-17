@@ -56,7 +56,7 @@ TBool GEnemyBulletProcess::RunAfter() {
 
   if ( mSprite->vz > gCamera->vz ) {
     TFloat FRAMES = 120.0f / (TFloat)gGame->mDifficulty;
-    gCamera->vz - (mSprite->z - gCamera->z) / FRAMES;
+    mSprite->vz = gCamera->vz - (mSprite->z - gCamera->z) / FRAMES;
   }
   return ETrue;
 }

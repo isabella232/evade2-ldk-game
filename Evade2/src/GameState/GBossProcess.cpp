@@ -9,10 +9,13 @@
 #include "img/boss_2_img.h"
 #include "img/boss_3_img.h"
 
+#define DEBUG_ME 1
+#undef DEBUG_ME
+
 static const TFloat z_dist  = 256;
 static const TFloat frames  = 64;
-//static const TFloat DELTA_X = (DELTACONTROL - 1);
-static const TFloat DELTA_X = (DELTACONTROL / 2);
+//static const TFloat DELTA_X = (DELTA_CONTROL - 1);
+static const TFloat DELTA_X = (DELTA_CONTROL / 2);
 
 const TInt TIMER = 240;
 
@@ -34,12 +37,10 @@ GBossProcess::GBossProcess() : BProcess() {
 
   gGameState->mKills = 0;
 
-  // position the boss sprite far out in the distance so we see it grow as we appraoch during warp in
+  // position the boss sprite far out in the distance so we see it grow as we approach during warp in
   gCamera->vx = gCamera->vy = 0;
-//  gCamera->vz = CAMERA_WARP_VZ;
   mSprite->z  = gCamera->z + z_dist;
   mSprite->vz = gCamera->vz;
-//  printf("Camera z: %.2f sprite z: %.2f dist: %.2f\n", gCamera->z, mSprite->z, TIMER * CAMERA_WARP_VZ);
 
   mSprite->mState = 0;
 
@@ -85,6 +86,7 @@ GBossProcess::~GBossProcess() {
 void GBossProcess::SetState(TInt aNewState) {
   mState = aNewState;
 
+#ifdef DEBUG_ME
   switch (mState) {
     case BOSS_WARP_STATE:
       printf("GBossProcess::mState = BOSS_WARP_STATE\n");
@@ -95,6 +97,7 @@ void GBossProcess::SetState(TInt aNewState) {
     default:
       break;
   }
+#endif
 }
 
 TBool GBossProcess::RunBefore() {
@@ -272,7 +275,7 @@ void GBossProcess::EngagePlayerFlee() {
 }
 
 void GBossProcess::EngagePlayerOrbit() {
-  printf("EngagePlayerOrbit\n");
+//  printf("EngagePlayerOrbit\n");
   if (mSprite->TestFlags(ORBIT_LEFT)) {
     mSprite->mState -= gGame->mDifficulty;
     if (mSprite->mState < 0) {
@@ -282,7 +285,7 @@ void GBossProcess::EngagePlayerOrbit() {
       mSprite->mState = 0;
       mSprite->ClearFlags(ORBIT_LEFT);
     } else {
-      mSprite->mTheta -= 6 + gGameState->mWave;
+      mSprite->mTheta -= 6 + (gGameState->mWave * .5);
     }
   } else {
     mSprite->mState += gGame->mDifficulty;
@@ -291,7 +294,7 @@ void GBossProcess::EngagePlayerOrbit() {
       mSprite->mState = 180;
       mSprite->SetFlags(ORBIT_LEFT);
     } else {
-      mSprite->mTheta += 6 + gGameState->mWave;
+      mSprite->mTheta += 6 + (gGameState->mWave * .5);
     }
   }
 

@@ -18,6 +18,9 @@ enum {
 #define MAX_POWER 100
 #define MAX_LIFE 100
 
+#define DEBUGME 1
+#undef DEBUGME
+
 GPlayerProcess::GPlayerProcess() {
   color = COLOR_WHITE;
   gCamera->vz = CAMERA_VZ;
@@ -49,10 +52,9 @@ void GPlayerProcess::DrawBitmap(TInt16 x, TInt16 y, const TUint8 *bitmap, TUint8
 }
 
 void GPlayerProcess::Hit(TInt8 amount) {
-  mShield -= amount;
+  mShield -= (TFloat)amount;
   if (mShield <= 0) {
     gGameEngine->AddProcess(new GGameOverProcess());
-    // ProcessManager::birth(GameOver::entry);
   } else {
     mHit = ETrue;
     gSoundPlayer.TriggerSfx(SFX_PLAYER_HIT_WAV, 4);
@@ -86,7 +88,6 @@ TBool GPlayerProcess::RunBefore() {
     gGame->mStarfield->mJSDown = EFalse;
     gGame->mStarfield->mJSLeft = EFalse;
     gGame->mStarfield->mJSRight = EFalse;
-    printf("NO CONTROL\n");
     return ETrue;
   }
   if (gGameState->mState == STATE_NEXT_WAVE){
@@ -94,7 +95,6 @@ TBool GPlayerProcess::RunBefore() {
     gGame->mStarfield->mJSDown = EFalse;
     gGame->mStarfield->mJSLeft = EFalse;
     gGame->mStarfield->mJSRight = EFalse;
-    printf("NO CONTROL STATE_NEXT_WAVE\n");
     return ETrue;
   }
   else {
@@ -137,18 +137,29 @@ TBool GPlayerProcess::RunBefore() {
     gSoundPlayer.TriggerSfx(SFX_SPEED_BOOST_WAV, 2);
   }
 
+
   if (gControls.IsPressed(CONTROL_BURST)) {
-    gGame->mStarfield->mBoostSpeed = ETrue;
     if (mBoostPower > 0) {
+      gGame->mStarfield->mBoostSpeed = ETrue;
       gCamera->vz = CAMERA_WARP_VZ;
-      mBoostPower -= .65;
+      mBoostPower -= .45;
       if (mBoostPower < 0) {
         mBoostPower = 0;
+        gSoundPlayer.TriggerSfx(SFX_SPEED_BOOST_END_WAV, 2);
+        gGame->mStarfield->mBoostSpeed = EFalse;
+        gCamera->vz = CAMERA_VZ;
+
       }
     } else {
       gCamera->vz = CAMERA_VZ;
+
     }
+
+
   } else {
+    if (mBoostPower <= MAX_POWER && gCamera->vz == CAMERA_WARP_VZ) {
+      gSoundPlayer.TriggerSfx(SFX_SPEED_BOOST_END_WAV, 2);
+    }
     gGame->mStarfield->mBoostSpeed = EFalse;
     gCamera->vz = CAMERA_VZ;
     mBoostPower += .5;
@@ -160,17 +171,17 @@ TBool GPlayerProcess::RunBefore() {
 
   //
   if (jsRight) {
-    gCamera->vx = -DELTACONTROL;
+    gCamera->vx = -DELTA_CONTROL;
   } else if (jsLeft) {
-    gCamera->vx = DELTACONTROL;
+    gCamera->vx = DELTA_CONTROL;
   } else {
     gCamera->vx = 0;
   }
 
   if (jsDown) {
-    gCamera->vy = DELTACONTROL;
+    gCamera->vy = DELTA_CONTROL;
   } else if (jsUp) {
-    gCamera->vy = -DELTACONTROL;
+    gCamera->vy = -DELTA_CONTROL;
   } else {
     gCamera->vy = 0;
   }
@@ -184,12 +195,12 @@ TBool GPlayerProcess::RunBefore() {
 void GPlayerProcess::DrawHud(TFloat x, TFloat y) {
 
   GVectorSprite::DrawVectorGraphic(
-      console_img,
-      x,
-      y,
-      0.0,
-      .25, // Originally 2.0
-      COLOR_WHITE
+    console_img,
+    x,
+    y,
+    0.0,
+    .25, // Originally 2.0
+    COLOR_WHITE
    );
 }
 
@@ -222,6 +233,7 @@ void GPlayerProcess::DrawMeter(TInt8 side, TInt8 value, TInt8 deltaXMeter, TInt8
         gDisplay.renderBitmap->FillRect(ENull, 310 + deltaXMeter, y + deltaYMeter, 310 + deltaXMeter + 4, y + deltaYMeter + 3, COLOR_HUD);
         gDisplay.renderBitmap->FillRect(ENull, 308 + deltaXMeter, y + deltaYMeter + 2, 308 + deltaXMeter + 6, y + deltaYMeter + 3, COLOR_HUD);
       }
+
       y -= yStep;
     }
   }
@@ -230,14 +242,15 @@ void GPlayerProcess::DrawMeter(TInt8 side, TInt8 value, TInt8 deltaXMeter, TInt8
 
 TBool GPlayerProcess::RunAfter() {
   if (gGameState->mState == STATE_GAME_OVER) {
-    gDisplay.SetColor(0, 255, 255, 255);
+    gDisplay.SetColor(0, 0, 0, 0);
     return EFalse;
   }
 
 
   if (mHit) {
     gSoundPlayer.TriggerSfx(SFX_PLAYER_HIT_WAV, 4);
-    gDisplay.SetColor(0, 255, 255, 255);
+    gDisplay.SetColor(COLOR_SPACE, 180, 50, 50);
+    gDisplay.renderBitmap->Clear(0);
   } else {
     gDisplay.SetColor(0, 0, 0, 0);
   }
@@ -269,6 +282,9 @@ TBool GPlayerProcess::RunAfter() {
       deltaYMeter      = 1;
       deltaYCrossHairs = -4;
     }
+  }
+  else {
+    gControls.Reset();
   }
 
 
@@ -316,6 +332,16 @@ TBool GPlayerProcess::RunAfter() {
   DrawMeter(0, mShield, deltaXMeter, deltaYMeter);
   DrawMeter(1, mBoostPower, deltaXMeter, deltaYMeter);
 
+#ifdef DEBUGME
+  gDisplay.renderBitmap->DrawRect(
+    ENull,
+    screenMidX - 128,
+    screenMidY - 96,
+    screenMidX + 128,
+    screenMidY + 96,
+    COLOR_HUD
+  );
+#endif
 
   return ETrue;
 }

@@ -21,7 +21,7 @@ public:
 
   TBool CollidesWith(GVectorSprite *aVSprite) const {
     // If enemy bullet collides with player
-    if (abs(aVSprite->z - z) < abs(aVSprite->vz) && abs(aVSprite->x - x) < 64 && abs(aVSprite->y - y) < 64) {
+    if (abs(aVSprite->z - z) <= abs(aVSprite->vz) && abs(aVSprite->x - x) <= 100 && abs(aVSprite->y - y) <= 96) {
       return ETrue;
     }
     return EFalse;

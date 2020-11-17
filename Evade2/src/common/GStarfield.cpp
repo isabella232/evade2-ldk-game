@@ -57,14 +57,14 @@ void GStarfield::InitStar(TInt aIndex) {
 #else
 
 GStarfield::GStarfield() : BPlayfield(){
-  mCurrSpeed = 10;
+  mCurrSpeed = 1;
   mMinSpeed = 1;
   mBoostSpeed = EFalse;
   mWarp = EFalse;
   mRotateLeft = mRotateRight = EFalse;
 
   for (TInt i = 0; i < NUM_STARS; i++) {
-    InitStar(i, 0);
+    InitStar(i);
   }
 }
 
@@ -73,8 +73,8 @@ void GStarfield::Render() {
 //  return;
 
   TFloat travelX = 0,
-      travelY = 0,
-      travelZ = 0;
+         travelY = 0,
+         travelZ = 0;
 
   //Todo: ROTATE via L or R Buttons in Z dimension
   if (mJSUp) {
@@ -102,13 +102,6 @@ void GStarfield::Render() {
     travelZ = -.02;
   }
 
-//  }
-//  if (gCamera->vz == CAMERA_WARP_VZ) {
-//    mBoostSpeed = ETrue;
-//  }
-//  else {
-//    mBoostSpeed = EFalse;
-//  }
 
   // Loop through each star.
   for (TInt16 i = 0; i < NUM_STARS; i++) {
@@ -155,12 +148,12 @@ void GStarfield::Render() {
     stars[i].mScreenY = stars[i].mY / stars[i].mZ * 100 + SCREEN_HEIGHT / 2;
 
     actualTime = Milliseconds() * .05;
-    if (mBoostSpeed && mCurrSpeed <= STAR_SPEED_MAX && actualTime - speedMills >= 25) {
-      mCurrSpeed = mCurrSpeed + 2.5;
+    if (mBoostSpeed && mCurrSpeed <= STAR_SPEED_MAX && actualTime - speedMills >= 5) {
+      mCurrSpeed += .5;
       speedMills = actualTime;
     }
 
-    if (!mBoostSpeed && mCurrSpeed > STAR_SPEED_MIN && actualTime - speedMills >= 10) {
+    if (!mBoostSpeed && mCurrSpeed > STAR_SPEED_MIN && actualTime - speedMills >= 5) {
       mCurrSpeed -= 2.5;
       speedMills = actualTime;
     }
@@ -171,33 +164,32 @@ void GStarfield::Render() {
 
     //If the stars go off the screen remove them and re-draw. If the stars hang out in the center remove them also
     if (stars[i].mScreenX > SCREEN_WIDTH || stars[i].mScreenX < 0 || stars[i].mScreenY > SCREEN_HEIGHT ||
-        stars[i].mScreenY < 0 ||
-        (stars[i].mScreenX == SCREEN_WIDTH >> 1 && stars[i].mScreenY == SCREEN_HEIGHT >> 1)) {
+        stars[i].mScreenY < 0 ) {
+//        || (stars[i].mScreenX == SCREEN_WIDTH * .5 && stars[i].mScreenY == SCREEN_HEIGHT * .5)) {
 
-
-      int xMin = -1000,
-          xMax = 1000,
-          yMin = -500,
-          yMax = 500;
-
-      if ((gGame->GetState() == GAME_STATE_GAME) && (mJSLeft || mJSRight)) {
-        xMin = -1000;
-        xMax = 1000;
-      }
+//      int xMin = -1000,
+//          xMax = 1000,
+//          yMin = -1000,
+//          yMax = 1000;
+//
+//      if ((gGame->GetState() == GAME_STATE_GAME) && (mJSLeft || mJSRight)) {
+//        xMin = -1000;
+//        xMax = 1000;
+//      }
 
       stars[i].Randomize(
-        xMin,
-        xMax,
-        yMin,
-        yMax,
+        -1000,
+        1000,
+        -1000,
+        1000,
         RANDOM_Z_MIN,
         RANDOM_Z_MAX,
         STAR_SPEED_MIN,
         STAR_SPEED_MAX
       );
 
-      stars[i].mScreenX = stars[i].mX / stars[i].mZ * 100 + SCREEN_WIDTH / 2;
-      stars[i].mScreenY = stars[i].mY / stars[i].mZ * 100 + SCREEN_HEIGHT / 2;
+      stars[i].mScreenX = stars[i].mX / stars[i].mZ * 100 + (TFloat)SCREEN_WIDTH / 2;
+      stars[i].mScreenY = stars[i].mY / stars[i].mZ * 100 + (TFloat)SCREEN_HEIGHT / 2;
       stars[i].mOldScreenX = stars[i].mScreenX;
       stars[i].mOldScreenY = stars[i].mScreenY;
     }
@@ -205,12 +197,12 @@ void GStarfield::Render() {
 
     // Draw the star at its new coordinate.
     gDisplay.renderBitmap->DrawLine(
-        ENull,
-        stars[i].mScreenX,
-        stars[i].mScreenY,
-        stars[i].mOldScreenX,
-        stars[i].mOldScreenY,
-        STAR_COLOR
+      ENull,
+      stars[i].mScreenX,
+      stars[i].mScreenY,
+      stars[i].mOldScreenX,
+      stars[i].mOldScreenY,
+      STAR_COLOR
     );
 
     //keep track of the old spot

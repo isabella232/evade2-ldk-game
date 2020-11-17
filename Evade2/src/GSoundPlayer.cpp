@@ -11,6 +11,7 @@ GSoundPlayer gSoundPlayer;
 
 static const TUint16 effectsList[] = {
 //  SFX_EMPTY_WAV,
+  SFX_ALERT_WAV,
   SFX_BOSS_EXPLODE_WAV,
   SFX_BOSS_HIT_WAV,
   SFX_ENEMY_EXPLODE_WAV,
@@ -20,6 +21,7 @@ static const TUint16 effectsList[] = {
   SFX_PLAYER_SHOOT_WAV,
   SFX_PLAYER_HIT_WAV,
   SFX_SPEED_BOOST_WAV,
+  SFX_SPEED_BOOST_END_WAV,
   SFX_NEXT_ATTRACT_CHAR_WAV,
   SFX_NEXT_ATTRACT_SCREEN_WAV,
 };
@@ -32,7 +34,6 @@ static TUint16 FindSfxNumber(TUint16 aSfxFile) {
     }
   }
 //  printf("WARNING :: Could not find SFX for ID %i\n", aSfxFile);
-
 
   return UINT16_MAX;
 }
@@ -108,8 +109,9 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
 // We have to re-mute it in case of mute == true
 
   soundEngine.SetMusicVolume(0.45f);
-//  soundEngine.SetMusicVolume(0.0f);
+  soundEngine.SetMusicVolume(0.0f);
   soundEngine.SetEffectsVolume(0.45f);
+//  soundEngine.SetEffectsVolume(0.0f);
   soundEngine.MuteMusic(EFalse);
 
   return music;

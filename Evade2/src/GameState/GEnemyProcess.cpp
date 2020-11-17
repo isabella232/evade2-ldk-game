@@ -10,8 +10,10 @@
 #include "img/enemy_assault_1_img.h"
 #include "img/enemy_heavy_bomber_1_img.h"
 #include "img/enemy_scout_1_img.h"
+#include "img/enemy_assault_2_img.h"
 
 #define FIRE_TIME (60 / gGame->mDifficulty + Random(1, 60 / gGame->mDifficulty))
+TBool fired = EFalse;
 
 const TInt8 *GEnemyProcess::Graphic(TInt aType) {
   switch (aType) {
@@ -54,7 +56,7 @@ TBool GEnemyProcess::Death() {
 }
 
 void GEnemyProcess::Fire() {
-  return;
+//  return;
   if (gGameState->mState != STATE_PLAY) {
     return;
   }
@@ -65,8 +67,10 @@ void GEnemyProcess::Fire() {
       return;
     }
     // FIRE!
-//    printf("Fire!!!\n");
-    gGameEngine->AddProcess(new GEnemyBulletProcess(mSprite, Random(0, 5) ? EBULLET_BULLET : EBULLET_BOMB));
+    if (! fired) {
+//      gGameEngine->AddProcess(new GEnemyBulletProcess(mSprite, Random(0, 5) ? EBULLET_BULLET : EBULLET_BOMB));
+      fired = ETrue;
+    }
     mSprite->mTimer = FIRE_TIME;
   }
 }
@@ -77,12 +81,12 @@ void GEnemyProcess::Fire() {
 void GEnemyProcess::Bank(TInt16 delta) {
   if (mSprite->flags & BANK_LEFT) {
     mSprite->mTheta -= DELTA_THETA;
-    if (mSprite->mTheta < -delta) {
+    if (mSprite->mTheta < (TFloat)-delta) {
       mSprite->flags &= ~BANK_LEFT;
     }
   } else {
     mSprite->mTheta += DELTA_THETA;
-    if (mSprite->mTheta > delta) {
+    if (mSprite->mTheta > (TFloat)delta) {
       mSprite->flags |= BANK_LEFT;
     }
   }
@@ -91,7 +95,7 @@ void GEnemyProcess::Bank(TInt16 delta) {
 void GEnemyProcess::Respawn() {
   mSprite->mTimer = Random(gGameState->mWave > 6 ? 30 : 30, 60) + 30;
   printf("RESPAWN %d\n", mSprite->mTimer);
-  
+  fired = EFalse;
   mState = ESTATE_WAITINIT;
 }
 
@@ -136,8 +140,10 @@ void GEnemyProcess::Init() {
   mSprite->mTimer = FIRE_TIME;
   mSprite->mTheta = 0;
 
+  TInt16 enemyType = Random(0, (gGameState->mWave > 4) ? 4 : gGameState->mWave);
+//  enemyType = 4; // Debug
   // One enemy type enters per wave
-  switch (Random(0, (gGameState->mWave > 3) ? 3 : gGameState->mWave)) {
+  switch (enemyType) {
     case 0:
       mSprite->SetLines((const TInt8 *) &enemy_scout_1_img);
       InitScout();
@@ -152,6 +158,26 @@ void GEnemyProcess::Init() {
       mSprite->SetLines((const TInt8 *) &enemy_assault_1_img);
       InitAssault(Random() & 1);
       mState = ESTATE_ORBIT;
+      break;
+    default:
+    case 4:
+      mSprite->SetLines((const TInt8 *) &enemy_assault_2_img);
+      TInt16 attackType = Random(0,2);
+      switch (attackType) {
+        case 0:
+          InitAssault(Random() & 1);
+          mState = ESTATE_ORBIT;
+          break;
+        case 1:
+          InitBomber();
+          mState = ESTATE_EVADE;
+          break;
+        default:
+        case 2:
+          InitScout();
+          mState = ESTATE_SEEK;
+          break;
+      }
       break;
   }
 }
