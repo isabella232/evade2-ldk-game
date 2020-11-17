@@ -32,7 +32,7 @@ const TInt8 *GEnemyProcess::Graphic(TInt aType) {
 GEnemyProcess::GEnemyProcess() {
   mSprite = new GVectorSprite(STYPE_ENEMY);
   gGameEngine->AddSprite(mSprite);
-  mState = ESTATE_WAITINIT;
+  mState = ESTATE_WAIT_INIT;
   Respawn();
 }
 
@@ -96,7 +96,7 @@ void GEnemyProcess::Respawn() {
   mSprite->mTimer = Random(gGameState->mWave > 6 ? 30 : 30, 60) + 30;
   printf("RESPAWN %d\n", mSprite->mTimer);
   fired = EFalse;
-  mState = ESTATE_WAITINIT;
+  mState = ESTATE_WAIT_INIT;
 }
 
 void GEnemyProcess::InitAssault(TBool left) {
@@ -198,7 +198,7 @@ TBool GEnemyProcess::StateSeek() {
   o->mTheta += 8;
   if (o->z - gCamera->z < Random(256, 512)) {
     o->mState = -1;
-    mState = ESTATE_RUNAWAY;
+    mState = ESTATE_RUN_AWAY;
     return ETrue;
   }
 
@@ -209,7 +209,7 @@ TBool GEnemyProcess::StateEvade() {
   GVectorSprite *o = mSprite;
   if (o->z - gCamera->z > 512) {
     o->mState = 1;
-    mState = ESTATE_RUNAWAY;
+    mState = ESTATE_RUN_AWAY;
     return ETrue;
   }
   if (Death()) {
@@ -323,9 +323,9 @@ TBool GEnemyProcess::RunBefore() {
       return StateEvade();
     case ESTATE_ORBIT:
       return StateOrbit();
-    case ESTATE_WAITINIT:
+    case ESTATE_WAIT_INIT:
       return StateWaitInit();
-    case ESTATE_RUNAWAY:
+    case ESTATE_RUN_AWAY:
       return StateRunAway();
     case ESTATE_EXPLODE:
       return StateExplode();

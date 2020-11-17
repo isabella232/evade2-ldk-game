@@ -133,7 +133,6 @@ TBool GAttractProcess::NextState() {
       gGame->SetState(GAME_STATE_MAIN_MENU);
       return EFalse;
     }
-//      Sound::play_sound(SFX_NEXT_ATTRACT_SCREEN);
     InitScreen();
     mState = STATE_TYPEWRITER;
   }

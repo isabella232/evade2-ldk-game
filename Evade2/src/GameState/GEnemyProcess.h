@@ -8,16 +8,19 @@
 #include "Game.h"
 #include "GVectorSprite.h"
 
-#define ENEMY_ASSAULT 0
-#define ENEMY_BOMBER 1
-#define ENEMY_SCOUT 2
+enum EnemyTypes {
+  ENEMY_ASSAULT,
+  ENEMY_BOMBER,
+  ENEMY_SCOUT,
+  ENEMY_NUM4
+};
 
 enum EState {
   ESTATE_SEEK,
   ESTATE_EVADE,
   ESTATE_ORBIT,
-  ESTATE_WAITINIT,
-  ESTATE_RUNAWAY,
+  ESTATE_WAIT_INIT,
+  ESTATE_RUN_AWAY,
   ESTATE_EXPLODE,
 };
 

@@ -109,7 +109,7 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
 // We have to re-mute it in case of mute == true
 
   soundEngine.SetMusicVolume(0.45f);
-  soundEngine.SetMusicVolume(0.0f);
+//  soundEngine.SetMusicVolume(0.0f);
   soundEngine.SetEffectsVolume(0.45f);
 //  soundEngine.SetEffectsVolume(0.0f);
   soundEngine.MuteMusic(EFalse);

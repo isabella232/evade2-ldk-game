@@ -26,7 +26,7 @@ enum {
 };
 
 GBossProcess::GBossProcess() : BProcess() {
-  mBlink      = -0;
+  mBlink      = 0;
   mColor      = 128;
   mDeltaColor = 1;
 
@@ -122,9 +122,9 @@ TBool GBossProcess::RunBefore() {
 
 TBool GBossProcess::Hit() {
   if (mSprite->TestAndClearFlags(OFLAG_COLLISION)) {
-    printf("    hit! %d\n", mHitPoints);
+//    printf("    hit! %d\n", mHitPoints);
     mHitPoints--;
-    mBlink = 15; // off for 4 frames
+    mBlink = 240; // off for 4 frames
     gSoundPlayer.TriggerSfx(SFX_BOSS_HIT_WAV, 4);
     return ETrue;
   }
@@ -191,8 +191,20 @@ TBool GBossProcess::ExplodeState() {
 }
 
 void GBossProcess::EngagePlayerRandomXY() {
-  mSprite->vz = 0;
-  mSprite->z  = gCamera->z + z_dist - 150;
+//  printf("%2f\n", gCamera->z - mSprite->z);
+
+  if ((gCamera->z - mSprite->z) < -300) {
+    mSprite->vz = CAMERA_VZ;
+  }
+  else {
+    mSprite->vz = CAMERA_VZ + 2;
+  }
+
+  if ((gCamera->z - mSprite->z) >= 0) {
+    mSprite->z = gCamera->z + 10;
+  }
+
+//  mSprite->z  = gCamera->z + z_dist - 150;
 
   // Debugging stuff
   // Font::scale = .7 * 256;
@@ -265,6 +277,7 @@ void GBossProcess::EngagePlayerFlee() {
   if (--mSprite->mTimer > 0) {
     return;
   }
+
   gGameState->AddProcess(new GEnemyBulletProcess(mSprite, EBULLET_BOMB));
 
   mSprite->mTimer = gGameState->mWave > 20 ? 20 : (50 - gGame->mDifficulty);

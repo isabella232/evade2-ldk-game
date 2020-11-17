@@ -21,7 +21,7 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 //  mPlayfield  = new GStarfield();
 
 //  AddProcess(new GEnemyProcess());
-//  AddProcess(new GEnemyProcess());
+  AddProcess(new GEnemyProcess());
 //  AddProcess(new GAsteroidProcess());
   AddProcess(new GEnemyProcess());
   mPlayerProcess = new GPlayerProcess();
