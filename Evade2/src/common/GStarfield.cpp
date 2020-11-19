@@ -62,7 +62,7 @@ GStarfield::GStarfield() : BPlayfield(){
   mBoostSpeed = EFalse;
   mWarp = EFalse;
   mRotateLeft = mRotateRight = EFalse;
-
+  mJSUp = mJSDown = mJSLeft = mJSRight = EFalse;
   for (TInt i = 0; i < NUM_STARS; i++) {
     InitStar(i);
   }
