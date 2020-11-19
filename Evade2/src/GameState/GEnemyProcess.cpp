@@ -68,7 +68,7 @@ void GEnemyProcess::Fire() {
     }
     // FIRE!
     if (! fired) {
-//      gGameEngine->AddProcess(new GEnemyBulletProcess(mSprite, Random(0, 5) ? EBULLET_BULLET : EBULLET_BOMB));
+      gGameEngine->AddProcess(new GEnemyBulletProcess(mSprite, Random(0, 5) ? EBULLET_BULLET : EBULLET_BOMB));
       fired = ETrue;
     }
     mSprite->mTimer = FIRE_TIME;
