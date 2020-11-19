@@ -44,7 +44,7 @@ GEnemyProcess::~GEnemyProcess() noexcept {
 
 TBool GEnemyProcess::Death() {
   if (mSprite->flags & OFLAG_COLLISION) {
-    printf("death(%d)\n", gGameState->mKills);
+    //printf("death(%d)\n", gGameState->mKills);
     gGameState->mKills++;
     mSprite->flags &= ~OFLAG_EXPLODE;
     mSprite->mState = 0;
@@ -94,7 +94,7 @@ void GEnemyProcess::Bank(TInt16 delta) {
 
 void GEnemyProcess::Respawn() {
   mSprite->mTimer = Random(gGameState->mWave > 6 ? 0 : 30, 60) + 30;
-  printf("RESPAWN %d\n", mSprite->mTimer);
+  //printf("RESPAWN %d\n", mSprite->mTimer);
   fired = EFalse;
   mState = ESTATE_WAIT_INIT;
 }

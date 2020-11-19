@@ -30,7 +30,7 @@ GPlayerProcess::GPlayerProcess() {
   mAlt        = EFalse;
   mHit        = EFalse;
 
-  printf("screen %d,%d\n", gDisplay.renderBitmap->Width(), gDisplay.renderBitmap->Height());
+  //printf("screen %d,%d\n", gDisplay.renderBitmap->Width(), gDisplay.renderBitmap->Height());
 }
 
 void GPlayerProcess::DrawPixel(TFloat x, TFloat y) const {

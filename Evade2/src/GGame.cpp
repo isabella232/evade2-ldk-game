@@ -25,7 +25,7 @@ TBool GGame::mDebug = EFalse;
 
 GGame::GGame() {
   gGame = this;
-  printf("Construct GGame\n");
+  //printf("Construct GGame\n");
   gCamera     = new GCamera();
   gVectorFont = new GVectorFont();
   mDifficulty = 1;
